@@ -1,0 +1,28 @@
+# Application
+application:
+  title: NaoDong Service
+  version: 0.1.0
+  openapi_url: /openapi.json
+  docs_url: /docs
+  redoc_url: /redoc
+
+# Mongo
+mongo:
+  host: 127.0.0.1
+  port: 27017
+  authSource: admin
+  username: root
+  password: password
+
+# ES
+elasticsearch:
+  hosts:
+    - 127.0.0.1:9200
+  index: project
+
+# User
+user:
+  pwd:
+    secret_key: 97y9bx1dfjt46050z3mgksqnom0m8a57icj2ha2lhjcyke12tfxuxejzdv0ckvsj
+    algorithm: HS256
+

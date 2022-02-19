@@ -1,0 +1,69 @@
+version: "3.9"
+services:
+
+  mongo:
+    container_name: table_mongo
+    networks:
+      - table
+    image: mongo:4.4
+    restart: unless-stopped
+    environment: 
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    ports:
+      - "27017:27017"
+    volumes:
+      - './data_mongo:/data/db'
+
+  elasticsearch:
+    container_name: table_es
+    networks:
+      - table
+    image: elasticsearch:7.16.2
+    environment:
+      cluster.name: table
+      node.name: table
+      discovery.type: "single-node"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    restart: unless-stopped
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - './data_es:/usr/share/elasticsearch/data'
+
+  apiserver:
+    container_name: table_apiserver
+    networks:
+      - table
+    build: ./backend
+    restart: unless-stopped
+    depends_on:
+      - mongo
+      - elasticsearch
+    environment:
+      MONGO_HOST: mongo
+      ELASTICSEARCH_HOSTS: '["elasticsearch:9200"]'
+    ports:
+    - "8080:80"
+      
+  webserver:
+    container_name: table_webserver
+    networks:
+      - table
+    build: ./frontend
+    restart: unless-stopped
+    depends_on:
+      - apiserver
+    ports:
+    - "8000:80"
+
+networks:
+  table:
+    driver: bridge

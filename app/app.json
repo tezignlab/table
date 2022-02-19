@@ -1,0 +1,38 @@
+{
+  "expo": {
+    "name": "Table",
+    "slug": "Table",
+    "version": "0.2.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "nd",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/images/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#000000"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "io.table",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Table needs your permission to access your camera",
+        "NSPhotoLibraryUsageDescription": "Table needs your permission to access your photos"
+      }
+    },
+    "android": {
+      "package": "io.table",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "web": {}
+  }
+}

@@ -1,0 +1,16 @@
+from typing import List
+
+from fastapi import Query
+
+from api import router_public
+from db import mongo
+from fastlab.models import Response
+from models.help import KeywordCategoryEnum
+
+nd_keywords = mongo["naodong"]["keywords"]
+
+
+@router_public.get("/api/v1/help/keywords", tags=["Search"], summary="Hot search keywords", response_model=Response[List[str]])
+async def search_keywords(category: KeywordCategoryEnum = Query(KeywordCategoryEnum.KEYWORD, description='category')):
+    result = list(nd_keywords.find({'category': category}, {'_id': 0}).sort([('order', 1)]))
+    return Response(data=[x['content'] for x in result])
