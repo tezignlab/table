@@ -40,7 +40,7 @@ export function HomeScreen({ navigation }: RootTabScreenProps<'Home'>) {
                     renderTabBar={DefaultTabBar}
                     navigationState={{
                         index, routes: [
-                            { key: 'latest', title: translate('newest') },
+                            { key: 'latest', title: translate('latest') },
                             { key: 'recommend', title: translate('discover') }
                         ]
                     }}

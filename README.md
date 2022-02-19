@@ -43,9 +43,16 @@
     <img src="https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=MongoDB&logoColor=fff"/> 
   </a>
 </p>
+
 <p align="center">
 <img width="800" src="https://user-images.githubusercontent.com/595772/154817942-3e7f8c43-2591-4f13-a0ae-032751bcda25.png">
 </p>
+
+<p align="center">
+<img height="500" src="https://user-images.githubusercontent.com/595772/154818228-2297e605-dc73-40b0-8e21-5ccffb7fff6a.jpg">
+<img height="500" src="https://user-images.githubusercontent.com/595772/154818230-fcbc5a58-b5d1-4d22-b1a6-73fb622e9224.jpg">
+</p>
+
 ## Quick Start
 
 You can setup Table on a local computer via a few simple steps:
