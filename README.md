@@ -53,112 +53,17 @@
 <img height="500" src="https://user-images.githubusercontent.com/595772/154818230-fcbc5a58-b5d1-4d22-b1a6-73fb622e9224.jpg">
 </p>
 
-## Quick Start
-
-You can setup Table on a local computer via a few simple steps:
-
-Clone the repo and switch to the folder:
-
-```
-git clone https://github.com/tezignlab/table.git
-cd table
-```
-
-Start [docker](https://www.docker.com/products/docker-desktop) and run all services using the following command:
-
-```
-docker-compose up --build --force-recreate
-```
-
-This creates two new data folders: `data_es` and `data_mongo`. 
-
-Load the sample data (choose from English or Chinese data):
-
-```shell
-# English data
-docker exec -it table_apiserver python3 init.py
-
-# Chinese data
-# docker exec -it table_apiserver bash -c "export DATA_LANG=zh && python3 init.py"
-```
-
-Open [http://localhost:8000](http://localhost:8000) with your browser to see Table web application.
-
-## Development
-
-### Run Backend Server
-
-This is a [FastAPI](https://github.com/tiangolo/fastapi) project.
-
-```shell
-cd backend/
-
-# setup and activate virtual environment
-python3 -m venv venv
-source venv/bin/activate
-
-# install packages
-pip3 install -r requirements.txt
-
-# run
-python3 run.py
-```
-
-Run the tests with:
-
-```
-pytest
-```
-`pytest` will run all files of the form `test_*.py` or `*_test.py` in the current directory and its subdirectories.
 
 
-### Run Frontend Web Application Server
-
-The frontend is a [UmiJS](https://umijs.org/) project bootstrapped with [`@umijs/umi-app`](https://github.com/umijs/umi).
-
-```shell
-cd frontend/
-
-# install packages
-yarn
-
-# run
-yarn start
-```
-
-Open [http://localhost:8000](http://localhost:8000) with your browser to see the web app.
-
-
-Run the tests with:
-
-```
-yarn test
-```
-
-See [UmiJS Plugin Test](https://umijs.org/plugins/best-practice#plugin-test) for more information.
-
-### Run Mobile App
-
-Mobile app is developed using [Expo](https://expo.dev/).
-
-```shell
-cd app/
-
-# install packages
-yarn
-
-# run
-yarn web
-```
-
-Install [Expo Go](https://expo.dev/client) on your phone, then scan the QR code using your phone's camera to check the App.
-
-
-## The Team
+# About
 
 Table is based on an internal project of [Tezign](https://www.tezign.com/) led by [Ling Fan](https://www.linkedin.com/in/fatflatfloat/), [Zhe Wang](https://www.linkedin.com/in/zhe-wang-7665921b/), and [Harry Wang](https://harrywang.me/). 
 
 Core development team includes [Yuandong Yang](https://github.com/AnoyiX), [Jinggang Zhuo](https://github.com/zhuojg), and [Feifei Ying](https://github.com/faye1225) with contributions from other members, such as Meixi Lu, Zilong Pei, Jing Zhu, Dan Li.
+
+# Documentation
+
+Please visit [https://tezignlab.github.io/table/](https://tezignlab.github.io/table/)
 
 
 
