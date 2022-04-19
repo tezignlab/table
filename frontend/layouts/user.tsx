@@ -1,13 +1,15 @@
 import React, { useEffect } from 'react'
-import { useSelector, useIntl, useParams, useDispatch } from 'umi'
-import { AuthModelState } from '@/models/auth'
-import { CurrentUserModelState } from '@/models/currentUser'
-import Layout from '@/layouts/basic'
+// import { useSelector, useIntl, useParams, useDispatch } from 'umi'
+import { AuthModelState } from '../models/auth'
+import { CurrentUserModelState } from '../models/currentUser'
+import Layout from './basic'
 import clsx from 'clsx'
-import { Loading } from '@/components/Icons'
-import NotFound from '@/components/NotFound'
-import HorizontalNavigation from '@/components/HorizontalNavigation'
-import { GlobalLoadingState } from '@/utils'
+import { Loading } from '../components/Icons'
+import NotFound from '../components/NotFound'
+import HorizontalNavigation from '../components/HorizontalNavigation'
+import { GlobalLoadingState } from '../utils'
+import { useTranslation } from 'next-i18next'
+import { useRouter } from 'next/router'
 
 export const PRIVATE_TYPE = ['history', 'inspiration']
 export const USER_PAGE_MENU = [
@@ -27,8 +29,9 @@ const UserLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const loading = useSelector(
     ({ loading }: { loading: GlobalLoadingState }) => loading,
   )
-  const intl = useIntl()
-  const { username } = useParams<{ username: string }>()
+  const { t } = useTranslation('common')
+  const router = useRouter()
+  const { username } = router.query as { username: string }
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -42,7 +45,7 @@ const UserLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const userPageMenu: { name: string; url: string }[] = []
   USER_PAGE_MENU.forEach(({ name, url }) => {
     userPageMenu.push({
-      name: intl.formatMessage({ id: name }),
+      name: t(name),
       url: url,
     })
   })
@@ -52,7 +55,9 @@ const UserLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       {!(loading.models.auth && loading.models.currentUser) && !error && user && (
         <div className="flex-grow h-full w-full flex flex-col bg-white">
           <div
-            className={clsx('w-full my-8 flex flex-col justify-center items-center')}
+            className={clsx(
+              'w-full my-8 flex flex-col justify-center items-center',
+            )}
           >
             <img src={user?.avatar} className="h-24 w-24 rounded-full" />
             <div className="flex-grow font-bold text-xl py-2 flex flex-col justify-center">

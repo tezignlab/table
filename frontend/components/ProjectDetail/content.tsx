@@ -1,19 +1,20 @@
 import React, { useRef, useEffect } from 'react'
-import { useIntl, useDispatch } from 'umi'
-import { ProjectDetail } from '@/models/project'
+// import { useIntl, useDispatch } from 'umi'
+import { ProjectDetail } from '../../models/project'
 import Clamp from 'react-multiline-clamp'
-import NeedAuthClickable from '@/components/NeedAuthClickable'
-import { Loading } from '@/components/Icons'
+import NeedAuthClickable from '../../components/NeedAuthClickable'
+import { Loading } from '../../components/Icons'
 import clsx from 'clsx'
-import { FolderPlus, Like, Detail } from '@/components/Icons'
+import { FolderPlus, Like, Detail } from '../../components/Icons'
 import moment from 'moment'
+import { useTranslation } from 'next-i18next'
 
 const ProjectDetailContent: React.FC<{
   project: ProjectDetail
   index?: number
   openModal: () => void
 }> = ({ project, index, openModal }) => {
-  const intl = useIntl()
+  const { t } = useTranslation('common')
   const dispatch = useDispatch()
   const contentRef = useRef<HTMLDivElement>(null)
 
@@ -42,7 +43,9 @@ const ProjectDetailContent: React.FC<{
         })}
         onClick={() => {
           dispatch({
-            type: project.is_like ? 'project/unlikeProject' : 'project/likeProject',
+            type: project.is_like
+              ? 'project/unlikeProject'
+              : 'project/likeProject',
             payload: { index: index, id: project.id },
           })
         }}
@@ -54,9 +57,7 @@ const ProjectDetailContent: React.FC<{
           </div>
         </div>
 
-        {project.is_like
-          ? project.count_like
-          : intl.formatMessage({ id: 'general.like' })}
+        {project.is_like ? project.count_like : t('general.like')}
       </button>
     </NeedAuthClickable>
   )
@@ -86,7 +87,7 @@ const ProjectDetailContent: React.FC<{
           </div>
         </div>
 
-        {intl.formatMessage({ id: 'general.collect' })}
+        {t('general.collect')}
       </button>
     </NeedAuthClickable>
   )
@@ -152,9 +153,7 @@ const ProjectDetailContent: React.FC<{
           className="w-full overflow-x-hidden lg:w-3/4 lg:mx-auto detail-content"
         >
           <div className="flex flex-row">
-            <span className="text-gray-500 pr-2">
-              {intl.formatMessage({ id: 'general.origin' })}
-            </span>
+            <span className="text-gray-500 pr-2">{t('general.origin')}</span>
             <a
               className="link"
               href={project.origin_url}
@@ -165,7 +164,7 @@ const ProjectDetailContent: React.FC<{
             </a>
 
             <span className="text-gray-500 pr-2 pl-4">
-              {intl.formatMessage({ id: 'general.publish' })}
+              {t('general.publish')}
             </span>
             {timestamp}
           </div>

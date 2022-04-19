@@ -1,26 +1,32 @@
+import { useTranslation } from 'next-i18next'
 import React, { useState, useEffect } from 'react'
-import {
-  useDispatch,
-  useIntl,
-  useParams,
-  useSelector,
-  history,
-  Helmet,
-} from 'umi'
-import ProjectList from '@/components/ProjectList'
-import CollectionModal from '@/components/CollectionModal'
-import { CollectionModelState } from '@/models/collection'
-import { CollectionModalModeType } from '@/components/CollectionModal'
-import { CurrentUserModelState } from '@/models/currentUser'
-import { AuthModelState } from '@/models/auth'
-import { ProjectModelState } from '@/models/project'
-import { SHOT_LIST_PAGE_SIZE } from '@/constants'
-import { Left } from '@/components/Icons'
+import { useRouter } from 'next/router'
+import CollectionsModal, {
+  CollectionModalModeType,
+} from '../../../../components/CollectionModal'
+import { CollectionModelState } from '../../../../models/collection'
+import { CurrentUserModelState } from '../../../../models/currentUser'
+import { AuthModelState } from '../../../../models/auth'
+import { ProjectModelState } from '../../../../models/project'
+import Head from 'next/head'
+import { Left } from '../../../../components/Icons'
+import ProjectList from '../../../../components/ProjectList'
+import { SHOT_LIST_PAGE_SIZE } from '../../../../constants'
+// import {
+//   useDispatch,
+//   useIntl,
+//   useParams,
+//   useSelector,
+//   history,
+//   Helmet,
+// } from 'umi'
 
 const CollectionsContentPage: React.FC = () => {
-  const intl = useIntl()
+  const { t } = useTranslation('common')
   const dispatch = useDispatch()
-  const params = useParams<{ id: string; username: string }>()
+  const router = useRouter()
+  const params = router.query as { id: string; username: string }
+
   const [modalMode, setModalMode] = useState<
     CollectionModalModeType | undefined
   >(undefined)
@@ -34,7 +40,9 @@ const CollectionsContentPage: React.FC = () => {
   const { user: authUser } = useSelector(
     ({ auth }: { auth: AuthModelState }) => auth,
   )
-  const { count } = useSelector(({ project }: { project: ProjectModelState }) => project)
+  const { count } = useSelector(
+    ({ project }: { project: ProjectModelState }) => project,
+  )
 
   useEffect(() => {
     dispatch({
@@ -49,30 +57,29 @@ const CollectionsContentPage: React.FC = () => {
 
   return (
     <div className="flex-grow w-full min-h-0 bg-white">
-      <Helmet>
-        <title>{`${current?.name} - ${intl.formatMessage({
-          id: 'collection.page.title',
-        })}`}</title>
-      </Helmet>
+      <Head>
+        <title>{`${current?.name} - ${t('collection.page.title')}`}</title>
+      </Head>
       <div className="w-full lg:px-16 px-4">
         <div
           className="text-gray-600 py-8 flex flex-row gap-1 items-center cursor-pointer"
           onClick={() => {
-            history.push(`/user/${params.username}/collections`)
+            router.push(`/user/${params.username}/collections`)
           }}
         >
-          <span className='h-4 w-4'><Left /></span>
-          <span>{intl.formatMessage({ id: 'general.return' })}</span>
+          <span className="h-4 w-4">
+            <Left />
+          </span>
+          <span>{t('general.return')}</span>
         </div>
 
-        <div className='flex flex-row items-end justify-between'>
+        <div className="flex flex-row items-end justify-between">
           <div>
             {current && !loading && (
               <div className="font-bold text-4xl">{current?.name}</div>
             )}
           </div>
           <div className="flex flex-row space-x-4">
-   
             {user?.id === authUser?.id && (
               <>
                 <button
@@ -81,7 +88,7 @@ const CollectionsContentPage: React.FC = () => {
                     setModalMode('edit')
                   }}
                 >
-                  {intl.formatMessage({ id: 'collection.edit' })}
+                  {t('collection.edit')}
                 </button>
                 <button
                   className="btn btn-gray"
@@ -89,7 +96,7 @@ const CollectionsContentPage: React.FC = () => {
                     setModalMode('delete')
                   }}
                 >
-                  {intl.formatMessage({ id: 'collection.delete' })}
+                  {t('collection.delete')}
                 </button>
               </>
             )}
@@ -113,7 +120,7 @@ const CollectionsContentPage: React.FC = () => {
         />
       </div>
 
-      <CollectionModal
+      <CollectionsModal
         mode={modalMode}
         visible={modalMode !== undefined}
         closeModal={() => {

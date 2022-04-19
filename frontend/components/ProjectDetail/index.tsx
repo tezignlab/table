@@ -1,9 +1,9 @@
 import React, { Fragment, useState } from 'react'
-import { ProjectDetail } from '@/models/project'
+import { ProjectDetail } from '../../models/project'
 import ProjectDetailContent from './content'
 import ProjectDetailSidebar from './sidebar'
 import ProjectDetailModal from './modal'
-import { useIntl } from 'umi'
+import { useTranslation } from 'next-i18next'
 
 const ProjectDetailComponent: React.FC<{
   project: ProjectDetail
@@ -17,35 +17,32 @@ const ProjectDetailComponent: React.FC<{
    * so `index` is to identify which project in list will be affected
    */
   const [modalShow, setModalShow] = useState(false)
-  const intl = useIntl()
-
+  const { t } = useTranslation('common')
   const sideContent = (
     <div className="flex flex-col space-y-8">
       {project.tags.map((tag, index) => (
         <Fragment key={index}>
-          {
-            tag.data.length > 0 && (
-              <div key={tag.type} className="flex flex-col space-y-2">
-                <div className="font-bold text-md mx-1">
-                  {intl.formatMessage({ id: `project.tag.${tag.type}` })}
-                </div>
-
-                <div className="flex flex-wrap">
-                  {tag.data.map((item) => (
-                    <div
-                      key={item}
-                      className="btn btn-tag mx-1 my-1"
-                      onClick={() => {
-                        window.open(`/search/projects/${item}`, '_blank')
-                      }}
-                    >
-                      {item}
-                    </div>
-                  ))}
-                </div>
+          {tag.data.length > 0 && (
+            <div key={tag.type} className="flex flex-col space-y-2">
+              <div className="font-bold text-md mx-1">
+                {t(`project.tag.${tag.type}`)}
               </div>
-            )
-          }
+
+              <div className="flex flex-wrap">
+                {tag.data.map((item) => (
+                  <div
+                    key={item}
+                    className="btn btn-tag mx-1 my-1"
+                    onClick={() => {
+                      window.open(`/search/projects/${item}`, '_blank')
+                    }}
+                  >
+                    {item}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </Fragment>
       ))}
     </div>

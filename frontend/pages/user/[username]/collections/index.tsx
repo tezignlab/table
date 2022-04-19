@@ -1,23 +1,32 @@
 import React, { useEffect } from 'react'
-import {
-  useDispatch,
-  useSelector,
-  history,
-  useParams,
-  Helmet,
-  useIntl,
-} from 'umi'
-import { Loading } from '@/components/Icons'
-import { CollectionModelState, Collection } from '@/models/collection'
-import { CurrentUserModelState } from '@/models/currentUser'
+// import {
+//   useDispatch,
+//   useSelector,
+//   history,
+//   useParams,
+//   Helmet,
+//   useIntl,
+// } from 'umi'
+// import { Loading } from '@/components/Icons'
+// import { CollectionModelState, Collection } from '@/models/collection'
+// import { CurrentUserModelState } from '@/models/currentUser'
 import clsx from 'clsx'
-import { useHover } from '@umijs/hooks'
+import { Collection, CollectionModelState } from '../../../../models/collection'
+import { useHover } from '../../../../hooks/useHover'
+import { useRouter } from 'next/router'
+import { useTranslation } from 'next-i18next'
+import { CurrentUserModelState } from '../../../../models/currentUser'
+import { Loading } from '../../../../components/Icons'
+import Head from 'next/head'
+
+// import { useHover } from '@umijs/hooks'
 
 const CollectionCard: React.FC<{ collection: Collection }> = ({
   collection,
 }) => {
   const [isHovering, hoverRef] = useHover<HTMLDivElement>()
-  const { username } = useParams<{ username: string }>()
+  const router = useRouter()
+  const { username } = router.query as { username: string }
   const dispatch = useDispatch()
 
   return (
@@ -34,7 +43,7 @@ const CollectionCard: React.FC<{ collection: Collection }> = ({
           type: 'collection/save',
           payload: { current: undefined },
         })
-        history.push(`/user/${username}/collections/${collection.id}`)
+        router.push(`/user/${username}/collections/${collection.id}`)
       }}
     >
       <div className="w-full flex flex-col relative">
@@ -56,12 +65,21 @@ const CollectionCard: React.FC<{ collection: Collection }> = ({
               collection.covers &&
               (collection.covers.length > index ? (
                 <img
-                  className={clsx("object-cover object-center w-full h-32", index === 1 ? 'rounded-bl-lg' : 'rounded-br-lg')}
+                  className={clsx(
+                    'object-cover object-center w-full h-32',
+                    index === 1 ? 'rounded-bl-lg' : 'rounded-br-lg',
+                  )}
                   key={index}
                   src={collection.covers[index]}
                 />
               ) : (
-                <div key={index} className={clsx("w-full h-full bg-gray-200", index === 1 ? 'rounded-bl-lg' : 'rounded-br-lg')} />
+                <div
+                  key={index}
+                  className={clsx(
+                    'w-full h-full bg-gray-200',
+                    index === 1 ? 'rounded-bl-lg' : 'rounded-br-lg',
+                  )}
+                />
               )),
           )}
         </div>
@@ -97,7 +115,7 @@ const CollectionCard: React.FC<{ collection: Collection }> = ({
 
 const CollectionsPage: React.FC = () => {
   const dispatch = useDispatch()
-  const intl = useIntl()
+  const { t } = useTranslation('common')
   const { user } = useSelector(
     ({ currentUser }: { currentUser: CurrentUserModelState }) => currentUser,
   )
@@ -129,11 +147,9 @@ const CollectionsPage: React.FC = () => {
             'xl:grid-cols-4',
           )}
         >
-          <Helmet>
-            <title>{`${user?.username}${intl.formatMessage({
-              id: 'collection.page.title',
-            })}`}</title>
-          </Helmet>
+          <Head>
+            <title>{`${user?.username}${t('collection.page.title')}`}</title>
+          </Head>
           {collections?.map((collection) => (
             <CollectionCard key={collection.id} collection={collection} />
           ))}

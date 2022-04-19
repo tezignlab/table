@@ -1,24 +1,35 @@
-import { useParams, useSelector, useDispatch } from 'umi'
-import React, { useEffect, useState } from 'react'
-import ProjectDetailComponent from '@/components/ProjectDetail'
-import { ProjectModelState } from '@/models/project'
-import { ProjectCollectionModelState } from '@/models/projectCollection'
-import CollectionModal from '@/components/CollectionModal'
-import { CollectionModalModeType } from '@/components/CollectionModal'
-import { useInViewport } from '@umijs/hooks'
+// import { useParams, useSelector, useDispatch } from 'umi'
+import React, { useEffect, useRef, useState } from 'react'
+import ProjectDetailComponent from '../../components/ProjectDetail'
+import { ProjectModelState } from '../../models/project'
+import { ProjectCollectionModelState } from '../../models/projectCollection'
+import CollectionModal from '../../components/CollectionModal'
+import { CollectionModalModeType } from '../../components/CollectionModal'
+import { useOnScreen } from '../../hooks/useOnScreen'
+// import { useInViewport } from '@umijs/hooks'
+import { useRouter } from 'next/router'
 
 const ProjectPage: React.FC = () => {
-  const params = useParams<{ id: string }>()
+  const router = useRouter()
+  const params = router.query as { id: string }
+
   const dispatch = useDispatch()
   const [modalMode, setModalMode] = useState<CollectionModalModeType>('choose')
-  const { current } = useSelector(({ project }: { project: ProjectModelState }) => project)
+  const { current } = useSelector(
+    ({ project }: { project: ProjectModelState }) => project,
+  )
   const { projectId } = useSelector(
-    ({ projectCollection }: { projectCollection: ProjectCollectionModelState }) =>
+    ({
       projectCollection,
+    }: {
+      projectCollection: ProjectCollectionModelState
+    }) => projectCollection,
   )
 
-  const [topVisible, topRef] = useInViewport<HTMLDivElement>()
-  const [bottomVisible, bottomRef] = useInViewport<HTMLDivElement>()
+  const bottomRef = useRef<HTMLDivElement>(null)
+  const bottomVisible = useOnScreen(bottomRef, 1)
+  const topRef = useRef<HTMLDivElement>(null)
+  const topVisible = useOnScreen(topRef, 1)
 
   useEffect(() => {
     dispatch({ type: 'project/getProjectDetail', payload: { id: params.id } })
@@ -31,7 +42,7 @@ const ProjectPage: React.FC = () => {
       {!!current && (
         <ProjectDetailComponent
           project={current}
-          inModal={false}
+          // inModal={false}
           bottomVisible={!!bottomVisible}
           topVisible={!!topVisible}
         />

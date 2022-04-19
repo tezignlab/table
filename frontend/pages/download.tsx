@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react'
-import { useDispatch, useIntl, useSelector } from 'umi'
-import { Project, ProjectModelState } from '@/models/project'
+// import { useDispatch, useIntl, useSelector } from 'umi'
+import { Project, ProjectModelState } from '../models/project'
 import clsx from 'clsx'
-import { LogoWhite } from '@/components/Images'
+import { LogoWhite } from '../components/Images'
+import { useTranslation } from 'next-i18next'
 
 const DownloadAppPage: React.FC = () => {
-  const { projects } = useSelector(({ project }: { project: ProjectModelState }) => project)
+  const { projects } = useSelector(
+    ({ project }: { project: ProjectModelState }) => project,
+  )
   const dispatch = useDispatch()
   const [isIOSHover, setIsIOSHover] = useState(false)
   const [isAndroidHover, setIsAndroidHover] = useState(false)
-  const intl = useIntl()
+  const { t } = useTranslation('common')
   useEffect(() => {
     dispatch({
       type: 'project/getProjects',
@@ -50,12 +53,8 @@ const DownloadAppPage: React.FC = () => {
           </div>
 
           <div className="flex flex-col my-auto justify-self-start text-white">
-            <LogoWhite
-              className="w-48 object-fill text-white"
-            />
-            <p className="text-3xl my-4">
-              {intl.formatMessage({ id: 'app.desc' })}
-            </p>
+            <LogoWhite className="w-48 object-fill text-white" />
+            <p className="text-3xl my-4">{t('app.desc')}</p>
             <div className="flex flex-row my-6 text-black">
               <div className="h-36 mr-4">
                 <div
@@ -70,7 +69,7 @@ const DownloadAppPage: React.FC = () => {
                     'rounded-2xl': isIOSHover,
                   })}
                 >
-                  {intl.formatMessage({ id: 'app.qr.ios' })}
+                  {t('app.qr.ios')}
                   {isIOSHover && (
                     <img
                       src="https://ai.tezign.com/static/naodong/nd-ios-qr-code.jpg"
@@ -92,7 +91,7 @@ const DownloadAppPage: React.FC = () => {
                     'rounded-2xl': isAndroidHover,
                   })}
                 >
-                  {intl.formatMessage({ id: 'app.qr.android' })}
+                  {t('app.qr.android')}
                   {isAndroidHover && (
                     <img
                       src="https://ai.tezign.com/static/naodong/nd-android-qr-code.jpg"

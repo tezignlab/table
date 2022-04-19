@@ -1,13 +1,13 @@
-import React from 'react'
-import { useDispatch } from 'umi'
-import { useHover } from '@umijs/hooks'
+import React, { MouseEventHandler } from 'react'
+// import { useDispatch } from 'umi'
+// import { useHover } from '@umijs/hooks'
 import clsx from 'clsx'
-import { Project } from '@/models/project'
-import { FolderPlus, Like, Loading } from '@/components/Icons'
-import NeedAuthClickable from '@/components/NeedAuthClickable'
+import { Project } from '../../models/project'
+import { FolderPlus, Like, Loading } from '../../components/Icons'
+import NeedAuthClickable from '../../components/NeedAuthClickable'
 import Clamp from 'react-multiline-clamp'
-import { MouseEventHandler } from '@umijs/renderer-react/node_modules/@types/react'
-import Decoder from '@/utils/decoder'
+import Decoder from '../../utils/decoder'
+import { useHover } from '../../hooks/useHover'
 
 const CardButton: React.FC<{
   handleClick: MouseEventHandler
@@ -35,7 +35,10 @@ const CardButton: React.FC<{
   )
 }
 
-const ProjectCard: React.FC<{ project: Project; index: number }> = ({ project, index }) => {
+const ProjectCard: React.FC<{ project: Project; index: number }> = ({
+  project,
+  index,
+}) => {
   const [isHovering, hoverRef] = useHover<HTMLDivElement>()
   const dispatch = useDispatch()
 
@@ -72,7 +75,9 @@ const ProjectCard: React.FC<{ project: Project; index: number }> = ({ project, i
                 e.stopPropagation()
 
                 dispatch({
-                  type: project.is_like ? 'project/unlikeProject' : 'project/likeProject',
+                  type: project.is_like
+                    ? 'project/unlikeProject'
+                    : 'project/likeProject',
                   payload: { id: project.id, index: index },
                 })
               }}
@@ -106,7 +111,10 @@ const ProjectCard: React.FC<{ project: Project; index: number }> = ({ project, i
         <div className="flex flex-row justify-between">
           <div className="flex flex-row justify-start">
             <div className="flex flex-col justify-center">
-              <img src={project.author.avatar} className="w-6 h-6 rounded-full" />
+              <img
+                src={project.author.avatar}
+                className="w-6 h-6 rounded-full"
+              />
             </div>
 
             <div className="h-full flex flex-col justify-center">

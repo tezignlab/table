@@ -1,11 +1,11 @@
 import React from 'react'
-import { useSelector } from 'umi'
-import Navigation from '@/components/Navigation'
-import NavigationMobile from '@/components/NavigationMobile'
-import { AuthModelState } from '@/models/auth'
-import { GlobalLoadingState } from '@/utils'
-import Footer from '@/components/Footer'
-import Layout from '@/layouts/index'
+// import { useSelector } from 'umi'
+import Navigation from '../components/Navigation'
+import NavigationMobile from '../components/NavigationMobile'
+import { AuthModelState } from '../models/auth'
+import { GlobalLoadingState } from '../utils'
+import Footer from '../components/Footer'
+import Layout from './index'
 
 const BasicLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { requested } = useSelector(

@@ -1,16 +1,17 @@
 import React from 'react'
-import { useDispatch, useSelector, useIntl } from 'umi'
+// import { useDispatch, useSelector, useIntl } from 'umi'
 import { useFormik, FormikProvider, Form } from 'formik'
 import * as Yup from 'yup'
-import { AuthModelState } from '@/models/auth'
-import { GlobalLoadingState } from '@/utils'
-import Input from '@/components/AuthInput'
-import { Loading } from '@/components/Icons'
-import { PASSWORD_MIN_LENGTH, PASSWORD_MAX_LENGTH } from '@/constants'
+import { AuthModelState } from '../../models/auth'
+import { GlobalLoadingState } from '../../utils'
+import Input from '../../components/AuthInput'
+import { Loading } from '../../components/Icons'
+import { PASSWORD_MIN_LENGTH, PASSWORD_MAX_LENGTH } from '../../constants'
+import { useTranslation } from 'next-i18next'
 
 const Password: React.FC = () => {
   const auth = useSelector(({ auth }: { auth: AuthModelState }) => auth)
-  const intl = useIntl()
+  const { t } = useTranslation('common')
   const dispatch = useDispatch()
   const globalLoading = useSelector(
     ({ loading }: { loading: GlobalLoadingState }) => loading,
@@ -35,50 +36,40 @@ const Password: React.FC = () => {
     },
     validationSchema: Yup.object({
       oldPassword: Yup.string()
-        .required(
-          intl.formatMessage(
-            { id: 'auth.validation.require' },
-            { type: intl.formatMessage({ id: 'user.password' }) },
-          ),
-        )
+        .required(t('auth.validation.require'))
         .min(
           PASSWORD_MIN_LENGTH,
-          intl.formatMessage({ id: 'auth.validation.min' }, { count: 6 }),
+          `${t('auth.validation.min.prefix')}${PASSWORD_MIN_LENGTH}${t(
+            'auth.validation.min.suffix',
+          )}`,
         )
         .max(
           PASSWORD_MAX_LENGTH,
-          intl.formatMessage({ id: 'auth.validation.max' }, { count: 16 }),
+          `${t('auth.validation.max.prefix')}${PASSWORD_MAX_LENGTH}${t(
+            'auth.validation.max.suffix',
+          )}`,
         ),
       newPassword: Yup.string()
-        .required(
-          intl.formatMessage(
-            { id: 'auth.validation.require' },
-            { type: intl.formatMessage({ id: 'user.password' }) },
-          ),
-        )
+        .required(t('auth.validation.require'))
         .min(
           PASSWORD_MIN_LENGTH,
-          intl.formatMessage({ id: 'auth.validation.min' }, { count: 6 }),
+          `${t('auth.validation.min.prefix')}${PASSWORD_MIN_LENGTH}${t(
+            'auth.validation.min.suffix',
+          )}`,
         )
         .max(
           PASSWORD_MAX_LENGTH,
-          intl.formatMessage({ id: 'auth.validation.max' }, { count: 16 }),
+          `${t('auth.validation.max.prefix')}${PASSWORD_MAX_LENGTH}${t(
+            'auth.validation.max.suffix',
+          )}`,
         ),
       newPasswordConfirm: Yup.string()
-        .required(
-          intl.formatMessage(
-            { id: 'auth.validation.require' },
-            { type: intl.formatMessage({ id: 'user.confirmPassword' }) },
-          ),
-        )
+        .required(t('auth.validation.require'))
         .when('newPassword', {
           is: (val: string): boolean => (val && val.length > 0 ? true : false),
           then: Yup.string().oneOf(
             [Yup.ref('newPassword')],
-            intl.formatMessage(
-              { id: 'auth.validation.correct' },
-              { type: intl.formatMessage({ id: 'user.confirmPassword' }) },
-            ),
+            t('auth.validation.correct'),
           ),
         }),
     }),
@@ -94,19 +85,19 @@ const Password: React.FC = () => {
                 id="oldPassword"
                 name="oldPassword"
                 type="password"
-                label={intl.formatMessage({ id: 'account.password.old' })}
+                label={t('account.password.old')}
               />
               <Input
                 id="newPassword"
                 name="newPassword"
                 type="password"
-                label={intl.formatMessage({ id: 'account.password.new' })}
+                label={t('account.password.new')}
               />
               <Input
                 id="newPasswordConfirm"
                 name="newPasswordConfirm"
                 type="password"
-                label={intl.formatMessage({ id: 'account.password.confirm' })}
+                label={t('account.password.confirm')}
               />
 
               <button className="btn btn-primary space-x-2 flex" type="submit">
@@ -115,7 +106,7 @@ const Password: React.FC = () => {
                     <Loading color="white" />
                   </div>
                 )}
-                <span>{intl.formatMessage({ id: 'account.save' })}</span>
+                <span>{t('account.save')}</span>
               </button>
             </Form>
           </FormikProvider>

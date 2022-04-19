@@ -1,14 +1,17 @@
+import { useTranslation } from 'next-i18next'
+import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import { useIntl, useDispatch, useSelector, history, useParams } from 'umi'
+// import { useIntl, useDispatch, useSelector, history, useParams } from 'umi'
 import { CollectionModelState } from '../../models/collection'
 import { Loading } from '../Icons'
 
 const DeleteCollection: React.FC<{ closeModal: () => void }> = ({
   closeModal,
 }) => {
-  const intl = useIntl()
+  const { t } = useTranslation('common')
+  const router = useRouter()
   const dispatch = useDispatch()
-  const { username } = useParams<{ username: string }>()
+  const { username } = router.query as { username: string }
 
   const { current, loading } = useSelector(
     ({ collection }: { collection: CollectionModelState }) => collection,
@@ -19,21 +22,20 @@ const DeleteCollection: React.FC<{ closeModal: () => void }> = ({
   useEffect(() => {
     if (!loading && confirmed) {
       closeModal()
-      history.push(`/user/${username}/collections`)
+      router.push(`/user/${username}/collections`)
     }
   }, [loading])
 
   return (
     <div className="w-full h-full flex flex-col space-y-8">
       <div className="text-bold text-xl text-black">
-        {intl.formatMessage({ id: 'collection.delete' })}
+        {t('collection.delete')}
       </div>
 
       <div className="w-full">
-        {intl.formatMessage(
-          { id: 'collection.delete.confirm' },
-          { name: current?.name },
-        )}
+        {t('collection.delete.confirm.prefix')}
+        {current?.name}
+        {t('collection.delete.confirm.suffix')}
       </div>
 
       <div className="w-full flex flex-col space-y-2">
@@ -54,11 +56,11 @@ const DeleteCollection: React.FC<{ closeModal: () => void }> = ({
               <Loading />
             </div>
           )}
-          <span>{intl.formatMessage({ id: 'collection.delete' })}</span>
+          <span>{t('collection.delete')}</span>
         </button>
 
         <button className="btn btn-gray" onClick={closeModal}>
-          {intl.formatMessage({ id: 'general.cancel' })}
+          {t('general.cancel')}
         </button>
       </div>
     </div>

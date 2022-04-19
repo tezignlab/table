@@ -6,13 +6,14 @@ import ProjectList from '../components/ProjectList'
 import { SHOT_LIST_PAGE_SIZE, ROUTES } from '../constants'
 import Banner from '../components/Banner'
 import { AuthModelState } from '../models/auth'
+import Head from 'next/head'
+import { useRouter } from 'next/router'
 
 const IndexPage: React.FC = () => {
-  // const intl = useIntl()
   const { t } = useTranslation('common')
 
   const dispatch = useDispatch()
-  const location = useLocation()
+  const router = useRouter()
 
   const { count } = useSelector(
     ({ project }: { project: ProjectModelState }) => project,
@@ -21,15 +22,15 @@ const IndexPage: React.FC = () => {
     let value = undefined
     ROUTES.forEach((route) => {
       if (
-        route.path === location.pathname ||
-        `${route.path}/` === location.pathname
+        route.path === router.pathname ||
+        `${route.path}/` === router.pathname
       ) {
         value = t('route.name')
       }
     })
 
     return value
-  }, [location.pathname])
+  }, [router.pathname])
   const { requested, user } = useSelector(
     ({ auth }: { auth: AuthModelState }) => auth,
   )
@@ -40,14 +41,10 @@ const IndexPage: React.FC = () => {
   return (
     <div className="w-full h-full">
       {requested && !user && <Banner />}
-      <Helmet>
+      <Head>
         <meta charSet="utf-8" />
-        <title>
-          {`${intl.formatMessage({
-            id: 'auth.welcome',
-          })} | ${intl.formatMessage({ id: 'site.name' })}`}
-        </title>
-      </Helmet>
+        <title>{`${t('auth.welcome')} | ${t('site.name')}`}</title>
+      </Head>
 
       <div className="w-full h-full bg-white">
         <div className="lg:hidden w-full py-6 text-center text-lg font-bold">
@@ -61,7 +58,7 @@ const IndexPage: React.FC = () => {
               payload: {
                 skip: count,
                 limit: SHOT_LIST_PAGE_SIZE,
-                type: location.pathname.includes('/project/recommend')
+                type: router.pathname.includes('/project/recommend')
                   ? 'recommend'
                   : 'all',
               },

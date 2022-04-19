@@ -1,10 +1,8 @@
 import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 import React from 'react'
-// import { setLocale, getLocale, useIntl } from 'umi';
 
 const Footer: React.FC = () => {
-  // const intl = useIntl()
   const router = useRouter()
   const { t } = useTranslation('common')
 

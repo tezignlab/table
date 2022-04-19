@@ -110,9 +110,8 @@ const NoticeWrapperOriginal: React.ForwardRefRenderFunction<
 const NoticeWrapper = React.forwardRef(NoticeWrapperOriginal)
 
 export const notification = (() => {
-  let noticeContainer: HTMLElement | null = document.getElementById(
-    'notice-container',
-  )
+  let noticeContainer: HTMLElement | null =
+    document.getElementById('notice-container')
   if (!noticeContainer) {
     noticeContainer = document.createElement('div')
     noticeContainer.setAttribute('id', 'notice-container')

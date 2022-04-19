@@ -1,25 +1,25 @@
 import { FC } from 'react'
-import { useIntl, useSelector, useDispatch } from 'umi'
+// import { useIntl, useSelector, useDispatch } from 'umi'
 import { useFormik, FormikProvider, Form } from 'formik'
 import * as Yup from 'yup'
-import Input from '@/components/AuthInput'
-import { Loading, Check } from '@/components/Icons'
+import Input from '../../components/AuthInput'
+import { Loading, Check } from '../../components/Icons'
 import {
   USERNAME_MIN_LENGTH,
   USERNAME_MAX_LENGTH,
   PASSWORD_MIN_LENGTH,
   PASSWORD_MAX_LENGTH,
   USERNAME_REGEX,
-} from '@/constants'
-import { AuthModelState } from '@/models/auth'
+} from '../../constants'
+import { AuthModelState } from '../../models/auth'
+import { useTranslation } from 'next-i18next'
 
 const SignUp: FC = () => {
   const dispatch = useDispatch()
   const { loading, success } = useSelector(
     ({ auth }: { auth: AuthModelState }) => auth,
   )
-
-  const intl = useIntl()
+  const { t } = useTranslation('common')
   const formik = useFormik({
     initialValues: {
       username: '',
@@ -39,71 +39,47 @@ const SignUp: FC = () => {
     },
     validationSchema: Yup.object({
       username: Yup.string()
-        .required(
-          intl.formatMessage(
-            { id: 'auth.validation.require' },
-            { type: intl.formatMessage({ id: 'user.username' }) },
-          ),
-        )
+        .required(t('auth.validation.require'))
         .min(
           USERNAME_MIN_LENGTH,
-          intl.formatMessage({ id: 'auth.validation.min' }, { count: 4 }),
+          `${t('auth.validation.min.prefix')}${USERNAME_MIN_LENGTH}${t(
+            'auth.validation.min.suffix',
+          )}`,
         )
         .max(
           USERNAME_MAX_LENGTH,
-          intl.formatMessage({ id: 'auth.validation.max' }, { count: 16 }),
+          `${t('auth.validation.max.prefix')}${USERNAME_MAX_LENGTH}${t(
+            'auth.validation.max.suffix',
+          )}`,
         )
-        .matches(
-          USERNAME_REGEX,
-          intl.formatMessage(
-            { id: 'auth.validation.correct' },
-            { type: intl.formatMessage({ id: 'user.username' }) },
-          ),
-        ),
+        .matches(USERNAME_REGEX, t('auth.validation.correct')),
       email: Yup.string()
-        .required(
-          intl.formatMessage(
-            { id: 'auth.validation.require' },
-            { type: intl.formatMessage({ id: 'user.email' }) },
-          ),
-        )
+        .required(t('auth.validation.require'))
         .matches(
           /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-          intl.formatMessage(
-            { id: 'auth.validation.correct' },
-            { type: intl.formatMessage({ id: 'user.email' }) },
-          ),
+          t('auth.validation.correct'),
         ),
       password: Yup.string()
-        .required(
-          intl.formatMessage(
-            { id: 'auth.validation.require' },
-            { type: intl.formatMessage({ id: 'user.password' }) },
-          ),
-        )
+        .required(t('auth.validation.require'))
         .min(
           PASSWORD_MIN_LENGTH,
-          intl.formatMessage({ id: 'auth.validation.min' }, { count: 6 }),
+          `${t('auth.validation.min.prefix')}${PASSWORD_MIN_LENGTH}${t(
+            'auth.validation.min.suffix',
+          )}`,
         )
         .max(
           PASSWORD_MAX_LENGTH,
-          intl.formatMessage({ id: 'auth.validation.max' }, { count: 16 }),
+          `${t('auth.validation.max.prefix')}${PASSWORD_MAX_LENGTH}${t(
+            'auth.validation.max.suffix',
+          )}`,
         ),
       confirmPassword: Yup.string()
-        .required(
-          intl.formatMessage(
-            { id: 'auth.validation.require' },
-            { type: intl.formatMessage({ id: 'user.confirmPassword' }) },
-          ),
-        )
+        .required(t('auth.validation.require'))
         .when('password', {
           is: (val: string): boolean => (val && val.length > 0 ? true : false),
           then: Yup.string().oneOf(
             [Yup.ref('password')],
-            intl.formatMessage(
-              { id: 'auth.validation.correct' },
-              { type: intl.formatMessage({ id: 'user.confirmPassword' }) },
-            ),
+            t('auth.validation.correct'),
           ),
         }),
     }),
@@ -114,31 +90,31 @@ const SignUp: FC = () => {
       {!success && (
         <FormikProvider value={formik}>
           <div className="w-full text-center text-2xl mb-2 hidden lg:block">
-            {intl.formatMessage({ id: 'auth.sign_up' })}
+            {t('auth.sign_up')}
           </div>
           <Form className="flex flex-col space-y-6 text-left">
             <Input
-              label={intl.formatMessage({ id: 'user.username' })}
+              label={t('user.username')}
               id="username"
               name="username"
               type="text"
-              desc={intl.formatMessage({ id: 'user.username.desc' })}
+              desc={t('user.username.desc')}
             />
             <Input
-              label={intl.formatMessage({ id: 'user.email' })}
+              label={t('user.email')}
               id="email"
               name="email"
               type="text"
             />
             <Input
-              label={intl.formatMessage({ id: 'user.password' })}
+              label={t('user.password')}
               id="password"
               name="password"
               type="password"
-              desc={intl.formatMessage({ id: 'user.password.desc' })}
+              desc={t('user.password.desc')}
             />
             <Input
-              label={intl.formatMessage({ id: 'user.confirmPassword' })}
+              label={t('user.confirmPassword')}
               id="confirmPassword"
               name="confirmPassword"
               type="password"
@@ -154,9 +130,7 @@ const SignUp: FC = () => {
                   <Loading color="white" />
                 </div>
               )}
-              <div className="text-md">
-                {intl.formatMessage({ id: 'auth.sign_up' })}
-              </div>
+              <div className="text-md">{t('auth.sign_up')}</div>
             </button>
           </Form>
         </FormikProvider>
@@ -169,9 +143,8 @@ const SignUp: FC = () => {
           </div>
 
           <div className="text-lg text-black text-center">
-            {intl.formatMessage({ id: 'auth.sign_up.success' })}
+            {t('auth.sign_up.success')}
           </div>
-          
         </div>
       )}
     </div>

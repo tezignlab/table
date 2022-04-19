@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import { Helmet, useDispatch, useIntl, useSelector } from 'umi'
-import { Inspiration, InspirationModelState } from '@/models/inspiration'
-import { CurrentUserModelState } from '@/models/currentUser'
-import { GlobalLoadingState } from '@/utils'
-import { Loading } from '@/components/Icons'
+// import { Helmet, useDispatch, useIntl, useSelector } from 'umi'
+import { Inspiration, InspirationModelState } from '../../../models/inspiration'
+import { CurrentUserModelState } from '../../../models/currentUser'
+import { GlobalLoadingState } from '../../../utils'
+import { Loading } from '../../../components/Icons'
 import moment from 'moment'
+import { useTranslation } from 'next-i18next'
+import Head from 'next/head'
 
 const InspirationCard: React.FC<{ inspiration: Inspiration }> = ({
   inspiration,
 }) => {
-  // const dispatch = useDispatch()
   return (
     <div className="w-full h-full mx-8 px-8 py-2 mb-8 border border-gray-200 rounded-lg">
       <p className="text-gray-400 my-2">
@@ -34,7 +35,7 @@ const InspirationCard: React.FC<{ inspiration: Inspiration }> = ({
 
 const InspirationPage: React.FC = () => {
   const dispatch = useDispatch()
-  const intl = useIntl()
+  const { t } = useTranslation('common')
   const [skip, setSkip] = useState(0)
   const { user } = useSelector(
     ({ currentUser }: { currentUser: CurrentUserModelState }) => currentUser,
@@ -64,11 +65,9 @@ const InspirationPage: React.FC = () => {
       )}
       {!loading.models.inspiration && (
         <div>
-          <Helmet>
-            <title>{`${user?.username}${intl.formatMessage({
-              id: 'likes.page.title',
-            })}`}</title>
-          </Helmet>
+          <Head>
+            <title>{`${user?.username}${t('likes.page.title')}`}</title>
+          </Head>
           <div className="flex flex-col w-2/3 mx-auto">
             {inspiration?.map((inspiration) => (
               <InspirationCard key={inspiration.id} inspiration={inspiration} />
@@ -84,7 +83,7 @@ const InspirationPage: React.FC = () => {
               setSkip(skip + 20)
             }}
           >
-            {intl.formatMessage({ id: 'general.load_more' })}
+            {t('general.load_more')}
           </button>
         )}
       </div>

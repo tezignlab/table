@@ -1,17 +1,20 @@
+import { useTranslation } from 'next-i18next'
+import Head from 'next/head'
+import { useRouter } from 'next/router'
 import React, { ReactNode, useEffect } from 'react'
-import {
-  useDispatch,
-  useLocation,
-  useSelector,
-  Helmet,
-  useIntl,
-} from 'umi'
-import { AuthModelState } from '@/models/auth'
+// import {
+//   useDispatch,
+//   useLocation,
+//   useSelector,
+//   Helmet,
+//   useIntl,
+// } from 'umi'
+import { AuthModelState } from '../models/auth'
 
 const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
   const dispatch = useDispatch()
-  const location = useLocation()
-  const intl = useIntl()
+  const router = useRouter()
+  const { t } = useTranslation('common')
   const { requested } = useSelector(
     ({ auth }: { auth: AuthModelState }) => auth,
   )
@@ -23,13 +26,13 @@ const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
 
   useEffect(() => {
     window.scrollTo(0, 0)
-  }, [location.pathname])
+  }, [router.pathname])
 
   return (
     <div className="w-full min-h-screen overflow-x-hidden">
-      <Helmet>
-        <title>{intl.formatMessage({ id: 'site.name' })}</title>
-      </Helmet>
+      <Head>
+        <title>{t('site.name')}</title>
+      </Head>
       {children}
     </div>
   )

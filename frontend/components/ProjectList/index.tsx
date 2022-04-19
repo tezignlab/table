@@ -1,37 +1,43 @@
-import React, { useState, useEffect } from 'react'
-import { useIntl, useSelector, useDispatch, useLocation } from 'umi'
-import ProjectCard from '@/components/ProjectCard'
-import { Loading } from '@/components/Icons'
-import ToTop from '@/components/ToTop'
-import ProjectModal from '@/components/ProjectModal'
-import CollectionModal from '@/components/CollectionModal'
-import { Project } from '@/models/project'
-import { useInViewport } from '@umijs/hooks'
-import { ProjectModelState } from '@/models/project'
-import { GlobalLoadingState } from '@/utils'
-import { ProjectCollectionModelState } from '@/models/projectCollection'
+import React, { useState, useEffect, useRef } from 'react'
+// import { useIntl, useSelector, useDispatch, useLocation } from 'umi'
+import ProjectCard from '../../components/ProjectCard'
+import { Loading } from '../../components/Icons'
+import ToTop from '../../components/ToTop'
+import ProjectModal from '../../components/ProjectModal'
+import CollectionModal from '../../components/CollectionModal'
+import { Project } from '../../models/project'
+import { ProjectModelState } from '../../models/project'
+import { GlobalLoadingState } from '../../utils'
+import { ProjectCollectionModelState } from '../../models/projectCollection'
 import clsx from 'clsx'
-import { CollectionModalModeType } from '@/components/CollectionModal'
+import { CollectionModalModeType } from '../../components/CollectionModal'
+import { useTranslation } from 'next-i18next'
+import { useRouter } from 'next/router'
+import { useOnScreen } from '../../hooks/useOnScreen'
 
 const ProjectList: React.FC<{ loadMore: () => void }> = ({ loadMore }) => {
-  const intl = useIntl()
-  const location = useLocation()
+  const router = useRouter()
   const dispatch = useDispatch()
 
   const { projects, hasMoreProjects } = useSelector(
     ({ project }: { project: ProjectModelState }) => project,
   )
   const { projectId } = useSelector(
-    ({ projectCollection }: { projectCollection: ProjectCollectionModelState }) =>
+    ({
       projectCollection,
+    }: {
+      projectCollection: ProjectCollectionModelState
+    }) => projectCollection,
   )
   const globalLoading = useSelector(
     ({ loading }: { loading: GlobalLoadingState }) => loading,
   )
   const loading = globalLoading.models.project
 
-  const [bottomVisible, bottomRef] = useInViewport<HTMLDivElement>()
-  const [topInViewPort, topRef] = useInViewport<HTMLDivElement>()
+  const bottomRef = useRef<HTMLDivElement>(null)
+  const bottomVisible = useOnScreen(bottomRef, 1)
+  const topRef = useRef<HTMLDivElement>(null)
+  const topInViewPort = useOnScreen(topRef, 1)
   const [modalMode, setModalMode] = useState<CollectionModalModeType>('choose')
 
   useEffect(() => {
@@ -42,7 +48,7 @@ const ProjectList: React.FC<{ loadMore: () => void }> = ({ loadMore }) => {
 
   useEffect(() => {
     dispatch({ type: 'project/clear' })
-  }, [location.pathname])
+  }, [router.pathname])
 
   useEffect(() => {
     dispatch({ type: 'project/clearDetail' })
@@ -76,7 +82,7 @@ const ProjectList: React.FC<{ loadMore: () => void }> = ({ loadMore }) => {
 
       <div className={clsx('w-full h-0 flex justify-center')} ref={bottomRef} />
 
-      <ProjectModal returnUrl={location.pathname} />
+      <ProjectModal returnUrl={router.pathname} />
 
       <CollectionModal
         visible={!!projectId}

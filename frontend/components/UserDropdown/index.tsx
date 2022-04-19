@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { history, useSelector, useDispatch, useIntl, useLocation } from 'umi'
-import { AuthModelState } from '@/models/auth'
+// import { history, useSelector, useDispatch, useIntl, useLocation } from 'umi'
+import { AuthModelState } from '../../models/auth'
 import clsx from 'clsx'
+import { useTranslation } from 'next-i18next'
+import { useRouter } from 'next/router'
 
 const DropdownItem = ({
   message,
@@ -21,8 +23,8 @@ const DropdownItem = ({
 }
 
 const UserDropdown: React.FC = () => {
-  const intl = useIntl()
-  const location = useLocation()
+  const { t } = useTranslation('common')
+  const router = useRouter()
   const dispatch = useDispatch()
   const { user } = useSelector(({ auth }: { auth: AuthModelState }) => auth)
   const [dropdownVisible, setDropdownVisible] = useState<boolean>(false)
@@ -66,32 +68,29 @@ const UserDropdown: React.FC = () => {
         onMouseLeave={onMouseLeave}
       >
         <div className="shadow flex flex-col py-4 rounded-lg bg-white divide-y divide-gray-200">
-
           <div className="">
             <DropdownItem
-              message={intl.formatMessage({
-                id: 'site.routes.user_profile',
-              })}
+              message={t('site.routes.user_profile')}
               handleClick={() => {
-                history.push(`/user/${user?.username}/inspiration`)
+                router.push(`/user/${user?.username}/inspiration`)
               }}
             />
             <DropdownItem
-              message={intl.formatMessage({ id: 'site.routes.user_update' })}
+              message={t('site.routes.user_update')}
               handleClick={() => {
-                history.push('/account/profile')
+                router.push('/account/profile')
               }}
             />
             <DropdownItem
-              message={intl.formatMessage({ id: 'site.routes.user_password' })}
+              message={t('site.routes.user_password')}
               handleClick={() => {
-                history.push('/account/password')
+                router.push('/account/password')
               }}
             />
           </div>
 
           <DropdownItem
-            message={intl.formatMessage({ id: 'auth.sign_out' })}
+            message={t('auth.sign_out')}
             handleClick={() => {
               dispatch({ type: 'auth/signOut' })
               window.location.reload()

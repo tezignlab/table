@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from 'react'
-import { useDispatch, useIntl, useSelector } from 'umi'
-// import { FormikInput as Input } from '@/components/Input'
-// import { Loading } from '@/components/Icons'
+// import { useDispatch, useIntl, useSelector } from 'umi'
+import { FormikInput as Input } from '../Input'
+import { Loading } from '../Icons'
 import { ProjectCollectionModelState } from '../../models/projectCollection'
 import { useFormik, FormikProvider, Form } from 'formik'
 import * as Yup from 'yup'
-// import {
-//   COLLECTION_DESC_MAX_LENGTH,
-//   COLLECTION_NAME_MAX_LENGTH,
-// } from '@/constants'
+import { useTranslation } from 'next-i18next'
+import {
+  COLLECTION_DESC_MAX_LENGTH,
+  COLLECTION_NAME_MAX_LENGTH,
+} from '../../constants'
 
 const CreateCollection: React.FC<{ showChooseModal: () => void }> = ({
   showChooseModal,
 }) => {
-  const intl = useIntl()
+  // const intl = useIntl()
+  const { t } = useTranslation('common')
   const dispatch = useDispatch()
   const { collections, loading } = useSelector(
     ({
@@ -44,25 +46,18 @@ const CreateCollection: React.FC<{ showChooseModal: () => void }> = ({
     },
     validationSchema: Yup.object({
       name: Yup.string()
-        .required(
-          intl.formatMessage(
-            { id: 'form.validation.require' },
-            { type: intl.formatMessage({ id: 'collection.name' }) },
-          ),
-        )
+        .required(t('form.validation.require', { type: t('collection.name') }))
         .max(
           COLLECTION_NAME_MAX_LENGTH,
-          intl.formatMessage(
-            { id: 'form.validation.max' },
-            { count: COLLECTION_NAME_MAX_LENGTH },
-          ),
+          `${t('form.validation.max.prefix')}${COLLECTION_NAME_MAX_LENGTH}${t(
+            'form.validation.max.suffix',
+          )}`,
         ),
       desc: Yup.string().max(
         COLLECTION_DESC_MAX_LENGTH,
-        intl.formatMessage(
-          { id: 'form.validation.max' },
-          { count: COLLECTION_DESC_MAX_LENGTH },
-        ),
+        `${t('form.validation.max.prefix')}${COLLECTION_DESC_MAX_LENGTH}${t(
+          'form.validation.max.suffix',
+        )}`,
       ),
     }),
   })
@@ -70,21 +65,21 @@ const CreateCollection: React.FC<{ showChooseModal: () => void }> = ({
   return (
     <div className="w-full h-full">
       <div className="text-bold text-xl text-black">
-        {intl.formatMessage({ id: 'collection.create' })}
+        {t('collection.create')}
       </div>
 
       <div className="">
         <FormikProvider value={formik}>
           <Form className="pt-6 flex flex-col space-y-4">
             <Input
-              placeholder={intl.formatMessage({ id: 'collection.name' })}
+              placeholder={t('collection.name')}
               id="name"
               name="name"
               type="text"
             />
 
             <Input
-              placeholder={intl.formatMessage({ id: 'collection.desc' })}
+              placeholder={t('collection.desc')}
               id="desc"
               name="desc"
               type="text"
@@ -100,7 +95,7 @@ const CreateCollection: React.FC<{ showChooseModal: () => void }> = ({
                     <Loading />
                   </div>
                 )}
-                <span>{intl.formatMessage({ id: 'collection.create' })}</span>
+                <span>{t('collection.create')}</span>
               </button>
 
               {collections && collections.length > 0 && (
@@ -110,7 +105,7 @@ const CreateCollection: React.FC<{ showChooseModal: () => void }> = ({
                     showChooseModal()
                   }}
                 >
-                  {intl.formatMessage({ id: 'general.cancel' })}
+                  {t('general.cancel')}
                 </button>
               )}
             </div>

@@ -1,42 +1,48 @@
 import React, { useEffect, useState, useRef } from 'react'
-import {
-  useParams,
-  history,
-  useIntl,
-  useLocation,
-  Helmet,
-  useSelector,
-  useDispatch,
-} from 'umi'
-import ProjectList from '@/components/ProjectList'
+// import {
+//   useParams,
+//   history,
+//   useIntl,
+//   useLocation,
+//   Helmet,
+//   useSelector,
+//   useDispatch,
+// } from 'umi'
+import ProjectList from '../components/ProjectList'
 import clsx from 'clsx'
-import { Search, Close } from '@/components/Icons'
-import { SHOT_LIST_PAGE_SIZE } from '@/constants'
-import { ProjectModelState } from '@/models/project'
+import { Search, Close } from '../components/Icons'
+import { SHOT_LIST_PAGE_SIZE } from '../constants'
+import { ProjectModelState } from '../models/project'
+import { useRouter } from 'next/router'
+import { useTranslation } from 'next-i18next'
+import Head from 'next/head'
 
 const SearchPage: React.FC = () => {
-  const { query, type: searchType } = useParams<{
+  const router = useRouter()
+  const { query, type: searchType } = router.query as {
     query: string
     type: 'projects'
-  }>()
-  const intl = useIntl()
+  }
+
+  const { t } = useTranslation('common')
   const dispatch = useDispatch()
-  const { count } = useSelector(({ project }: { project: ProjectModelState }) => project)
+  const { count } = useSelector(
+    ({ project }: { project: ProjectModelState }) => project,
+  )
 
   const inputRef = useRef<HTMLInputElement>(null)
-  const location = useLocation()
   const [searchValue, setSearchValue] = useState(query)
 
   useEffect(() => {
     setSearchValue(query)
-  }, [location.pathname])
+  }, [router.pathname])
 
   useEffect(() => {
     dispatch({ type: 'project/clear' })
   }, [])
 
   const handleSearch = () => {
-    history.push(
+    router.push(
       `/search/${encodeURIComponent(searchType)}/${encodeURIComponent(
         searchValue ?? '',
       )}`,
@@ -45,18 +51,12 @@ const SearchPage: React.FC = () => {
 
   return (
     <div className="flex-grow w-full flex flex-col">
-      <Helmet>
-        {query && (
-          <title>{`${query} - ${intl.formatMessage({
-            id: 'site.name',
-          })}`}</title>
-        )}
+      <Head>
+        {query && <title>{`${query} - ${t('site.name')}`}</title>}
         {!query && (
-          <title>{`${intl.formatMessage({
-            id: 'general.search',
-          })} - ${intl.formatMessage({ id: 'site.name' })}`}</title>
+          <title>{`${t('general.search')} - ${t('site.name')}`}</title>
         )}
-      </Helmet>
+      </Head>
 
       <div className="w-full py-8">
         <div className="w-full flex flex-row justify-center">
@@ -80,7 +80,7 @@ const SearchPage: React.FC = () => {
                   handleSearch()
                 }
               }}
-              placeholder={intl.formatMessage({ id: `search.${searchType}` })}
+              placeholder={t(`search.${searchType}`)}
             />
 
             <div
@@ -117,9 +117,8 @@ const SearchPage: React.FC = () => {
             </div>
           </div>
         </div>
-       
       </div>
- 
+
       {searchType === 'projects' && (
         <ProjectList
           loadMore={() => {
@@ -135,7 +134,6 @@ const SearchPage: React.FC = () => {
           }}
         />
       )}
- 
     </div>
   )
 }

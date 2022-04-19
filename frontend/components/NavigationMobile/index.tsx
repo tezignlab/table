@@ -1,22 +1,22 @@
 import React, { useState, useEffect, useMemo, Fragment } from 'react'
-import {
-  Link,
-  useIntl,
-  history,
-  useSelector,
-  useDispatch,
-  useLocation,
-} from 'umi'
-import { AuthModelState } from '@/models/auth'
-import { Search, Menu, Close } from '@/components/Icons'
+// import {
+//   Link,
+//   useIntl,
+//   history,
+//   useSelector,
+//   useDispatch,
+//   useLocation,
+// } from 'umi'
+import { AuthModelState } from '../../models/auth'
+import { Search, Menu, Close } from '../Icons'
 import clsx from 'clsx'
-import {
-  ROUTES,
-  APP_ICON_URL,
-} from '@/constants'
-import { GlobalLoadingState } from '@/utils'
-import { isiOS as isiOSService } from '@/utils/device'
+import { ROUTES, APP_ICON_URL } from '../../constants'
+import { GlobalLoadingState } from '../../utils'
+import { isiOS as isiOSService } from '../../utils/device'
 import { Logo } from '../Images'
+import { useTranslation } from 'next-i18next'
+import { useRouter } from 'next/router'
+import Link from 'next/link'
 
 const MenuItem: React.FC<{
   message: string
@@ -36,9 +36,9 @@ const MenuItem: React.FC<{
 }
 
 const NavigationMobile: React.FC = () => {
-  const intl = useIntl()
+  const { t } = useTranslation('common')
   const dispatch = useDispatch()
-  const location = useLocation()
+  const router = useRouter()
   const { user } = useSelector(({ auth }: { auth: AuthModelState }) => auth)
   const globalLoading = useSelector(
     ({ loading }: { loading: GlobalLoadingState }) => loading,
@@ -82,10 +82,10 @@ const NavigationMobile: React.FC = () => {
             <div
               className="h-16 flex flex-col p-2 justify-center"
               onClick={() => {
-                history.push('/auth/phone')
+                router.push('/auth/phone')
               }}
             >
-              {intl.formatMessage({ id: 'auth.sign_in' })}
+              {t('auth.sign_in')}
             </div>
           )}
         </div>
@@ -94,7 +94,7 @@ const NavigationMobile: React.FC = () => {
           <Logo
             className="h-16 py-5 px-2 object-fill cursor-pointer"
             onClick={() => {
-              history.push('/')
+              router.push('/')
             }}
           />
         </div>
@@ -103,7 +103,7 @@ const NavigationMobile: React.FC = () => {
           <div
             className="w-10 h-16 py-5 px-2 text-gray-500"
             onClick={() => {
-              history.push('/search/projects')
+              router.push('/search/projects')
             }}
           >
             <Search />
@@ -119,12 +119,8 @@ const NavigationMobile: React.FC = () => {
               <img className="rounded-lg w-auto h-full" src={APP_ICON_URL} />
 
               <div className="flex flex-col justify-center pl-2">
-                <div className="font-bold text-sm">
-                  {intl.formatMessage({ id: 'app.name' })}
-                </div>
-                <div className="text-xs">
-                  {intl.formatMessage({ id: 'app.desc' })}
-                </div>
+                <div className="font-bold text-sm">{t('app.name')}</div>
+                <div className="text-xs">{t('app.desc')}</div>
               </div>
             </div>
           </div>
@@ -134,7 +130,7 @@ const NavigationMobile: React.FC = () => {
               className="btn btn-primary btn-small text-sm"
               href={'https://ai.tezign.com/api/download'}
             >
-              {intl.formatMessage({ id: 'app.download' })}
+              {t('app.download')}
             </a>
           </div>
         </div>
@@ -156,49 +152,45 @@ const NavigationMobile: React.FC = () => {
           <div className="w-full flex flex-col">
             {ROUTES.map(({ name, path, visibleOnMobile }, index) => (
               <Fragment key={index}>
-                {
-                  visibleOnMobile && (
-                    <Link
+                {visibleOnMobile && (
+                  <Link href={path}>
+                    <a
                       className={clsx('link w-full p-4', {
                         'link-active':
                           location.pathname === path ||
                           location.pathname === `${path}/`,
                       })}
-                      to={path}
                     >
-                      {intl.formatMessage({ id: name })}
-                    </Link>
-                  )
-                }
+                      {t(name)}
+                    </a>
+                  </Link>
+                )}
               </Fragment>
             ))}
           </div>
 
           {!!user && (
             <div className="w-full">
-
               <MenuItem
-                message={intl.formatMessage({
-                  id: 'site.routes.user_profile',
-                })}
+                message={t('site.routes.user_profile')}
                 handleClick={() => {
-                  history.push(`/user/${user?.username}/inspiration`)
+                  router.push(`/user/${user?.username}/inspiration`)
                 }}
               />
               <MenuItem
-                message={intl.formatMessage({ id: 'site.routes.user_update' })}
+                message={t('site.routes.user_update')}
                 handleClick={() => {
-                  history.push('/account/profile')
+                  router.push('/account/profile')
                 }}
               />
               <MenuItem
-                message={intl.formatMessage({ id: 'site.routes.user_password' })}
+                message={t('site.routes.user_password')}
                 handleClick={() => {
-                  history.push('/account/password')
+                  router.push('/account/password')
                 }}
               />
               <MenuItem
-                message={intl.formatMessage({ id: 'auth.sign_out' })}
+                message={t('auth.sign_out')}
                 handleClick={() => {
                   dispatch({ type: 'auth/signOut' })
                   window.location.reload()
@@ -210,15 +202,15 @@ const NavigationMobile: React.FC = () => {
           {!user && (
             <div className="w-full">
               <MenuItem
-                message={intl.formatMessage({ id: 'auth.sign_in' })}
+                message={t('auth.sign_in')}
                 handleClick={() => {
-                  history.push('/auth/sign-in')
+                  router.push('/auth/sign-in')
                 }}
               />
               <MenuItem
-                message={intl.formatMessage({ id: 'auth.sign_up' })}
+                message={t('auth.sign_up')}
                 handleClick={() => {
-                  history.push('/auth/sign-up')
+                  router.push('/auth/sign-up')
                 }}
               />
             </div>

@@ -1,6 +1,6 @@
 import React from 'react'
 import clsx from 'clsx'
-import { Close } from '@/components/Icons'
+import { Close } from '../../components/Icons'
 
 const ProjectDetailModal: React.FC<{
   hidden: boolean
@@ -21,7 +21,7 @@ const ProjectDetailModal: React.FC<{
     <div
       className={clsx(
         'relative rounded-lg bg-white',
-        'mt-32 py-8 px-4 flex flex justify-center',
+        'mt-32 py-8 px-4 flex justify-center',
         { 'animate__animated animate__bounceIn': !hidden },
       )}
       onClick={(e) => {

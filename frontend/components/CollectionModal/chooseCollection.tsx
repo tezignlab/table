@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react'
-import { useIntl, useSelector, useDispatch } from 'umi'
+// import { useSelector, useDispatch } from 'umi'
 import {
   ProjectCollectionModelState,
   ProjectCollection,
 } from '../../models/projectCollection'
 import { Loading, Check, Plus } from '../Icons'
 import clsx from 'clsx'
+import { useTranslation } from 'next-i18next'
 
 const CollectionChoice: React.FC<{
   collection: ProjectCollection
@@ -62,7 +63,7 @@ const ChooseCollection: React.FC<{
   closeModal: () => void
   showCreateModal: () => void
 }> = ({ closeModal, showCreateModal }) => {
-  const intl = useIntl()
+  const { t } = useTranslation('common')
   const { collections, loading } = useSelector(
     ({
       projectCollection,
@@ -80,7 +81,7 @@ const ChooseCollection: React.FC<{
   return (
     <div className="w-full h-full">
       <div className="text-bold text-xl text-black">
-        {intl.formatMessage({ id: 'collection.collect.desc' })}
+        {t('collection.collect.desc')}
       </div>
 
       <div className="py-4 w-full">
@@ -104,7 +105,7 @@ const ChooseCollection: React.FC<{
             closeModal()
           }}
         >
-          {intl.formatMessage({ id: 'general.done' })}
+          {t('general.done')}
         </button>
 
         <button
@@ -117,7 +118,7 @@ const ChooseCollection: React.FC<{
             <Plus />
           </div>
           <span className="h-full flex flex-col justify-center">
-            {intl.formatMessage({ id: 'collection.create' })}
+            {t('collection.create')}
           </span>
         </button>
       </div>

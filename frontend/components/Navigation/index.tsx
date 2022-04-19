@@ -12,9 +12,7 @@ import { ROUTES } from '../../constants'
 import Link from 'next/link'
 
 const Navigation: React.FC = () => {
-  // const intl = useIntl()
   const { t } = useTranslation()
-  // const location = useLocation()
   const router = useRouter()
 
   const auth = useSelector(({ auth }: { auth: AuthModelState }) => auth)
