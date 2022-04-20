@@ -6,9 +6,16 @@ import { ProjectCollectionModelState } from '../../models/projectCollection'
 import CollectionModal from '../../components/CollectionModal'
 import { CollectionModalModeType } from '../../components/CollectionModal'
 import { useOnScreen } from '../../hooks/useOnScreen'
-// import { useInViewport } from '@umijs/hooks'
 import { useRouter } from 'next/router'
-
+import { GetServerSideProps } from 'next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  return {
+    props: {
+      ...(await serverSideTranslations(context.locale ?? '')),
+    },
+  }
+}
 const ProjectPage: React.FC = () => {
   const router = useRouter()
   const params = router.query as { id: string }

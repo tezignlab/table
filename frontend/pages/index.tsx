@@ -8,7 +8,15 @@ import Banner from '../components/Banner'
 import { AuthModelState } from '../models/auth'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-
+import { GetServerSideProps } from 'next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  return {
+    props: {
+      ...(await serverSideTranslations(context.locale ?? '')),
+    },
+  }
+}
 const IndexPage: React.FC = () => {
   const { t } = useTranslation('common')
 

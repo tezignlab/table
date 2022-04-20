@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { ReactElement, useEffect } from 'react'
 // import { useDispatch, useSelector, useIntl } from 'umi'
 import { useFormik, FormikProvider, Form } from 'formik'
 import { AuthModelState } from '../../models/auth'
@@ -8,8 +8,17 @@ import { USERNAME_MAX_LENGTH } from '../../constants'
 import { FormikInput as Input } from '../../components/Input'
 import { Loading } from '../../components/Icons'
 import { useTranslation } from 'next-i18next'
-
-const Profile: React.FC = () => {
+import { GetServerSideProps } from 'next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import AccountLayout from '../../components/layouts/account'
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  return {
+    props: {
+      ...(await serverSideTranslations(context.locale ?? '')),
+    },
+  }
+}
+export default function Profile() {
   const auth = useSelector(({ auth }: { auth: AuthModelState }) => auth)
   const { t } = useTranslation('common')
   const dispatch = useDispatch()
@@ -117,5 +126,6 @@ const Profile: React.FC = () => {
     </div>
   )
 }
-
-export default Profile
+Profile.getLayout = function getLayout(page: ReactElement) {
+  return <AccountLayout>{page}</AccountLayout>
+}

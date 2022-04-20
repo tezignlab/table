@@ -4,7 +4,15 @@ import { Project, ProjectModelState } from '../models/project'
 import clsx from 'clsx'
 import { LogoWhite } from '../components/Images'
 import { useTranslation } from 'next-i18next'
-
+import { GetServerSideProps } from 'next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  return {
+    props: {
+      ...(await serverSideTranslations(context.locale ?? '')),
+    },
+  }
+}
 const DownloadAppPage: React.FC = () => {
   const { projects } = useSelector(
     ({ project }: { project: ProjectModelState }) => project,

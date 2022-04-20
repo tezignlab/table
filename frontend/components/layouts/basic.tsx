@@ -1,10 +1,10 @@
 import React from 'react'
 // import { useSelector } from 'umi'
-import Navigation from '../components/Navigation'
-import NavigationMobile from '../components/NavigationMobile'
-import { AuthModelState } from '../models/auth'
-import { GlobalLoadingState } from '../utils'
-import Footer from '../components/Footer'
+import Navigation from '../Navigation'
+import NavigationMobile from '../NavigationMobile'
+import { AuthModelState } from '../../models/auth'
+import { GlobalLoadingState } from '../../utils'
+import Footer from '../Footer'
 import Layout from './index'
 
 const BasicLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {

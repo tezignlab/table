@@ -17,7 +17,15 @@ import { CurrentUserModelState } from '../../../models/currentUser'
 import { PRIVATE_TYPE } from '../../../layouts/user'
 import ProjectList from '../../../components/ProjectList'
 import { SHOT_LIST_PAGE_SIZE } from '../../../constants'
-
+import { GetServerSideProps } from 'next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  return {
+    props: {
+      ...(await serverSideTranslations(context.locale ?? '')),
+    },
+  }
+}
 const UserProjectsPage: React.FC = () => {
   const { t } = useTranslation('common')
   const router = useRouter()

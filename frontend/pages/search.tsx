@@ -16,7 +16,15 @@ import { ProjectModelState } from '../models/project'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 import Head from 'next/head'
-
+import { GetServerSideProps } from 'next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  return {
+    props: {
+      ...(await serverSideTranslations(context.locale ?? '')),
+    },
+  }
+}
 const SearchPage: React.FC = () => {
   const router = useRouter()
   const { query, type: searchType } = router.query as {

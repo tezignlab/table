@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, ReactElement } from 'react'
 // import { useIntl, useSelector, useDispatch } from 'umi'
 import { useFormik, FormikProvider, Form } from 'formik'
 import * as Yup from 'yup'
@@ -13,8 +13,17 @@ import {
 } from '../../constants'
 import { AuthModelState } from '../../models/auth'
 import { useTranslation } from 'next-i18next'
-
-const SignUp: FC = () => {
+import { GetServerSideProps } from 'next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import AuthLayout from '../../components/layouts/auth'
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  return {
+    props: {
+      ...(await serverSideTranslations(context.locale ?? '')),
+    },
+  }
+}
+export default function SignUp() {
   const dispatch = useDispatch()
   const { loading, success } = useSelector(
     ({ auth }: { auth: AuthModelState }) => auth,
@@ -150,5 +159,6 @@ const SignUp: FC = () => {
     </div>
   )
 }
-
-export default SignUp
+SignUp.getLayout = function getLayout(page: ReactElement) {
+  return <AuthLayout>{page}</AuthLayout>
+}

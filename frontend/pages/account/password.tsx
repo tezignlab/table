@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 // import { useDispatch, useSelector, useIntl } from 'umi'
 import { useFormik, FormikProvider, Form } from 'formik'
 import * as Yup from 'yup'
@@ -8,8 +8,17 @@ import Input from '../../components/AuthInput'
 import { Loading } from '../../components/Icons'
 import { PASSWORD_MIN_LENGTH, PASSWORD_MAX_LENGTH } from '../../constants'
 import { useTranslation } from 'next-i18next'
-
-const Password: React.FC = () => {
+import { GetServerSideProps } from 'next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import AccountLayout from '../../components/layouts/account'
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  return {
+    props: {
+      ...(await serverSideTranslations(context.locale ?? '')),
+    },
+  }
+}
+export default function Password() {
   const auth = useSelector(({ auth }: { auth: AuthModelState }) => auth)
   const { t } = useTranslation('common')
   const dispatch = useDispatch()
@@ -115,5 +124,6 @@ const Password: React.FC = () => {
     </div>
   )
 }
-
-export default Password
+Password.getLayout = function getLayout(page: ReactElement) {
+  return <AccountLayout>{page}</AccountLayout>
+}

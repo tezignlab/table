@@ -1,19 +1,29 @@
-import React from 'react'
-import { useIntl, useDispatch, useSelector } from 'umi'
+import React, { ReactElement } from 'react'
+// import { useIntl, useDispatch, useSelector } from 'umi'
 import { useFormik, FormikProvider, Form } from 'formik'
 import * as Yup from 'yup'
-import Input from '@/components/AuthInput'
-import { Loading } from '@/components/Icons'
-import { GlobalLoadingState } from '@/utils'
-import { USERNAME_REGEX } from '@/constants'
-
-const SignIn: React.FC = () => {
+import Input from '../../components/AuthInput'
+import { Loading } from '../../components/Icons'
+import { GlobalLoadingState } from '../../utils'
+import { USERNAME_REGEX } from '../../constants'
+import { GetServerSideProps } from 'next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { useTranslation } from 'next-i18next'
+import AuthLayout from '../../components/layouts/auth'
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  return {
+    props: {
+      ...(await serverSideTranslations(context.locale ?? '')),
+    },
+  }
+}
+export default function SignIn() {
   const dispatch = useDispatch()
   const globalLoading = useSelector(
     ({ loading }: { loading: GlobalLoadingState }) => loading,
   )
 
-  const intl = useIntl()
+  const { t } = useTranslation('common')
   const formik = useFormik({
     initialValues: {
       username: '',
@@ -31,43 +41,27 @@ const SignIn: React.FC = () => {
     },
     validationSchema: Yup.object({
       username: Yup.string()
-        .required(
-          intl.formatMessage(
-            { id: 'auth.validation.require' },
-            { type: intl.formatMessage({ id: 'user.username' }) },
-          ),
-        )
-        .matches(
-          USERNAME_REGEX,
-          intl.formatMessage(
-            { id: 'auth.validation.correct' },
-            { type: intl.formatMessage({ id: 'user.username' }) },
-          ),
-        ),
-      password: Yup.string().required(
-        intl.formatMessage(
-          { id: 'auth.validation.require' },
-          { type: intl.formatMessage({ id: 'user.password' }) },
-        ),
-      ),
+        .required(t('auth.validation.require'))
+        .matches(USERNAME_REGEX, t('auth.validation.correct')),
+      password: Yup.string().required(t('auth.validation.require')),
     }),
   })
 
   return (
     <div className="flex flex-col w-full mx-auto">
       <div className="w-full text-center text-2xl mb-6 capitalize hidden lg:block">
-        {intl.formatMessage({ id: 'auth.welcome' })}
+        {t('auth.welcome')}
       </div>
       <FormikProvider value={formik}>
         <Form className="flex flex-col space-y-6">
           <Input
-            label={intl.formatMessage({ id: 'user.username' })}
+            label={t('user.username')}
             id="username"
             name="username"
             type="text"
           />
           <Input
-            label={intl.formatMessage({ id: 'user.password' })}
+            label={t('user.password')}
             id="password"
             name="password"
             type="password"
@@ -82,14 +76,13 @@ const SignIn: React.FC = () => {
                 <Loading color="white" />
               </div>
             )}
-            <div className="text-md">
-              {intl.formatMessage({ id: 'auth.sign_in' })}
-            </div>
+            <div className="text-md">{t('auth.sign_in')}</div>
           </button>
         </Form>
       </FormikProvider>
     </div>
   )
 }
-
-export default SignIn
+SignIn.getLayout = function getLayout(page: ReactElement) {
+  return <AuthLayout>{page}</AuthLayout>
+}

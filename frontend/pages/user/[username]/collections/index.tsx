@@ -7,9 +7,6 @@ import React, { useEffect } from 'react'
 //   Helmet,
 //   useIntl,
 // } from 'umi'
-// import { Loading } from '@/components/Icons'
-// import { CollectionModelState, Collection } from '@/models/collection'
-// import { CurrentUserModelState } from '@/models/currentUser'
 import clsx from 'clsx'
 import { Collection, CollectionModelState } from '../../../../models/collection'
 import { useHover } from '../../../../hooks/useHover'
@@ -18,9 +15,15 @@ import { useTranslation } from 'next-i18next'
 import { CurrentUserModelState } from '../../../../models/currentUser'
 import { Loading } from '../../../../components/Icons'
 import Head from 'next/head'
-
-// import { useHover } from '@umijs/hooks'
-
+import { GetServerSideProps } from 'next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  return {
+    props: {
+      ...(await serverSideTranslations(context.locale ?? '')),
+    },
+  }
+}
 const CollectionCard: React.FC<{ collection: Collection }> = ({
   collection,
 }) => {
@@ -107,8 +110,6 @@ const CollectionCard: React.FC<{ collection: Collection }> = ({
           {collection.name}
         </div>
       </div>
-
-      {/* <div className="">{collection.desc}</div> */}
     </div>
   )
 }

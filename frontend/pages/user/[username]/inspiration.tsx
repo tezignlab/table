@@ -7,7 +7,15 @@ import { Loading } from '../../../components/Icons'
 import moment from 'moment'
 import { useTranslation } from 'next-i18next'
 import Head from 'next/head'
-
+import { GetServerSideProps } from 'next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  return {
+    props: {
+      ...(await serverSideTranslations(context.locale ?? '')),
+    },
+  }
+}
 const InspirationCard: React.FC<{ inspiration: Inspiration }> = ({
   inspiration,
 }) => {

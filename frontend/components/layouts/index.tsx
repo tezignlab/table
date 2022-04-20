@@ -9,7 +9,7 @@ import React, { ReactNode, useEffect } from 'react'
 //   Helmet,
 //   useIntl,
 // } from 'umi'
-import { AuthModelState } from '../models/auth'
+import { AuthModelState } from '../../models/auth'
 
 const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
   const dispatch = useDispatch()

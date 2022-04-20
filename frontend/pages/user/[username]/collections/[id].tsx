@@ -20,7 +20,15 @@ import { SHOT_LIST_PAGE_SIZE } from '../../../../constants'
 //   history,
 //   Helmet,
 // } from 'umi'
-
+import { GetServerSideProps } from 'next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  return {
+    props: {
+      ...(await serverSideTranslations(context.locale ?? '')),
+    },
+  }
+}
 const CollectionsContentPage: React.FC = () => {
   const { t } = useTranslation('common')
   const dispatch = useDispatch()
