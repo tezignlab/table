@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react'
-// import { Helmet, useDispatch, useIntl, useSelector } from 'umi'
+import React, { ReactElement, useEffect, useState } from 'react'
 import { Inspiration, InspirationModelState } from '../../../models/inspiration'
 import { CurrentUserModelState } from '../../../models/currentUser'
 import { GlobalLoadingState } from '../../../utils'
@@ -9,6 +8,7 @@ import { useTranslation } from 'next-i18next'
 import Head from 'next/head'
 import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import UserLayout from '../../../components/layouts/user'
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
@@ -41,7 +41,7 @@ const InspirationCard: React.FC<{ inspiration: Inspiration }> = ({
   )
 }
 
-const InspirationPage: React.FC = () => {
+export default function InspirationPage() {
   const dispatch = useDispatch()
   const { t } = useTranslation('common')
   const [skip, setSkip] = useState(0)
@@ -98,5 +98,6 @@ const InspirationPage: React.FC = () => {
     </div>
   )
 }
-
-export default InspirationPage
+InspirationPage.getLayout = function getLayout(page: ReactElement) {
+  return <UserLayout>{page}</UserLayout>
+}

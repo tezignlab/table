@@ -1,4 +1,3 @@
-// import { useParams, useSelector, useDispatch } from 'umi'
 import React, { useEffect, useRef, useState } from 'react'
 import ProjectDetailComponent from '../../components/ProjectDetail'
 import { ProjectModelState } from '../../models/project'

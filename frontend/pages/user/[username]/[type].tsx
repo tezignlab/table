@@ -1,24 +1,16 @@
 import { useTranslation } from 'next-i18next'
-import React, { useEffect } from 'react'
+import React, { ReactElement, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { AuthModelState } from '../../../models/auth'
 import { ProjectModelState } from '../../../models/project'
 import { GlobalLoadingState } from '../../../utils'
 import Head from 'next/head'
-// import {
-//   useIntl,
-//   Helmet,
-//   useSelector,
-//   useDispatch,
-//   useParams,
-//   history,
-// } from 'umi'
 import { CurrentUserModelState } from '../../../models/currentUser'
-import { PRIVATE_TYPE } from '../../../layouts/user'
 import ProjectList from '../../../components/ProjectList'
 import { SHOT_LIST_PAGE_SIZE } from '../../../constants'
 import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import UserLayout, { PRIVATE_TYPE } from '../../../components/layouts/user'
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
@@ -26,7 +18,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     },
   }
 }
-const UserProjectsPage: React.FC = () => {
+export default function UserProjectsPage() {
   const { t } = useTranslation('common')
   const router = useRouter()
   const { type, username } = router.query as { type: string; username: string }
@@ -84,5 +76,6 @@ const UserProjectsPage: React.FC = () => {
     </div>
   )
 }
-
-export default UserProjectsPage
+UserProjectsPage.getLayout = function getLayout(page: ReactElement) {
+  return <UserLayout>{page}</UserLayout>
+}

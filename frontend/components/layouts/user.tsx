@@ -1,6 +1,4 @@
 import React, { useEffect } from 'react'
-// import { useSelector, useIntl, useParams, useDispatch } from 'umi'
-import { AuthModelState } from '../../models/auth'
 import { CurrentUserModelState } from '../../models/currentUser'
 import Layout from './basic'
 import clsx from 'clsx'
@@ -22,9 +20,6 @@ export const USER_PAGE_MENU = [
 const UserLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, error } = useSelector(
     ({ currentUser }: { currentUser: CurrentUserModelState }) => currentUser,
-  )
-  const { user: authUser } = useSelector(
-    ({ auth }: { auth: AuthModelState }) => auth,
   )
   const loading = useSelector(
     ({ loading }: { loading: GlobalLoadingState }) => loading,

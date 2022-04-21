@@ -1,5 +1,4 @@
 import React, { ReactElement, useEffect } from 'react'
-// import { useDispatch, useSelector, useIntl } from 'umi'
 import { useFormik, FormikProvider, Form } from 'formik'
 import { AuthModelState } from '../../models/auth'
 import { GlobalLoadingState } from '../../utils'

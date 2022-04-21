@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-// import { Link, useIntl, history, useSelector, useLocation } from 'umi'
 import { AuthModelState } from '../../models/auth'
 import { GlobalLoadingState } from '../../utils'
 import UserDropdown from '../UserDropdown'
@@ -12,7 +11,7 @@ import { ROUTES } from '../../constants'
 import Link from 'next/link'
 
 const Navigation: React.FC = () => {
-  const { t } = useTranslation()
+  const { t } = useTranslation('common')
   const router = useRouter()
 
   const auth = useSelector(({ auth }: { auth: AuthModelState }) => auth)

@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react'
-// import { useIntl, useSelector, useDispatch, useLocation } from 'umi'
 import ProjectCard from '../../components/ProjectCard'
 import { Loading } from '../../components/Icons'
 import ToTop from '../../components/ToTop'

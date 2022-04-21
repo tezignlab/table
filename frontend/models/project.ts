@@ -1,4 +1,4 @@
-import { Effect, Reducer } from 'umi'
+// import { Effect, Reducer } from 'umi'
 import {
   getProjects as getProjectsService,
   getProjectDetail as getProjectDetailService,

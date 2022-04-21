@@ -1,6 +1,4 @@
 import React, { MouseEventHandler } from 'react'
-// import { useDispatch } from 'umi'
-// import { useHover } from '@umijs/hooks'
 import clsx from 'clsx'
 import { Project } from '../../models/project'
 import { FolderPlus, Like, Loading } from '../../components/Icons'

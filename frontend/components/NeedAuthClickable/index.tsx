@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router'
 import React from 'react'
-// import { useSelector, history } from 'umi'
 import { AuthModelState } from '../../models/auth'
 
 const NeedAuthClickable: React.FC<{ children: React.ReactNode }> = ({

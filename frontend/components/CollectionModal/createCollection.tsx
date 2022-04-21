@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-// import { useDispatch, useIntl, useSelector } from 'umi'
 import { FormikInput as Input } from '../Input'
 import { Loading } from '../Icons'
 import { ProjectCollectionModelState } from '../../models/projectCollection'
@@ -46,7 +45,7 @@ const CreateCollection: React.FC<{ showChooseModal: () => void }> = ({
     },
     validationSchema: Yup.object({
       name: Yup.string()
-        .required(t('form.validation.require', { type: t('collection.name') }))
+        .required(t('form.validation.require'))
         .max(
           COLLECTION_NAME_MAX_LENGTH,
           `${t('form.validation.max.prefix')}${COLLECTION_NAME_MAX_LENGTH}${t(

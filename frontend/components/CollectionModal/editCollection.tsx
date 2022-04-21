@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-// import { useIntl, useDispatch, useSelector } from 'umi'
 import { FormikInput as Input } from '../Input'
 import { useFormik, FormikProvider, Form } from 'formik'
 import * as Yup from 'yup'
@@ -43,7 +42,7 @@ const EditCollection: React.FC<{ closeModal: () => void }> = ({
     },
     validationSchema: Yup.object({
       name: Yup.string()
-        .required(t('form.validation.require', { type: t('collection.name') }))
+        .required(t('form.validation.require'))
         .max(
           COLLECTION_NAME_MAX_LENGTH,
           `${t('form.validation.max.prefix')}${COLLECTION_NAME_MAX_LENGTH}${t(

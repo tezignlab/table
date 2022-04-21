@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-// import { history, useSelector, useDispatch, useIntl, useLocation } from 'umi'
 import { AuthModelState } from '../../models/auth'
 import clsx from 'clsx'
 import { useTranslation } from 'next-i18next'

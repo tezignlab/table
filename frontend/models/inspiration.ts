@@ -1,4 +1,4 @@
-import { Effect, Reducer } from 'umi'
+// import { Effect, Reducer } from 'umi'
 import { getInspiration as getInspirationService } from '../services/inspiration'
 
 export interface Inspiration {

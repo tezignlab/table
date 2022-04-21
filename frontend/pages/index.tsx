@@ -1,6 +1,5 @@
 import { useTranslation } from 'next-i18next'
-import React, { useEffect, useMemo } from 'react'
-// import { Helmet, useIntl, useDispatch, useSelector, useLocation } from 'umi'
+import React, { ReactElement, useEffect, useMemo } from 'react'
 import { ProjectModelState } from '../models/project'
 import ProjectList from '../components/ProjectList'
 import { SHOT_LIST_PAGE_SIZE, ROUTES } from '../constants'
@@ -10,6 +9,7 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import Layout from '../components/layouts'
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
@@ -17,7 +17,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     },
   }
 }
-const IndexPage: React.FC = () => {
+export default function IndexPage() {
   const { t } = useTranslation('common')
 
   const dispatch = useDispatch()
@@ -77,5 +77,6 @@ const IndexPage: React.FC = () => {
     </div>
   )
 }
-
-export default IndexPage
+IndexPage.getLayout = function getLayout(page: ReactElement) {
+  return <Layout>{page}</Layout>
+}

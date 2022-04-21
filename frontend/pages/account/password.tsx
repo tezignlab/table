@@ -1,5 +1,4 @@
 import React, { ReactElement } from 'react'
-// import { useDispatch, useSelector, useIntl } from 'umi'
 import { useFormik, FormikProvider, Form } from 'formik'
 import * as Yup from 'yup'
 import { AuthModelState } from '../../models/auth'

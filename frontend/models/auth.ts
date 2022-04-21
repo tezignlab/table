@@ -1,4 +1,4 @@
-import { Effect, Reducer } from 'umi'
+// import { Effect, Reducer } from 'umi'
 import {
   signIn as signInService,
   signUp as signUpService,

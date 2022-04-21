@@ -1,4 +1,3 @@
-// import request from 'umi-request'
 import { IDefaultReturnType } from '../services/index'
 import { Inspiration } from '../models/inspiration'
 import axios from 'axios'

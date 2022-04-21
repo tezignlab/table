@@ -1,4 +1,4 @@
-import { Effect, Reducer } from 'umi'
+// import { Effect, Reducer } from 'umi'
 import { User } from '../models/auth'
 import { getCurrentUser as getCurrentUserService } from '../services/auth'
 

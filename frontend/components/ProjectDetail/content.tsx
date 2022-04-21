@@ -1,5 +1,4 @@
 import React, { useRef, useEffect } from 'react'
-// import { useIntl, useDispatch } from 'umi'
 import { ProjectDetail } from '../../models/project'
 import Clamp from 'react-multiline-clamp'
 import NeedAuthClickable from '../../components/NeedAuthClickable'

@@ -1,5 +1,4 @@
-import { FC, ReactElement } from 'react'
-// import { useIntl, useSelector, useDispatch } from 'umi'
+import { ReactElement } from 'react'
 import { useFormik, FormikProvider, Form } from 'formik'
 import * as Yup from 'yup'
 import Input from '../../components/AuthInput'

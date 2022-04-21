@@ -1,12 +1,4 @@
 import React, { useState, useEffect, useMemo, Fragment } from 'react'
-// import {
-//   Link,
-//   useIntl,
-//   history,
-//   useSelector,
-//   useDispatch,
-//   useLocation,
-// } from 'umi'
 import { AuthModelState } from '../../models/auth'
 import { Search, Menu, Close } from '../Icons'
 import clsx from 'clsx'

@@ -1,7 +1,6 @@
 import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-// import { useIntl, useDispatch, useSelector, history, useParams } from 'umi'
 import { CollectionModelState } from '../../models/collection'
 import { Loading } from '../Icons'
 

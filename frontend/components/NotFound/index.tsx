@@ -4,7 +4,7 @@ import { useTranslation } from 'next-i18next'
 import Head from 'next/head'
 
 const NotFound: React.FC = () => {
-  const { t } = useTranslation()
+  const { t } = useTranslation('common')
 
   return (
     <div className="flex-grow w-full h-full p-8 flex flex-col justify-center">

@@ -1,12 +1,4 @@
-import React, { useEffect } from 'react'
-// import {
-//   useDispatch,
-//   useSelector,
-//   history,
-//   useParams,
-//   Helmet,
-//   useIntl,
-// } from 'umi'
+import React, { ReactElement, useEffect } from 'react'
 import clsx from 'clsx'
 import { Collection, CollectionModelState } from '../../../../models/collection'
 import { useHover } from '../../../../hooks/useHover'
@@ -17,6 +9,7 @@ import { Loading } from '../../../../components/Icons'
 import Head from 'next/head'
 import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import UserLayout from '../../../../components/layouts/user'
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
@@ -114,7 +107,7 @@ const CollectionCard: React.FC<{ collection: Collection }> = ({
   )
 }
 
-const CollectionsPage: React.FC = () => {
+export default function CollectionsPage() {
   const dispatch = useDispatch()
   const { t } = useTranslation('common')
   const { user } = useSelector(
@@ -159,5 +152,6 @@ const CollectionsPage: React.FC = () => {
     </div>
   )
 }
-
-export default CollectionsPage
+CollectionsPage.getLayout = function getLayout(page: ReactElement) {
+  return <UserLayout>{page}</UserLayout>
+}

@@ -1,5 +1,4 @@
 import React from 'react'
-// import { useSelector } from 'umi'
 import Navigation from '../Navigation'
 import NavigationMobile from '../NavigationMobile'
 import { AuthModelState } from '../../models/auth'

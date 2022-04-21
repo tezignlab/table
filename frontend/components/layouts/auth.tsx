@@ -1,13 +1,4 @@
 import React, { ReactNode, useEffect } from 'react'
-// import {
-//   history,
-//   useIntl,
-//   Helmet,
-//   useSelector,
-//   useDispatch,
-//   Link,
-//   useLocation,
-// } from 'umi'
 import { AuthModelState } from '../../models/auth'
 import { GlobalLoadingState } from '../../utils'
 import { notification } from '../Notification'

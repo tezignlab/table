@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-// import { useDispatch, useIntl, useSelector } from 'umi'
 import { Project, ProjectModelState } from '../models/project'
 import clsx from 'clsx'
 import { LogoWhite } from '../components/Images'

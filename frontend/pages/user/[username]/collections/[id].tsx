@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, ReactElement } from 'react'
 import { useRouter } from 'next/router'
 import CollectionsModal, {
   CollectionModalModeType,
@@ -12,16 +12,9 @@ import Head from 'next/head'
 import { Left } from '../../../../components/Icons'
 import ProjectList from '../../../../components/ProjectList'
 import { SHOT_LIST_PAGE_SIZE } from '../../../../constants'
-// import {
-//   useDispatch,
-//   useIntl,
-//   useParams,
-//   useSelector,
-//   history,
-//   Helmet,
-// } from 'umi'
 import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import UserLayout from '../../../../components/layouts/user'
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
@@ -29,7 +22,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     },
   }
 }
-const CollectionsContentPage: React.FC = () => {
+export default function CollectionsContentPage() {
   const { t } = useTranslation('common')
   const dispatch = useDispatch()
   const router = useRouter()
@@ -142,4 +135,6 @@ const CollectionsContentPage: React.FC = () => {
   )
 }
 
-export default CollectionsContentPage
+CollectionsContentPage.getLayout = function getLayout(page: ReactElement) {
+  return <UserLayout>{page}</UserLayout>
+}
