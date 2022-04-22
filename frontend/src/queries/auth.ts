@@ -25,9 +25,7 @@ export const useSignIn = (params: Parameters<typeof signIn>[number] | Parameters
         if ('phone' in params) {
           result = await signInWithCode(params)
         } else {
-          console.log('signin')
           result = await signIn(params)
-          console.log(result)
         }
 
         if (!result.access_token) throw { reponse: { status: 401 }, data: result }

@@ -9,14 +9,19 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { useRecoilValue } from 'recoil'
 import { authStatusState, currentUserStatusState } from '@/stores/auth'
-
+import { Project } from '@/stores/project'
+import { getRecommendProjects } from '@/services/project'
+import { useQuery } from 'react-query'
 export const AuthLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
   const { t } = useTranslation('common')
   const router = useRouter()
 
   const authStatus = useRecoilValue(authStatusState)
   const authUser = useRecoilValue(currentUserStatusState)
-
+  const { data: recommendProjects } = useQuery(['recommendProjects'], async () => {
+    const result = await getRecommendProjects(0,12)
+    return result.data
+  })
   useEffect(() => {
     if (authUser) {
       router.push('/')
@@ -35,18 +40,6 @@ export const AuthLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
     }
   }, [authStatus.error, authStatus.success])
 
-  useEffect(() => {
-    // dispatch({
-    //   type: 'project/getProjects',
-    //   payload: {
-    //     skip: 0,
-    //     limit: 12,
-    //     type: 'recommend',
-    //   },
-    // })
-    // TODO get projects
-  }, [])
-
   return (
     <Layout>
       <Head>
@@ -55,14 +48,14 @@ export const AuthLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
       </Head>
 
       <div className="top-0 bottom-0 hidden lg:flex flex-wrap z-0 h-screen w-screen overflow-x-hidden overflow-y-hidden">
-        {/* {projects &&
-          projects.map((project: Project, index: number) => (
+        {recommendProjects &&
+        recommendProjects.map((project: Project, index: number) => (
             <img
               key={index}
               className="h-1/3 w-1/4 object-cover object-center"
               src={project.cover}
             />
-          ))} */}
+          ))}
           {/* TODO add projects */}
       </div>
 

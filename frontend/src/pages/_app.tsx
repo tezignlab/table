@@ -7,7 +7,7 @@ import React from 'react'
 import '../global.css'
 import { RecoilRoot } from 'recoil'
 import BasicLayout from '@/components/layouts/basic'
-
+import { ReactQueryDevtools } from 'react-query/devtools'
 import { QueryClient, QueryClientProvider } from 'react-query'
 
 // Create a client
@@ -32,6 +32,7 @@ const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
   return (
     <RecoilRoot>
       <QueryClientProvider client={queryClient}>
+        <ReactQueryDevtools/>
         <BasicLayout>{getLayout(<Component {...pageProps} />)}</BasicLayout>
         <Component {...pageProps} />
       </QueryClientProvider>
