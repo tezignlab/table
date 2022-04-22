@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { AuthModelState } from '../../models/auth'
-import { GlobalLoadingState } from '../../utils'
+import { GlobalLoadingState } from '../../../utils'
 import UserDropdown from '../UserDropdown'
 import { Search } from '../Icons'
 import clsx from 'clsx'

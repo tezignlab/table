@@ -1,10 +1,10 @@
 import React, { MouseEventHandler } from 'react'
 import clsx from 'clsx'
 import { Project } from '../../models/project'
-import { FolderPlus, Like, Loading } from '../../components/Icons'
-import NeedAuthClickable from '../../components/NeedAuthClickable'
+import { FolderPlus, Like, Loading } from '../Icons'
+import NeedAuthClickable from '../NeedAuthClickable'
 import Clamp from 'react-multiline-clamp'
-import Decoder from '../../utils/decoder'
+import Decoder from '../../../utils/decoder'
 import { useHover } from '../../hooks/useHover'
 
 const CardButton: React.FC<{

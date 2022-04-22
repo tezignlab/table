@@ -5,7 +5,7 @@ import clsx from 'clsx'
 import { Loading } from '../Icons'
 import NotFound from '../NotFound'
 import HorizontalNavigation from '../HorizontalNavigation'
-import { GlobalLoadingState } from '../../utils'
+import { GlobalLoadingState } from '../../../utils'
 import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 

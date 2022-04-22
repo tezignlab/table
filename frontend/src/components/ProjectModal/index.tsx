@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
 import clsx from 'clsx'
 import { ProjectModelState } from '../../models/project'
-import ProjectDetail from '../../components/ProjectDetail'
-import { Close } from '../../components/Icons'
+import ProjectDetail from '../ProjectDetail'
+import { Close } from '../Icons'
 
 const ProjectModal: React.FC<{ returnUrl: string }> = ({ returnUrl }) => {
   const dispatch = useDispatch()

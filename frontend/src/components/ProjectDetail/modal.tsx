@@ -1,6 +1,6 @@
 import React from 'react'
 import clsx from 'clsx'
-import { Close } from '../../components/Icons'
+import { Close } from '../Icons'
 
 const ProjectDetailModal: React.FC<{
   hidden: boolean

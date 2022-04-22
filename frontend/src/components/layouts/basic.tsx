@@ -2,7 +2,7 @@ import React from 'react'
 import Navigation from '../Navigation'
 import NavigationMobile from '../NavigationMobile'
 import { AuthModelState } from '../../models/auth'
-import { GlobalLoadingState } from '../../utils'
+import { GlobalLoadingState } from '../../../utils'
 import Footer from '../Footer'
 import Layout from './index'
 

@@ -1,10 +1,10 @@
 import React, { useRef, useEffect } from 'react'
 import { ProjectDetail } from '../../models/project'
 import Clamp from 'react-multiline-clamp'
-import NeedAuthClickable from '../../components/NeedAuthClickable'
-import { Loading } from '../../components/Icons'
+import NeedAuthClickable from '../NeedAuthClickable'
+import { Loading } from '../Icons'
 import clsx from 'clsx'
-import { FolderPlus, Like, Detail } from '../../components/Icons'
+import { FolderPlus, Like, Detail } from '../Icons'
 import moment from 'moment'
 import { useTranslation } from 'next-i18next'
 

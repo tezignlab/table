@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { AuthModelState } from '../../models/auth'
-import { GlobalLoadingState } from '../../utils'
+import { GlobalLoadingState } from '../../../utils'
 import { notification } from '../Notification'
 import Layout from './basic'
 import { useTranslation } from 'next-i18next'

@@ -1,6 +1,6 @@
 import React, { ReactNode, useEffect } from 'react'
 import { AuthModelState } from '../../models/auth'
-import { GlobalLoadingState } from '../../utils'
+import { GlobalLoadingState } from '../../../utils'
 import { notification } from '../Notification'
 import { Project, ProjectModelState } from '../../models/project'
 import Layout from './index'
