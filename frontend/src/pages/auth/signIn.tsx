@@ -2,13 +2,14 @@ import React, { ReactElement } from 'react'
 import { useFormik, FormikProvider, Form } from 'formik'
 import * as Yup from 'yup'
 import Input from '../../components/AuthInput'
-import { Loading } from '../../components/Icons'
-import { GlobalLoadingState } from '../../utils'
 import { USERNAME_REGEX } from '../../constants'
 import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { useTranslation } from 'next-i18next'
-import AuthLayout from '../../components/layouts/auth'
+import { AuthLayout } from '../../components/layouts/auth'
+import { useRecoilValue } from 'recoil'
+import { authStatusState } from '@/stores/auth'
+
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
@@ -16,11 +17,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     },
   }
 }
+
 export default function SignIn() {
-  const dispatch = useDispatch()
-  const globalLoading = useSelector(
-    ({ loading }: { loading: GlobalLoadingState }) => loading,
-  )
+  // const authStatus = useRecoilValue(authStatusState)
 
   const { t } = useTranslation('common')
   const formik = useFormik({
@@ -29,14 +28,7 @@ export default function SignIn() {
       password: '',
     },
     onSubmit: async (values: { username: string; password: string }) => {
-      dispatch({
-        type: 'auth/signIn',
-        payload: {
-          username: values.username,
-          password: values.password,
-          type: 'username',
-        },
-      })
+      // TODO send sign in request
     },
     validationSchema: Yup.object({
       username: Yup.string()
@@ -68,13 +60,17 @@ export default function SignIn() {
           <button
             type="submit"
             className="btn btn-primary capitalize flex flex-row space-x-2 justify-center"
-            disabled={globalLoading.models.auth}
+            // disabled={globalLoading.models.auth}
+            // TODO add loading judgement
           >
-            {globalLoading.models.auth && (
-              <div className="h-5 w-5">
-                <Loading color="white" />
-              </div>
-            )}
+            {
+              // globalLoading.models.auth && (
+              //   <div className="h-5 w-5">
+              //     <Loading color="white" />
+              //   </div>
+              // )
+              // TODO add loadin judgement
+            }
             <div className="text-md">{t('auth.sign_in')}</div>
           </button>
         </Form>
@@ -82,6 +78,7 @@ export default function SignIn() {
     </div>
   )
 }
-SignIn.getLayout = function getLayout(page: ReactElement) {
-  return <AuthLayout>{page}</AuthLayout>
-}
+
+// SignIn.getLayout = function getLayout(page: ReactElement) {
+//   return <AuthLayout>{page}</AuthLayout>
+// }

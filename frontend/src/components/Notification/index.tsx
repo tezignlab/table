@@ -110,6 +110,11 @@ const NoticeWrapperOriginal: React.ForwardRefRenderFunction<
 const NoticeWrapper = React.forwardRef(NoticeWrapperOriginal)
 
 export const notification = (() => {
+  if (typeof window === 'undefined')
+    return (type: string, message: string, delay: number) => {
+      // on server do nothing
+    }
+
   let noticeContainer: HTMLElement | null =
     document.getElementById('notice-container')
   if (!noticeContainer) {

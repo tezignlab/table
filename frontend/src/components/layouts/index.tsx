@@ -1,19 +1,18 @@
+import { authStatusState } from '@/stores/auth'
 import { useTranslation } from 'next-i18next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import React, { ReactNode, useEffect } from 'react'
-import { AuthModelState } from '../../models/auth'
+import { useRecoilValue } from 'recoil'
 
 const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const dispatch = useDispatch()
   const router = useRouter()
   const { t } = useTranslation('common')
-  const { requested } = useSelector(
-    ({ auth }: { auth: AuthModelState }) => auth,
-  )
+  const authStatus = useRecoilValue(authStatusState)
+
   useEffect(() => {
-    if (!requested) {
-      dispatch({ type: 'auth/getUser' })
+    if (!authStatus.requested) {
+      // TODO request user
     }
   }, [])
 

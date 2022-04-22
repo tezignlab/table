@@ -1,6 +1,4 @@
 import React, { useState } from 'react'
-import { AuthModelState } from '../../models/auth'
-import { GlobalLoadingState } from '../../../utils'
 import UserDropdown from '../UserDropdown'
 import { Search } from '../Icons'
 import clsx from 'clsx'
@@ -9,18 +7,15 @@ import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 import { ROUTES } from '../../constants'
 import Link from 'next/link'
+import { useRecoilValue } from 'recoil'
+import { currentUserStatusState } from '@/stores/auth'
 
 const Navigation: React.FC = () => {
   const { t } = useTranslation('common')
   const router = useRouter()
 
-  const auth = useSelector(({ auth }: { auth: AuthModelState }) => auth)
+  const authUser = useRecoilValue(currentUserStatusState)
   const [searchValue, setSearchValue] = useState('')
-  const globalLoading = useSelector(
-    ({ loading }: { loading: GlobalLoadingState }) => loading,
-  )
-
-  const authLoading = globalLoading.models.auth
 
   return (
     <div className="w-full h-16 bg-white px-6 flex-row justify-between shadow hidden lg:flex">
@@ -38,8 +33,8 @@ const Navigation: React.FC = () => {
               <a
                 className={clsx('link text-md flex flex-col justify-center', {
                   'link-active':
-                    location.pathname === path ||
-                    location.pathname === `${path}/`,
+                    router.pathname === path ||
+                    router.pathname === `${path}/`,
                 })}
               >
                 {t(name)}
@@ -50,7 +45,7 @@ const Navigation: React.FC = () => {
       </div>
 
       <div className="w-1/3 flex flex-col justify-center px-4">
-        {!location.pathname.startsWith('/search') && (
+        {!router.pathname.startsWith('/search') && (
           <div className="mx-auto flex flex-col justify-center w-full max-w-md relative">
             <input
               className={clsx(
@@ -84,7 +79,7 @@ const Navigation: React.FC = () => {
 
       <div className="w-1/3 flex justify-end space-x-2">
         <div className="flex-none h-full flex flex-col justify-center">
-          {!authLoading && !auth.user && (
+          {!authUser.user && (
             <div className="w-full space-x-2 flex justify-end">
               <button
                 className="btn text-sm py-2"
@@ -106,7 +101,7 @@ const Navigation: React.FC = () => {
             </div>
           )}
 
-          {!authLoading && !!auth.user && (
+          {!!authUser.user && (
             <div className="w-full flex flex-row justify-end">
               <UserDropdown />
             </div>

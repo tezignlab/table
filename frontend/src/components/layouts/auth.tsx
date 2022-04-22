@@ -1,8 +1,5 @@
 import React, { ReactNode, useEffect } from 'react'
-import { AuthModelState } from '../../models/auth'
-import { GlobalLoadingState } from '../../../utils'
 import { notification } from '../Notification'
-import { Project, ProjectModelState } from '../../models/project'
 import Layout from './index'
 import { Loading } from '../Icons'
 import { Logo, LogoWhite } from '../Images'
@@ -10,48 +7,44 @@ import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 import Link from 'next/link'
+import { useRecoilValue } from 'recoil'
+import { authStatusState, currentUserStatusState } from '@/stores/auth'
 
-const AuthLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const AuthLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
   const { t } = useTranslation('common')
-  const dispatch = useDispatch()
-  const auth = useSelector(({ auth }: { auth: AuthModelState }) => auth)
   const router = useRouter()
-  const globalLoading = useSelector(
-    ({ loading }: { loading: GlobalLoadingState }) => loading,
-  )
-  const authLoading = globalLoading.models.auth
 
-  const { projects } = useSelector(
-    ({ project }: { project: ProjectModelState }) => project,
-  )
+  const authStatus = useRecoilValue(authStatusState)
+  const authUser = useRecoilValue(currentUserStatusState)
 
   useEffect(() => {
-    if (auth.user) {
+    if (authUser) {
       router.push('/')
     }
-  }, [auth.user])
+  }, [authUser])
 
   useEffect(() => {
-    if (auth.error) {
-      notification('error', t(auth.message), 1000)
-      dispatch({ type: 'auth/clearNotification' })
+    if (authStatus.error) {
+      notification('error', t(authStatus.message), 1000)
+      // TODO dispatch({ type: 'auth/clearNotification' })
     }
 
-    if (auth.success && !!auth.message) {
-      notification('success', t(auth.message), 1000)
-      dispatch({ type: 'auth/clearNotification' })
+    if (authStatus.success && !!authStatus.message) {
+      notification('success', t(authStatus.message), 1000)
+      // TODO dispatch({ type: 'auth/clearNotification' })
     }
-  }, [auth.error, auth.success])
+  }, [authStatus.error, authStatus.success])
 
   useEffect(() => {
-    dispatch({
-      type: 'project/getProjects',
-      payload: {
-        skip: 0,
-        limit: 12,
-        type: 'recommend',
-      },
-    })
+    // dispatch({
+    //   type: 'project/getProjects',
+    //   payload: {
+    //     skip: 0,
+    //     limit: 12,
+    //     type: 'recommend',
+    //   },
+    // })
+    // TODO get projects
   }, [])
 
   return (
@@ -62,14 +55,15 @@ const AuthLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
       </Head>
 
       <div className="top-0 bottom-0 hidden lg:flex flex-wrap z-0 h-screen w-screen overflow-x-hidden overflow-y-hidden">
-        {projects &&
+        {/* {projects &&
           projects.map((project: Project, index: number) => (
             <img
               key={index}
               className="h-1/3 w-1/4 object-cover object-center"
               src={project.cover}
             />
-          ))}
+          ))} */}
+          {/* TODO add projects */}
       </div>
 
       <div className="absolute top-0 min-h-screen lg:h-screen w-screen lg:grid lg:grid-cols-2 lg:bg-black lg:bg-opacity-70 z-10">
@@ -83,7 +77,7 @@ const AuthLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
           </div>
 
           <div className="h-full lg:h-auto w-full lg:max-w-xl lg:mx-auto flex flex-col justify-center lg:p-16 bg-white rounded-lg">
-            {!auth.requested && authLoading ? (
+            {!authStatus.requested? (
               <div className="w-full h-full flex flex-col justify-center">
                 <div className="mx-auto h-5 w-5">
                   <Loading />
@@ -121,5 +115,3 @@ const AuthLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
     </Layout>
   )
 }
-
-export default AuthLayout

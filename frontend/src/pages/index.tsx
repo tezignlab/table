@@ -10,6 +10,8 @@ import { useRouter } from 'next/router'
 import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import Layout from '../components/layouts'
+import { useRecoilValue } from 'recoil'
+import { authStatusState, currentUserStatusState } from '@/stores/auth'
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
@@ -20,12 +22,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 export default function IndexPage() {
   const { t } = useTranslation('common')
 
-  const dispatch = useDispatch()
   const router = useRouter()
 
-  const { count } = useSelector(
-    ({ project }: { project: ProjectModelState }) => project,
-  )
+  // const { count } = useSelector(
+  //   ({ project }: { project: ProjectModelState }) => project,
+  // )
   const pageHeader = useMemo(() => {
     let value = undefined
     ROUTES.forEach((route) => {
@@ -39,16 +40,13 @@ export default function IndexPage() {
 
     return value
   }, [router.pathname])
-  const { requested, user } = useSelector(
-    ({ auth }: { auth: AuthModelState }) => auth,
-  )
-  useEffect(() => {
-    dispatch({ type: 'project/clear' })
-  }, [])
+
+  const authUser = useRecoilValue(currentUserStatusState)
+  const authStatus = useRecoilValue(authStatusState)
 
   return (
     <div className="w-full h-full">
-      {requested && !user && <Banner />}
+      {authStatus.requested && !authUser && <Banner />}
       <Head>
         <meta charSet="utf-8" />
         <title>{`${t('auth.welcome')} | ${t('site.name')}`}</title>
@@ -59,7 +57,7 @@ export default function IndexPage() {
           {pageHeader}
         </div>
 
-        <ProjectList
+        {/* <ProjectList
           loadMore={() => {
             dispatch({
               type: 'project/getProjects',
@@ -72,11 +70,12 @@ export default function IndexPage() {
               },
             })
           }}
-        />
+        /> */}
       </div>
     </div>
   )
 }
+
 IndexPage.getLayout = function getLayout(page: ReactElement) {
   return <Layout>{page}</Layout>
 }
