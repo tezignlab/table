@@ -1,5 +1,13 @@
 import { atom } from 'recoil'
 
+interface Status {
+  verificationCodeRequesting?: boolean
+  error?: boolean
+  message?: string
+  success?: boolean
+  requested?: boolean
+}
+
 export interface User {
   id: string
   username: string
@@ -10,25 +18,20 @@ export interface User {
   bio?: string
 }
 
-export interface AuthState {
-  user?: User
-  verificationCodeRequesting?: boolean
-  error?: boolean
-  message?: string
-  success?: boolean
-  requested?: boolean
-}
-
-export const authStatusState = atom<AuthState>({
+export const authStatusState = atom<Status>({
   key: 'authStatus',
   default: {
-    user: undefined,
     verificationCodeRequesting: false,
     error: false,
     message: undefined,
     success: false,
     requested: false,
   },
+})
+
+export const authUserState = atom<User | undefined>({
+  key: 'authUser',
+  default: undefined,
 })
 
 export interface CurrentUserStatus {

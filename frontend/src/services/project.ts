@@ -1,14 +1,19 @@
 import axios from 'axios'
-import { IDefaultReturnType } from '.'
+import { IDefaultReturnType, IDefaultPageDataReturnType } from '.'
 import { Collection } from '../models/collection'
 import { Project, ProjectDetail } from '../models/project'
 import { ProjectCollection } from '../models/projectCollection'
 
-export const getProjects = async (
-  skip: number,
-  limit: number,
-): Promise<IDefaultReturnType<Project[]>> =>
-  (await axios.get(`/api/v1/projects?skip=${skip}&limit=${limit}`)).data
+export const getProjects = async ({ skip, limit }: { skip: number; limit: number }) => {
+  const urlParams = new URLSearchParams()
+  urlParams.set('skip', skip.toString())
+  urlParams.set('limit', limit.toString())
+  const result = await axios.get<IDefaultPageDataReturnType<Project[]>>(
+    `/api/v1/projects?${urlParams.toString()}`,
+  )
+  return result.data
+}
+
 
 export const getProjectDetail = async (
   id: string,

@@ -18,6 +18,7 @@
     "react-dom": "^18.0.0",
     "react-markdown": "^7.1.2",
     "react-multiline-clamp": "^2.0.0",
+    "react-query": "3.34.7",
     "recoil": "^0.7.2",
     "tailwindcss-animatecss": "^1.0.7",
     "yup": "^0.32.11"

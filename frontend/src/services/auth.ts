@@ -2,28 +2,26 @@ import axios from 'axios'
 import { User } from '../models/auth'
 import { IDefaultReturnType } from './index'
 
-export const signIn = async (
-  username: string,
-  password: string,
-): Promise<IDefaultReturnType<{ token_type: string; access_token: string }>> =>
-  (
+export const signIn = async ({ username, password }: { username: string; password: string }) => {
+  const bodyFormData = new FormData()
+  bodyFormData.append('username', username)
+  bodyFormData.append('password', password)
+
+  return (
     await axios.post('/api/v1/login', {
       requestType: 'form',
       data: { username, password },
     })
   ).data
-
-export const signUp = async (
-  username: string,
-  password: string,
-  email: string,
-): Promise<IDefaultReturnType> =>
+}
+export const signUp = async ({ username, password, email }: { username: string; password: string; email: string }) =>
   (
     await axios.post('/api/v1/register', {
       requestType: 'json',
       data: { username, password, email },
     })
   ).data
+
 
 export const getVerificationCode = async (
   phone: string,
@@ -35,10 +33,7 @@ export const getVerificationCode = async (
     })
   ).data
 
-export const signInWithCode = async (
-  phone: string,
-  code: string,
-): Promise<IDefaultReturnType> =>
+export const signInWithCode = async ({ phone, code }: { phone: string; code: string }) =>
   (
     await axios.post('/api/v1/login/sms', {
       requestType: 'json',
@@ -56,8 +51,8 @@ export const activateUser = async (
     })
   ).data
 
-export const getUser = async (): Promise<User> =>
-  (await axios.get('/api/v1/user')).data
+export const getUser = async () => (await axios.request<IDefaultReturnType<User>>({ url: '/api/v1/user' })).data
+
 
 export const getCurrentUser = async (
   username: string,

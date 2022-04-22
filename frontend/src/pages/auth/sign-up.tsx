@@ -1,4 +1,4 @@
-import { ReactElement } from 'react'
+import { useEffect, useState } from 'react'
 import { useFormik, FormikProvider, Form } from 'formik'
 import * as Yup from 'yup'
 import Input from '../../components/AuthInput'
@@ -10,11 +10,13 @@ import {
   PASSWORD_MAX_LENGTH,
   USERNAME_REGEX,
 } from '../../constants'
-import { AuthModelState } from '../../models/auth'
+import { authStatusState } from '../../stores/auth'
 import { useTranslation } from 'next-i18next'
 import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import AuthLayout from '../../components/layouts/auth'
+import { useRecoilValue } from 'recoil'
+import { useSignUp } from '../../queries/auth'
+
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
@@ -23,10 +25,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 }
 export default function SignUp() {
-  const dispatch = useDispatch()
-  const { loading, success } = useSelector(
-    ({ auth }: { auth: AuthModelState }) => auth,
-  )
+  const authStatus = useRecoilValue(authStatusState)
   const { t } = useTranslation('common')
   const formik = useFormik({
     initialValues: {
@@ -36,14 +35,8 @@ export default function SignUp() {
       confirmPassword: '',
     },
     onSubmit: async (values) => {
-      dispatch({
-        type: 'auth/signUp',
-        payload: {
-          username: values.username,
-          password: values.password,
-          email: values.email,
-        },
-      })
+      setValues(values)
+      setSubmit(true)
     },
     validationSchema: Yup.object({
       username: Yup.string()
@@ -92,65 +85,80 @@ export default function SignUp() {
         }),
     }),
   })
+  const [values, setValues] = useState<{
+    username: string
+    password: string
+    email: string
+  }>(formik.values)
+  const [submit, setSubmit] = useState(false)
+
+  const { isLoading, refetch: signUp } = useSignUp(values)
+
+  useEffect(() => {
+    if (submit) {
+      signUp()
+      setSubmit(false)
+    }
+  }, [values, submit])
 
   return (
-    <div className="flex flex-col w-full mx-auto">
-      {!success && (
+    <div className='flex flex-col w-full mx-auto'>
+      {!authStatus.success && (
         <FormikProvider value={formik}>
-          <div className="w-full text-center text-2xl mb-2 hidden lg:block">
+          <div className='w-full text-center text-2xl mb-2 hidden lg:block'>
             {t('auth.sign_up')}
           </div>
-          <Form className="flex flex-col space-y-6 text-left">
+          <Form className='flex flex-col space-y-6 text-left'>
             <Input
               label={t('user.username')}
-              id="username"
-              name="username"
-              type="text"
+              id='username'
+              name='username'
+              type='text'
               desc={t('user.username.desc')}
             />
             <Input
               label={t('user.email')}
-              id="email"
-              name="email"
-              type="text"
+              id='email'
+              name='email'
+              type='text'
             />
             <Input
               label={t('user.password')}
-              id="password"
-              name="password"
-              type="password"
+              id='password'
+              name='password'
+              type='password'
               desc={t('user.password.desc')}
             />
             <Input
               label={t('user.confirmPassword')}
-              id="confirmPassword"
-              name="confirmPassword"
-              type="password"
+              id='confirmPassword'
+              name='confirmPassword'
+              type='password'
             />
 
             <button
-              type="submit"
-              className="btn btn-primary capitalize flex flex-row space-x-2 justify-center"
-              disabled={loading}
+              type='submit'
+              className='btn btn-primary capitalize flex flex-row space-x-2 justify-center'
+              disabled={isLoading}
             >
-              {loading && (
-                <div className="h-5 w-5">
-                  <Loading color="white" />
+              {isLoading && (
+                <div className='h-5 w-5'>
+                  <Loading color='white' />
                 </div>
               )}
-              <div className="text-md">{t('auth.sign_up')}</div>
+              <div className='text-md'>{t('auth.sign_up')}</div>
             </button>
           </Form>
         </FormikProvider>
       )}
 
-      {!!success && (
-        <div className="w-full flex flex-col justify-between">
-          <div className="w-36 mx-auto text-green-500">
+      {!!authStatus.success && (
+        <div className='w-full flex flex-col justify-between'>
+          <div className='w-36 mx-auto text-green-500'>
             <Check />
           </div>
 
-          <div className="text-lg text-black text-center">
+          <div className='text-lg text-black text-center'>
             {t('auth.sign_up.success')}
           </div>
         </div>
@@ -158,6 +166,6 @@ export default function SignUp() {
     </div>
   )
 }
-SignUp.getLayout = function getLayout(page: ReactElement) {
-  return <AuthLayout>{page}</AuthLayout>
-}
+// SignUp.getLayout = function getLayout(page: ReactElement) {
+//   return <AuthLayout>{page}</AuthLayout>
+// }

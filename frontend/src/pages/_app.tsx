@@ -8,6 +8,17 @@ import '../global.css'
 import { RecoilRoot } from 'recoil'
 import BasicLayout from '@/components/layouts/basic'
 
+import { QueryClient, QueryClientProvider } from 'react-query'
+
+// Create a client
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+    },
+  },
+})
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode
 }
@@ -20,8 +31,10 @@ const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
   const getLayout = Component.getLayout ?? ((page) => page)
   return (
     <RecoilRoot>
-      <BasicLayout>{getLayout(<Component {...pageProps} />)}</BasicLayout>
-      <Component {...pageProps} />
+      <QueryClientProvider client={queryClient}>
+        <BasicLayout>{getLayout(<Component {...pageProps} />)}</BasicLayout>
+        <Component {...pageProps} />
+      </QueryClientProvider>
     </RecoilRoot>
   )
 }
