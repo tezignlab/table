@@ -22,7 +22,7 @@ def get_user(query: dict):
 
 
 def random_avatar():
-    return f'/api/static/avatars/{randint(0, 9)}.png'
+    return f'/avatars/{randint(0, 9)}.png'
 
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = timedelta(days=7)):
