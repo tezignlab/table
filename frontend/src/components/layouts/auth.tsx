@@ -23,7 +23,7 @@ export const AuthLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
     return result.data
   })
   useEffect(() => {
-    if (authUser) {
+    if (authUser.user) {
       router.push('/')
     }
   }, [authUser])
