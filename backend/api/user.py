@@ -68,8 +68,9 @@ async def register(body: RegisterBody):
         'hashed_password': crypt_context.hash(body.password),
         'status': UserStatusEnum.ACTIVE
     }
-    nd_user.insert_one(user)
-    return Response(data=True)
+    result = nd_user.insert_one(user)
+    access_token, expire = create_access_token(data={'id': str(result.inserted_id)})
+    return Response(data=UserAuthedToken(access_token=access_token, expire=expire).dict())
 
 
 @router_public.get("/api/v1/user", response_model=Response[User], summary='Mine info', tags=['User'])
