@@ -1,4 +1,4 @@
-import { atom } from 'recoil'
+import { atom ,selector} from 'recoil'
 
 interface Status {
   verificationCodeRequesting?: boolean
@@ -46,5 +46,15 @@ export const currentUserStatusState = atom<CurrentUserStatus>({
     user: undefined,
     loading: false,
     error: false,
+  },
+})
+
+export const isAuthState = selector({
+  key: 'isAuthState',
+  get: ({ get }) => {
+    const requested = get(authStatusState).requested
+    const user = get(authUserState)
+
+    return requested && user
   },
 })

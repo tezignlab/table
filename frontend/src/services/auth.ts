@@ -1,58 +1,36 @@
 import axios from 'axios'
-import { User } from '../models/auth'
-import { IDefaultReturnType } from './index'
+import { User } from '../stores/auth'
+import { IDefaultReturnType, AuthToken } from './index'
+import { ACCESS_TOKEN_NAME } from '@/constants/index'
 
 export const signIn = async ({ username, password }: { username: string; password: string }) => {
   const bodyFormData = new FormData()
   bodyFormData.append('username', username)
   bodyFormData.append('password', password)
-
   return (
-    await axios.post('/api/v1/login', {
-      requestType: 'form',
-      data: { username, password },
+    await axios.request<AuthToken>({
+      url: '/api/v1/login',
+      method: 'post',
+      data: bodyFormData,
+      headers: { 'Content-Type': 'multipart/form-data' },
     })
   ).data
 }
+
 export const signUp = async ({ username, password, email }: { username: string; password: string; email: string }) =>
   (
-    await axios.post('/api/v1/register', {
-      requestType: 'json',
-      data: { username, password, email },
-    })
-  ).data
-
-
-export const getVerificationCode = async (
-  phone: string,
-): Promise<IDefaultReturnType> =>
-  (
-    await axios.post('/api/v1/login/sms/code', {
-      requestType: 'json',
-      data: { phone },
-    })
-  ).data
-
-export const signInWithCode = async ({ phone, code }: { phone: string; code: string }) =>
-  (
-    await axios.post('/api/v1/login/sms', {
-      requestType: 'json',
-      data: { phone, code },
-    })
-  ).data
-
-export const activateUser = async (
-  code: string,
-): Promise<IDefaultReturnType<{ token_type: string; access_token: string }>> =>
-  (
-    await axios.post('/api/v1/activate', {
-      requestType: 'json',
-      data: { code },
+    await axios.request<IDefaultReturnType<AuthToken>>({
+      url: '/api/v1/register',
+      method: 'post',
+      data: {
+        username,
+        password,
+        email,
+      },
     })
   ).data
 
 export const getUser = async () => (await axios.request<IDefaultReturnType<User>>({ url: '/api/v1/user' })).data
-
 
 export const getCurrentUser = async (
   username: string,
@@ -80,3 +58,7 @@ export const updatePassword = async (
       data: { new_password: newPassword, old_password: password },
     })
   ).data
+
+export const signOut = () => {
+  localStorage.removeItem(ACCESS_TOKEN_NAME)
+}

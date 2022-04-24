@@ -12,5 +12,9 @@ export interface IDefaultPageDataReturnType<T = void> {
   total: number
   has_more: boolean
   data: T
-
+}
+export interface AuthToken {
+  token_type: string
+  access_token: string
+  expire:number
 }

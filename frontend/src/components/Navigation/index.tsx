@@ -8,13 +8,13 @@ import { useRouter } from 'next/router'
 import { ROUTES } from '../../constants'
 import Link from 'next/link'
 import { useRecoilValue } from 'recoil'
-import { currentUserStatusState } from '@/stores/auth'
+import { authUserState } from '@/stores/auth'
 
 const Navigation: React.FC = () => {
   const { t } = useTranslation('common')
   const router = useRouter()
 
-  const authUser = useRecoilValue(currentUserStatusState)
+  const authUser = useRecoilValue(authUserState)
   const [searchValue, setSearchValue] = useState('')
 
   return (
@@ -79,7 +79,7 @@ const Navigation: React.FC = () => {
 
       <div className="w-1/3 flex justify-end space-x-2">
         <div className="flex-none h-full flex flex-col justify-center">
-          {!authUser.user && (
+          {!authUser && (
             <div className="w-full space-x-2 flex justify-end">
               <button
                 className="btn text-sm py-2"
@@ -101,7 +101,7 @@ const Navigation: React.FC = () => {
             </div>
           )}
 
-          {!!authUser.user && (
+          {!!authUser && (
             <div className="w-full flex flex-row justify-end">
               <UserDropdown />
             </div>

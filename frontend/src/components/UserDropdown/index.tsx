@@ -1,19 +1,22 @@
 import React, { useState, useEffect } from 'react'
-import { AuthModelState } from '../../models/auth'
+import { signOut } from '@/services/auth'
 import clsx from 'clsx'
 import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
+import { useRecoilValue } from 'recoil'
+import { authUserState } from '@/stores/auth'
+import Image from 'next/image'
 
 const DropdownItem = ({
-  message,
-  handleClick,
-}: {
+                        message,
+                        handleClick,
+                      }: {
   message: string
   handleClick: () => void
 }) => {
   return (
     <div
-      className="w-full hover:bg-gray-100 p-4 text-md cursor-pointer transition-all duration-200 ease-in-out"
+      className='w-full hover:bg-gray-100 p-4 text-md cursor-pointer transition-all duration-200 ease-in-out'
       onClick={handleClick}
     >
       {message}
@@ -24,8 +27,7 @@ const DropdownItem = ({
 const UserDropdown: React.FC = () => {
   const { t } = useTranslation('common')
   const router = useRouter()
-  const dispatch = useDispatch()
-  const { user } = useSelector(({ auth }: { auth: AuthModelState }) => auth)
+  const authStatus = useRecoilValue(authUserState)
   const [dropdownVisible, setDropdownVisible] = useState<boolean>(false)
 
   let timer: NodeJS.Timeout | null = null
@@ -54,7 +56,7 @@ const UserDropdown: React.FC = () => {
         <img
           onMouseEnter={onMouseEnter}
           onMouseLeave={onMouseLeave}
-          src={user?.avatar}
+          src={authStatus?.avatar}
           className="w-16 p-4 rounded-full cursor-pointer"
         />
       </div>
@@ -66,12 +68,12 @@ const UserDropdown: React.FC = () => {
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
       >
-        <div className="shadow flex flex-col py-4 rounded-lg bg-white divide-y divide-gray-200">
-          <div className="">
+        <div className='shadow flex flex-col py-4 rounded-lg bg-white divide-y divide-gray-200'>
+          <div className=''>
             <DropdownItem
               message={t('site.routes.user_profile')}
               handleClick={() => {
-                router.push(`/user/${user?.username}/inspiration`)
+                router.push(`/user/${authStatus?.username}/inspiration`)
               }}
             />
             <DropdownItem
@@ -91,7 +93,7 @@ const UserDropdown: React.FC = () => {
           <DropdownItem
             message={t('auth.sign_out')}
             handleClick={() => {
-              dispatch({ type: 'auth/signOut' })
+              signOut()
               window.location.reload()
             }}
           />

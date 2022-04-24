@@ -1,19 +1,15 @@
 import {
-  activateUser,
   getUser,
-  getVerificationCode,
   signIn,
   signUp,
-  signInWithCode,
 } from '@/services/auth'
 import { authStatusState, authUserState } from '../stores/auth'
-import { ACCESS_TOKEN_NAME, VERIFICATION_CODE_TIME_NAME } from '../constants/index'
+import { ACCESS_TOKEN_NAME } from '../constants/index'
 import { sagaErrorStatusHandler,sagaErrorCodeHandler } from '../../utils/error'
-import { useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useRecoilState, useSetRecoilState } from 'recoil'
 
-export const useSignIn = (params: Parameters<typeof signIn>[number] | Parameters<typeof signInWithCode>[number]) => {
+export const useSignIn = (params: Parameters<typeof signIn>[number]) => {
   const [authStatus, setAuthStatus] = useRecoilState(authStatusState)
   const setAuthUser = useSetRecoilState(authUserState)
 
@@ -22,11 +18,7 @@ export const useSignIn = (params: Parameters<typeof signIn>[number] | Parameters
     async () => {
       try {
         let result: { code?: number; token_type: string; access_token: string }
-        if ('phone' in params) {
-          result = await signInWithCode(params)
-        } else {
-          result = await signIn(params)
-        }
+        result = await signIn(params)
 
         if (!result.access_token) throw { reponse: { status: 401 }, data: result }
 
@@ -66,8 +58,9 @@ export const useSignUp = (params: Parameters<typeof signUp>[number]) => {
     async () => {
       try {
         const result = await signUp(params)
-        if ('access_token' in result) {
-          localStorage.setItem(ACCESS_TOKEN_NAME, result.access_token)
+        console.log('signUp',result)
+        if ('access_token' in result.data) {
+          localStorage.setItem(ACCESS_TOKEN_NAME, result.data.access_token)
         } else {
           setAuthStatus({
             ...authStatus,
