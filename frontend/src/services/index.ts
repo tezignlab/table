@@ -16,5 +16,5 @@ export interface IDefaultPageDataReturnType<T = void> {
 export interface AuthToken {
   token_type: string
   access_token: string
-  expire:number
+  expire: number
 }

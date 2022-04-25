@@ -1,10 +1,6 @@
 import { RefObject, useEffect, useState } from 'react'
 
-export const useOnScreen = (
-  ref: RefObject<HTMLDivElement>,
-  thresholdValue?: number,
-  rootMargin = '0px',
-) => {
+export const useOnScreen = (ref: RefObject<HTMLDivElement>, thresholdValue?: number, rootMargin = '0px') => {
   const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {

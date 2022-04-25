@@ -2,8 +2,8 @@ import React from 'react'
 import Modal from '../Modal'
 import ChooseCollection from './chooseCollection'
 import CreateCollection from './createCollection'
-import EditCollection from './editCollection'
 import DeleteCollection from './deleteCollection'
+import EditCollection from './editCollection'
 
 export type CollectionModalModeType = 'create' | 'choose' | 'edit' | 'delete'
 

@@ -1,11 +1,11 @@
 // import { Effect, Reducer } from 'umi'
+import { User } from '../models/auth'
 import {
-  getCollectionsList as getCollectionsService,
-  getCollectionDetail as getCollectionDetailService,
   deleteCollection as deleteCollectionService,
+  getCollectionDetail as getCollectionDetailService,
+  getCollectionsList as getCollectionsService,
   updateCollection as updateCollectionService,
 } from '../services/project'
-import { User } from '../models/auth'
 
 export interface Collection {
   id: string

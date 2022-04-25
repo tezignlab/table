@@ -1,9 +1,9 @@
+import { useTranslation } from 'next-i18next'
 import React, { Fragment, useState } from 'react'
 import { ProjectDetail } from '../../models/project'
 import ProjectDetailContent from './content'
-import ProjectDetailSidebar from './sidebar'
 import ProjectDetailModal from './modal'
-import { useTranslation } from 'next-i18next'
+import ProjectDetailSidebar from './sidebar'
 
 const ProjectDetailComponent: React.FC<{
   project: ProjectDetail
@@ -24,9 +24,7 @@ const ProjectDetailComponent: React.FC<{
         <Fragment key={index}>
           {tag.data.length > 0 && (
             <div key={tag.type} className="flex flex-col space-y-2">
-              <div className="font-bold text-md mx-1">
-                {t(`project.tag.${tag.type}`)}
-              </div>
+              <div className="font-bold text-md mx-1">{t(`project.tag.${tag.type}`)}</div>
 
               <div className="flex flex-wrap">
                 {tag.data.map((item) => (
@@ -57,11 +55,7 @@ const ProjectDetailComponent: React.FC<{
           setModalShow(true)
         }}
       />
-      <ProjectDetailSidebar
-        inModal={!!index}
-        bottomVisible={bottomVisible}
-        topVisible={topVisible}
-      >
+      <ProjectDetailSidebar inModal={!!index} bottomVisible={bottomVisible} topVisible={topVisible}>
         {sideContent}
       </ProjectDetailSidebar>
       <ProjectDetailModal

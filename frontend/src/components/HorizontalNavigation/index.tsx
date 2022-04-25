@@ -1,6 +1,6 @@
-import React from 'react'
 import clsx from 'clsx'
 import { useRouter } from 'next/router'
+import React from 'react'
 
 const HorizontalNavigation: React.FC<{
   routes: { name: string; url: string }[]
@@ -14,9 +14,7 @@ const HorizontalNavigation: React.FC<{
         <div
           key={index}
           className={clsx('text-md btn font-bold', {
-            'btn-primary':
-              router.pathname === `${urlPrefix}/${url}` ||
-              router.pathname === `${urlPrefix}/${url}/`,
+            'btn-primary': router.pathname === `${urlPrefix}/${url}` || router.pathname === `${urlPrefix}/${url}/`,
           })}
           onClick={() => {
             router.push(`${urlPrefix}/${url}`)

@@ -1,10 +1,10 @@
 // import { Effect, Reducer } from 'umi'
-import { Collection } from './collection'
 import {
-  getProjectCollection,
   collectProject as collectProjectService,
   createCollection as createCollectionService,
+  getProjectCollection,
 } from '../services/project'
+import { Collection } from './collection'
 
 export interface ProjectCollection extends Collection {
   is_collect: boolean
@@ -108,11 +108,7 @@ const CollectionModel: ProjectCollectionModelType = {
           },
         })
 
-        const result = yield collectProjectService(
-          projectId,
-          collectionId,
-          method,
-        )
+        const result = yield collectProjectService(projectId, collectionId, method)
 
         if (result && result.code === 0) {
           if (requireReload) {
@@ -154,11 +150,9 @@ const CollectionModel: ProjectCollectionModelType = {
       const state = yield select()
 
       let isCollect = false
-      state?.projectCollection?.collections?.forEach(
-        (item: ProjectCollection) => {
-          isCollect = isCollect || item.is_collect
-        },
-      )
+      state?.projectCollection?.collections?.forEach((item: ProjectCollection) => {
+        isCollect = isCollect || item.is_collect
+      })
 
       yield put({
         type: 'project/updateProject',

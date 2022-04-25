@@ -1,4 +1,4 @@
-import { atom ,selector} from 'recoil'
+import { atom, selector } from 'recoil'
 
 interface Status {
   verificationCodeRequesting?: boolean

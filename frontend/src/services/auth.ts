@@ -1,7 +1,7 @@
+import { ACCESS_TOKEN_NAME } from '@/constants/index'
 import axios from 'axios'
 import { User } from '../stores/auth'
-import { IDefaultReturnType, AuthToken } from './index'
-import { ACCESS_TOKEN_NAME } from '@/constants/index'
+import { AuthToken, IDefaultReturnType } from './index'
 
 export const signIn = async ({ username, password }: { username: string; password: string }) => {
   const bodyFormData = new FormData()
@@ -32,9 +32,7 @@ export const signUp = async ({ username, password, email }: { username: string; 
 
 export const getUser = async () => (await axios.request<IDefaultReturnType<User>>({ url: '/api/v1/user' })).data
 
-export const getCurrentUser = async (
-  username: string,
-): Promise<IDefaultReturnType<User>> =>
+export const getCurrentUser = async (username: string): Promise<IDefaultReturnType<User>> =>
   (await axios.get(`/api/v1/user/${username}`)).data
 
 export const updateUser = async (
@@ -49,10 +47,7 @@ export const updateUser = async (
     })
   ).data
 
-export const updatePassword = async (
-  password: string,
-  newPassword: string,
-): Promise<IDefaultReturnType> =>
+export const updatePassword = async (password: string, newPassword: string): Promise<IDefaultReturnType> =>
   (
     await axios.patch('/api/v1/user/password', {
       data: { new_password: newPassword, old_password: password },

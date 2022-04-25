@@ -1,14 +1,14 @@
-import React, { ReactElement, useEffect, useState } from 'react'
-import { Inspiration, InspirationModelState } from '../../../models/inspiration'
-import { CurrentUserModelState } from '../../../models/currentUser'
-import { GlobalLoadingState } from '../../../utils'
-import { Loading } from '../../../components/Icons'
 import moment from 'moment'
-import { useTranslation } from 'next-i18next'
-import Head from 'next/head'
 import { GetServerSideProps } from 'next'
+import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import Head from 'next/head'
+import React, { ReactElement, useEffect, useState } from 'react'
+import { Loading } from '../../../components/Icons'
 import UserLayout from '../../../components/layouts/user'
+import { CurrentUserModelState } from '../../../models/currentUser'
+import { Inspiration, InspirationModelState } from '../../../models/inspiration'
+import { GlobalLoadingState } from '../../../utils'
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
@@ -16,14 +16,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     },
   }
 }
-const InspirationCard: React.FC<{ inspiration: Inspiration }> = ({
-  inspiration,
-}) => {
+const InspirationCard: React.FC<{ inspiration: Inspiration }> = ({ inspiration }) => {
   return (
     <div className="w-full h-full mx-8 px-8 py-2 mb-8 border border-gray-200 rounded-lg">
-      <p className="text-gray-400 my-2">
-        {moment(inspiration.create_time).format('YYYY-MM-DD HH:mm:ss')}
-      </p>
+      <p className="text-gray-400 my-2">{moment(inspiration.create_time).format('YYYY-MM-DD HH:mm:ss')}</p>
       <div className="text-lg ">
         <p>{inspiration.content}</p>
       </div>
@@ -45,15 +41,11 @@ export default function InspirationPage() {
   const dispatch = useDispatch()
   const { t } = useTranslation('common')
   const [skip, setSkip] = useState(0)
-  const { user } = useSelector(
-    ({ currentUser }: { currentUser: CurrentUserModelState }) => currentUser,
-  )
+  const { user } = useSelector(({ currentUser }: { currentUser: CurrentUserModelState }) => currentUser)
   const { inspiration, hasMoreInspiration } = useSelector(
     ({ inspiration }: { inspiration: InspirationModelState }) => inspiration,
   )
-  const loading = useSelector(
-    ({ loading }: { loading: GlobalLoadingState }) => loading,
-  )
+  const loading = useSelector(({ loading }: { loading: GlobalLoadingState }) => loading)
   useEffect(() => {
     dispatch({
       type: 'inspiration/getInspiration',

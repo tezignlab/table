@@ -1,20 +1,18 @@
+import { GetServerSideProps } from 'next'
 import { useTranslation } from 'next-i18next'
-import React, { useState, useEffect, ReactElement } from 'react'
-import { useRouter } from 'next/router'
-import CollectionsModal, {
-  CollectionModalModeType,
-} from '../../../../components/CollectionModal'
-import { CollectionModelState } from '../../../../models/collection'
-import { CurrentUserModelState } from '../../../../models/currentUser'
-import { AuthModelState } from '../../../../models/auth'
-import { ProjectModelState } from '../../../../models/project'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import Head from 'next/head'
+import { useRouter } from 'next/router'
+import React, { ReactElement, useEffect, useState } from 'react'
+import CollectionsModal, { CollectionModalModeType } from '../../../../components/CollectionModal'
 import { Left } from '../../../../components/Icons'
+import UserLayout from '../../../../components/layouts/user'
 import ProjectList from '../../../../components/ProjectList'
 import { SHOT_LIST_PAGE_SIZE } from '../../../../constants'
-import { GetServerSideProps } from 'next'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import UserLayout from '../../../../components/layouts/user'
+import { AuthModelState } from '../../../../models/auth'
+import { CollectionModelState } from '../../../../models/collection'
+import { CurrentUserModelState } from '../../../../models/currentUser'
+import { ProjectModelState } from '../../../../models/project'
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
@@ -28,22 +26,12 @@ export default function CollectionsContentPage() {
   const router = useRouter()
   const params = router.query as { id: string; username: string }
 
-  const [modalMode, setModalMode] = useState<
-    CollectionModalModeType | undefined
-  >(undefined)
+  const [modalMode, setModalMode] = useState<CollectionModalModeType | undefined>(undefined)
 
-  const { current, loading } = useSelector(
-    ({ collection }: { collection: CollectionModelState }) => collection,
-  )
-  const { user } = useSelector(
-    ({ currentUser }: { currentUser: CurrentUserModelState }) => currentUser,
-  )
-  const { user: authUser } = useSelector(
-    ({ auth }: { auth: AuthModelState }) => auth,
-  )
-  const { count } = useSelector(
-    ({ project }: { project: ProjectModelState }) => project,
-  )
+  const { current, loading } = useSelector(({ collection }: { collection: CollectionModelState }) => collection)
+  const { user } = useSelector(({ currentUser }: { currentUser: CurrentUserModelState }) => currentUser)
+  const { user: authUser } = useSelector(({ auth }: { auth: AuthModelState }) => auth)
+  const { count } = useSelector(({ project }: { project: ProjectModelState }) => project)
 
   useEffect(() => {
     dispatch({
@@ -75,11 +63,7 @@ export default function CollectionsContentPage() {
         </div>
 
         <div className="flex flex-row items-end justify-between">
-          <div>
-            {current && !loading && (
-              <div className="font-bold text-4xl">{current?.name}</div>
-            )}
-          </div>
+          <div>{current && !loading && <div className="font-bold text-4xl">{current?.name}</div>}</div>
           <div className="flex flex-row space-x-4">
             {user?.id === authUser?.id && (
               <>

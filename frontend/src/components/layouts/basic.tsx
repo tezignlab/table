@@ -1,10 +1,9 @@
-import React, { ReactNode } from 'react'
-import Navigation from '../Navigation'
-import NavigationMobile from '../NavigationMobile'
-import Footer from '../Footer'
-import Layout from './index'
 import { useRouter } from 'next/router'
+import React, { ReactNode } from 'react'
+import Footer from '../Footer'
+import Navigation from '../Navigation'
 import { AuthLayout } from './auth'
+import Layout from './index'
 
 const BasicLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   let childrenWithLayout: ReactNode
@@ -14,15 +13,15 @@ const BasicLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     childrenWithLayout = <AuthLayout>{children}</AuthLayout>
   } else {
     childrenWithLayout = (
-      <div className='w-full min-h-screen flex flex-col'>
-        <div className='flex-none w-full z-10'>
+      <div className="w-full min-h-screen flex flex-col">
+        <div className="flex-none w-full z-10">
           <Navigation />
           {/* <NavigationMobile /> */}
         </div>
 
-        <div className='flex-grow w-full min-h-0 flex flex-col'>{children}</div>
+        <div className="flex-grow w-full min-h-0 flex flex-col">{children}</div>
 
-        <div className='flex-none w-full'>
+        <div className="flex-none w-full">
           <Footer />
         </div>
       </div>

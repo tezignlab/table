@@ -22,7 +22,6 @@ export interface InspirationState {
   hasMoreInspiration: boolean
 }
 
-
 export const inspirationStateState = atom<InspirationState>({
   key: 'inspiration',
   default: {

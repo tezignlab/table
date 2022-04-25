@@ -1,15 +1,15 @@
+import { Form, FormikProvider, useFormik } from 'formik'
+import { GetServerSideProps } from 'next'
+import { useTranslation } from 'next-i18next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import React, { ReactElement, useEffect } from 'react'
-import { useFormik, FormikProvider, Form } from 'formik'
+import * as Yup from 'yup'
+import { Loading } from '../../components/Icons'
+import { FormikInput as Input } from '../../components/Input'
+import AccountLayout from '../../components/layouts/account'
+import { USERNAME_MAX_LENGTH } from '../../constants'
 import { AuthModelState } from '../../models/auth'
 import { GlobalLoadingState } from '../../utils'
-import * as Yup from 'yup'
-import { USERNAME_MAX_LENGTH } from '../../constants'
-import { FormikInput as Input } from '../../components/Input'
-import { Loading } from '../../components/Icons'
-import { useTranslation } from 'next-i18next'
-import { GetServerSideProps } from 'next'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import AccountLayout from '../../components/layouts/account'
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
@@ -21,9 +21,7 @@ export default function Profile() {
   const auth = useSelector(({ auth }: { auth: AuthModelState }) => auth)
   const { t } = useTranslation('common')
   const dispatch = useDispatch()
-  const globalLoading = useSelector(
-    ({ loading }: { loading: GlobalLoadingState }) => loading,
-  )
+  const globalLoading = useSelector(({ loading }: { loading: GlobalLoadingState }) => loading)
 
   const authLoading = globalLoading.models.auth
 
@@ -46,9 +44,7 @@ export default function Profile() {
     validationSchema: Yup.object({
       nickname: Yup.string().max(
         USERNAME_MAX_LENGTH,
-        `${t('auth.validation.max.prefix')}${USERNAME_MAX_LENGTH}${t(
-          'auth.validation.max.suffix',
-        )}`,
+        `${t('auth.validation.max.prefix')}${USERNAME_MAX_LENGTH}${t('auth.validation.max.suffix')}`,
       ),
     }),
   })
@@ -99,17 +95,9 @@ export default function Profile() {
                   desc={t('account.nickname.desc')}
                 />
 
-                <Input
-                  id="bio"
-                  name="bio"
-                  type="text"
-                  label={t('account.bio')}
-                />
+                <Input id="bio" name="bio" type="text" label={t('account.bio')} />
 
-                <button
-                  className="btn btn-primary space-x-2 flex"
-                  type="submit"
-                >
+                <button className="btn btn-primary space-x-2 flex" type="submit">
                   {authLoading && (
                     <div className="h-5 w-5">
                       <Loading color="white" />

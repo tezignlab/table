@@ -1,14 +1,14 @@
-import React, { useState } from 'react'
-import UserDropdown from '../UserDropdown'
-import { Search } from '../Icons'
-import clsx from 'clsx'
-import { Logo } from '../Images'
-import { useTranslation } from 'next-i18next'
-import { useRouter } from 'next/router'
-import { ROUTES } from '../../constants'
-import Link from 'next/link'
-import { useRecoilValue } from 'recoil'
 import { authUserState } from '@/stores/auth'
+import clsx from 'clsx'
+import { useTranslation } from 'next-i18next'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+import React, { useState } from 'react'
+import { useRecoilValue } from 'recoil'
+import { ROUTES } from '../../constants'
+import { Search } from '../Icons'
+import { Logo } from '../Images'
+import UserDropdown from '../UserDropdown'
 
 const Navigation: React.FC = () => {
   const { t } = useTranslation('common')
@@ -32,9 +32,7 @@ const Navigation: React.FC = () => {
             <Link key={index} href={path}>
               <a
                 className={clsx('link text-md flex flex-col justify-center', {
-                  'link-active':
-                    router.pathname === path ||
-                    router.pathname === `${path}/`,
+                  'link-active': router.pathname === path || router.pathname === `${path}/`,
                 })}
               >
                 {t(name)}
@@ -63,9 +61,7 @@ const Navigation: React.FC = () => {
               }}
               onKeyDown={(event) => {
                 if (event.key === 'Enter') {
-                  router.push(
-                    `/search/projects/${encodeURIComponent(searchValue)}`,
-                  )
+                  router.push(`/search/projects/${encodeURIComponent(searchValue)}`)
                 }
               }}
             />

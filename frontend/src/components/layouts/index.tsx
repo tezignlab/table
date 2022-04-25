@@ -1,9 +1,7 @@
-import { authStatusState } from '@/stores/auth'
 import { useTranslation } from 'next-i18next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import React, { ReactNode, useEffect } from 'react'
-import { useRecoilValue } from 'recoil'
 import { useGetUser } from '../../queries/auth'
 
 const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {

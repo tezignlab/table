@@ -1,20 +1,9 @@
-import React from 'react'
-import { useField } from 'formik'
 import clsx from 'clsx'
+import { useField } from 'formik'
+import React from 'react'
 
 const Input: React.FC<any> = (props) => {
-  const {
-    id,
-    name,
-    icon,
-    hasError,
-    placeholder,
-    type,
-    label,
-    desc,
-    disabled,
-    ...config
-  } = props
+  const { id, name, icon, hasError, placeholder, type, label, desc, disabled, ...config } = props
   return (
     <div className="w-full relative flex flex-col justify-center">
       {!!label && <div className="text-lg font-bold py-1">{label}</div>}
@@ -51,15 +40,7 @@ const Input: React.FC<any> = (props) => {
 
 export const FormikInput: React.FC<any> = ({ placeholder, icon, ...props }) => {
   const [field, meta] = useField(props)
-  return (
-    <Input
-      hasError={meta.touched && !!meta.error}
-      placeholder={placeholder}
-      icon={icon}
-      {...field}
-      {...props}
-    />
-  )
+  return <Input hasError={meta.touched && !!meta.error} placeholder={placeholder} icon={icon} {...field} {...props} />
 }
 
 export default Input

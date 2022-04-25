@@ -4,17 +4,13 @@ import React, { useEffect, useState } from 'react'
 import { CollectionModelState } from '../../models/collection'
 import { Loading } from '../Icons'
 
-const DeleteCollection: React.FC<{ closeModal: () => void }> = ({
-  closeModal,
-}) => {
+const DeleteCollection: React.FC<{ closeModal: () => void }> = ({ closeModal }) => {
   const { t } = useTranslation('common')
   const router = useRouter()
   const dispatch = useDispatch()
   const { username } = router.query as { username: string }
 
-  const { current, loading } = useSelector(
-    ({ collection }: { collection: CollectionModelState }) => collection,
-  )
+  const { current, loading } = useSelector(({ collection }: { collection: CollectionModelState }) => collection)
 
   const [confirmed, setConfirmed] = useState<boolean>(false)
 
@@ -27,9 +23,7 @@ const DeleteCollection: React.FC<{ closeModal: () => void }> = ({
 
   return (
     <div className="w-full h-full flex flex-col space-y-8">
-      <div className="text-bold text-xl text-black">
-        {t('collection.delete')}
-      </div>
+      <div className="text-bold text-xl text-black">{t('collection.delete')}</div>
 
       <div className="w-full">
         {t('collection.delete.confirm.prefix')}

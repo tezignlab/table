@@ -1,14 +1,13 @@
+import clsx from 'clsx'
 import { useField } from 'formik'
 import React, { useState } from 'react'
-import clsx from 'clsx'
 
 const AuthInput: React.FC<any> = ({ label, desc, ...props }) => {
   const [field, meta] = useField(props)
   const [didFocus, setDidFocus] = useState(false)
   const handleFocus = () => setDidFocus(true)
 
-  const showFeedback =
-    (!!didFocus && field.value.trim().length > 2) || meta.touched
+  const showFeedback = (!!didFocus && field.value.trim().length > 2) || meta.touched
 
   return (
     <div className="w-full space-y-2">
@@ -20,11 +19,7 @@ const AuthInput: React.FC<any> = ({ label, desc, ...props }) => {
           <div
             id={`${props.id}-feedback`}
             aria-live="polite"
-            className={clsx(
-              'text-sm',
-              { 'text-red-500': meta.error },
-              { 'text-green-500': !meta.error },
-            )}
+            className={clsx('text-sm', { 'text-red-500': meta.error }, { 'text-green-500': !meta.error })}
           >
             {meta.error ? meta.error : '✓'}
           </div>

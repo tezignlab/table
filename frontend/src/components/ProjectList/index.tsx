@@ -1,36 +1,25 @@
-import React, { useState, useEffect, useRef } from 'react'
-import ProjectCard from '../ProjectCard'
-import { Loading } from '../Icons'
-import ToTop from '../ToTop'
-import ProjectModal from '../ProjectModal'
-import CollectionModal from '../CollectionModal'
-import { Project } from '../../models/project'
-import { ProjectModelState } from '../../models/project'
-import { GlobalLoadingState } from '../../../utils'
-import { ProjectCollectionModelState } from '../../models/projectCollection'
 import clsx from 'clsx'
-import { CollectionModalModeType } from '../CollectionModal'
-import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
+import React, { useEffect, useRef, useState } from 'react'
 import { useOnScreen } from '../../hooks/useOnScreen'
+import { Project, ProjectModelState } from '../../models/project'
+import { ProjectCollectionModelState } from '../../models/projectCollection'
+import { GlobalLoadingState } from '../../utils'
+import CollectionModal, { CollectionModalModeType } from '../CollectionModal'
+import { Loading } from '../Icons'
+import ProjectCard from '../ProjectCard'
+import ProjectModal from '../ProjectModal'
+import ToTop from '../ToTop'
 
 const ProjectList: React.FC<{ loadMore: () => void }> = ({ loadMore }) => {
   const router = useRouter()
   const dispatch = useDispatch()
 
-  const { projects, hasMoreProjects } = useSelector(
-    ({ project }: { project: ProjectModelState }) => project,
-  )
+  const { projects, hasMoreProjects } = useSelector(({ project }: { project: ProjectModelState }) => project)
   const { projectId } = useSelector(
-    ({
-      projectCollection,
-    }: {
-      projectCollection: ProjectCollectionModelState
-    }) => projectCollection,
+    ({ projectCollection }: { projectCollection: ProjectCollectionModelState }) => projectCollection,
   )
-  const globalLoading = useSelector(
-    ({ loading }: { loading: GlobalLoadingState }) => loading,
-  )
+  const globalLoading = useSelector(({ loading }: { loading: GlobalLoadingState }) => loading)
   const loading = globalLoading.models.project
 
   const bottomRef = useRef<HTMLDivElement>(null)
@@ -74,9 +63,7 @@ const ProjectList: React.FC<{ loadMore: () => void }> = ({ loadMore }) => {
           </div>
         </div>
 
-        {!topInViewPort && (
-          <ToTop visible={!topInViewPort} atBottom={!!bottomVisible} />
-        )}
+        {!topInViewPort && <ToTop visible={!topInViewPort} atBottom={!!bottomVisible} />}
       </div>
 
       <div className={clsx('w-full h-0 flex justify-center')} ref={bottomRef} />

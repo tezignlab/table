@@ -1,15 +1,15 @@
+import { Form, FormikProvider, useFormik } from 'formik'
+import { GetServerSideProps } from 'next'
+import { useTranslation } from 'next-i18next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import React, { ReactElement } from 'react'
-import { useFormik, FormikProvider, Form } from 'formik'
 import * as Yup from 'yup'
-import { AuthModelState } from '../../models/auth'
-import { GlobalLoadingState } from '../../utils'
 import Input from '../../components/AuthInput'
 import { Loading } from '../../components/Icons'
-import { PASSWORD_MIN_LENGTH, PASSWORD_MAX_LENGTH } from '../../constants'
-import { useTranslation } from 'next-i18next'
-import { GetServerSideProps } from 'next'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import AccountLayout from '../../components/layouts/account'
+import { PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH } from '../../constants'
+import { AuthModelState } from '../../models/auth'
+import { GlobalLoadingState } from '../../utils'
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
@@ -21,9 +21,7 @@ export default function Password() {
   const auth = useSelector(({ auth }: { auth: AuthModelState }) => auth)
   const { t } = useTranslation('common')
   const dispatch = useDispatch()
-  const globalLoading = useSelector(
-    ({ loading }: { loading: GlobalLoadingState }) => loading,
-  )
+  const globalLoading = useSelector(({ loading }: { loading: GlobalLoadingState }) => loading)
 
   const authLoading = globalLoading.models.auth
 
@@ -47,38 +45,27 @@ export default function Password() {
         .required(t('auth.validation.require'))
         .min(
           PASSWORD_MIN_LENGTH,
-          `${t('auth.validation.min.prefix')}${PASSWORD_MIN_LENGTH}${t(
-            'auth.validation.min.suffix',
-          )}`,
+          `${t('auth.validation.min.prefix')}${PASSWORD_MIN_LENGTH}${t('auth.validation.min.suffix')}`,
         )
         .max(
           PASSWORD_MAX_LENGTH,
-          `${t('auth.validation.max.prefix')}${PASSWORD_MAX_LENGTH}${t(
-            'auth.validation.max.suffix',
-          )}`,
+          `${t('auth.validation.max.prefix')}${PASSWORD_MAX_LENGTH}${t('auth.validation.max.suffix')}`,
         ),
       newPassword: Yup.string()
         .required(t('auth.validation.require'))
         .min(
           PASSWORD_MIN_LENGTH,
-          `${t('auth.validation.min.prefix')}${PASSWORD_MIN_LENGTH}${t(
-            'auth.validation.min.suffix',
-          )}`,
+          `${t('auth.validation.min.prefix')}${PASSWORD_MIN_LENGTH}${t('auth.validation.min.suffix')}`,
         )
         .max(
           PASSWORD_MAX_LENGTH,
-          `${t('auth.validation.max.prefix')}${PASSWORD_MAX_LENGTH}${t(
-            'auth.validation.max.suffix',
-          )}`,
+          `${t('auth.validation.max.prefix')}${PASSWORD_MAX_LENGTH}${t('auth.validation.max.suffix')}`,
         ),
       newPasswordConfirm: Yup.string()
         .required(t('auth.validation.require'))
         .when('newPassword', {
           is: (val: string): boolean => (val && val.length > 0 ? true : false),
-          then: Yup.string().oneOf(
-            [Yup.ref('newPassword')],
-            t('auth.validation.correct'),
-          ),
+          then: Yup.string().oneOf([Yup.ref('newPassword')], t('auth.validation.correct')),
         }),
     }),
   })
@@ -89,18 +76,8 @@ export default function Password() {
         <div className="w-full h-full">
           <FormikProvider value={formik}>
             <Form className="py-4 space-y-4">
-              <Input
-                id="oldPassword"
-                name="oldPassword"
-                type="password"
-                label={t('account.password.old')}
-              />
-              <Input
-                id="newPassword"
-                name="newPassword"
-                type="password"
-                label={t('account.password.new')}
-              />
+              <Input id="oldPassword" name="oldPassword" type="password" label={t('account.password.old')} />
+              <Input id="newPassword" name="newPassword" type="password" label={t('account.password.new')} />
               <Input
                 id="newPasswordConfirm"
                 name="newPasswordConfirm"

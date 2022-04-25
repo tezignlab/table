@@ -39,7 +39,6 @@ export interface ProjectState {
   current?: ProjectDetail
 }
 
-
 export const projectStateState = atom<ProjectState>({
   key: 'project',
   default: {

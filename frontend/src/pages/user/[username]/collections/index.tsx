@@ -1,15 +1,15 @@
-import React, { ReactElement, useEffect } from 'react'
 import clsx from 'clsx'
-import { Collection, CollectionModelState } from '../../../../models/collection'
-import { useHover } from '../../../../hooks/useHover'
-import { useRouter } from 'next/router'
-import { useTranslation } from 'next-i18next'
-import { CurrentUserModelState } from '../../../../models/currentUser'
-import { Loading } from '../../../../components/Icons'
-import Head from 'next/head'
 import { GetServerSideProps } from 'next'
+import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import Head from 'next/head'
+import { useRouter } from 'next/router'
+import React, { ReactElement, useEffect } from 'react'
+import { Loading } from '../../../../components/Icons'
 import UserLayout from '../../../../components/layouts/user'
+import { useHover } from '../../../../hooks/useHover'
+import { Collection, CollectionModelState } from '../../../../models/collection'
+import { CurrentUserModelState } from '../../../../models/currentUser'
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
@@ -17,9 +17,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     },
   }
 }
-const CollectionCard: React.FC<{ collection: Collection }> = ({
-  collection,
-}) => {
+const CollectionCard: React.FC<{ collection: Collection }> = ({ collection }) => {
   const [isHovering, hoverRef] = useHover<HTMLDivElement>()
   const router = useRouter()
   const { username } = router.query as { username: string }
@@ -28,10 +26,7 @@ const CollectionCard: React.FC<{ collection: Collection }> = ({
   return (
     <div
       ref={hoverRef}
-      className={clsx(
-        'cursor-pointer',
-        'transition-all duration-200 ease-in-out',
-      )}
+      className={clsx('cursor-pointer', 'transition-all duration-200 ease-in-out')}
       key={collection.id}
       onClick={() => {
         dispatch({ type: 'project/clear' })
@@ -46,10 +41,7 @@ const CollectionCard: React.FC<{ collection: Collection }> = ({
         <div className="w-full h-64 mb-1">
           {collection.covers &&
             (collection.covers.length >= 1 ? (
-              <img
-                className="object-cover object-center w-full h-full rounded-t-lg"
-                src={collection.covers[0]}
-              />
+              <img className="object-cover object-center w-full h-full rounded-t-lg" src={collection.covers[0]} />
             ) : (
               <div className="w-full h-full bg-gray-200" />
             ))}
@@ -71,10 +63,7 @@ const CollectionCard: React.FC<{ collection: Collection }> = ({
               ) : (
                 <div
                   key={index}
-                  className={clsx(
-                    'w-full h-full bg-gray-200',
-                    index === 1 ? 'rounded-bl-lg' : 'rounded-br-lg',
-                  )}
+                  className={clsx('w-full h-full bg-gray-200', index === 1 ? 'rounded-bl-lg' : 'rounded-br-lg')}
                 />
               )),
           )}
@@ -110,12 +99,8 @@ const CollectionCard: React.FC<{ collection: Collection }> = ({
 export default function CollectionsPage() {
   const dispatch = useDispatch()
   const { t } = useTranslation('common')
-  const { user } = useSelector(
-    ({ currentUser }: { currentUser: CurrentUserModelState }) => currentUser,
-  )
-  const { collections, loading } = useSelector(
-    ({ collection }: { collection: CollectionModelState }) => collection,
-  )
+  const { user } = useSelector(({ currentUser }: { currentUser: CurrentUserModelState }) => currentUser)
+  const { collections, loading } = useSelector(({ collection }: { collection: CollectionModelState }) => collection)
 
   useEffect(() => {
     dispatch({

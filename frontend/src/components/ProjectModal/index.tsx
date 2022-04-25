@@ -1,14 +1,12 @@
-import React, { useEffect } from 'react'
 import clsx from 'clsx'
+import React, { useEffect } from 'react'
 import { ProjectModelState } from '../../models/project'
-import ProjectDetail from '../ProjectDetail'
 import { Close } from '../Icons'
+import ProjectDetail from '../ProjectDetail'
 
 const ProjectModal: React.FC<{ returnUrl: string }> = ({ returnUrl }) => {
   const dispatch = useDispatch()
-  const { current, currentId, currentIndex } = useSelector(
-    ({ project }: { project: ProjectModelState }) => project,
-  )
+  const { current, currentId, currentIndex } = useSelector(({ project }: { project: ProjectModelState }) => project)
 
   useEffect(() => {
     if (currentId) {
@@ -25,7 +23,7 @@ const ProjectModal: React.FC<{ returnUrl: string }> = ({ returnUrl }) => {
         'flex flex-col bg-opacity-50 bg-black',
         {
           'z-20': !!currentId,
-          hidden: !currentId,
+          'hidden': !currentId,
         },
       )}
     >

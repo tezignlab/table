@@ -1,11 +1,8 @@
-import React, { useEffect } from 'react'
-import {
-  ProjectCollectionModelState,
-  ProjectCollection,
-} from '../../models/projectCollection'
-import { Loading, Check, Plus } from '../Icons'
 import clsx from 'clsx'
 import { useTranslation } from 'next-i18next'
+import React, { useEffect } from 'react'
+import { ProjectCollection, ProjectCollectionModelState } from '../../models/projectCollection'
+import { Check, Loading, Plus } from '../Icons'
 
 const CollectionChoice: React.FC<{
   collection: ProjectCollection
@@ -13,11 +10,7 @@ const CollectionChoice: React.FC<{
 }> = ({ collection, index }) => {
   const dispatch = useDispatch()
   const { projectId } = useSelector(
-    ({
-      projectCollection,
-    }: {
-      projectCollection: ProjectCollectionModelState
-    }) => projectCollection,
+    ({ projectCollection }: { projectCollection: ProjectCollectionModelState }) => projectCollection,
   )
 
   return (
@@ -64,11 +57,7 @@ const ChooseCollection: React.FC<{
 }> = ({ closeModal, showCreateModal }) => {
   const { t } = useTranslation('common')
   const { collections, loading } = useSelector(
-    ({
-      projectCollection,
-    }: {
-      projectCollection: ProjectCollectionModelState
-    }) => projectCollection,
+    ({ projectCollection }: { projectCollection: ProjectCollectionModelState }) => projectCollection,
   )
 
   useEffect(() => {
@@ -79,9 +68,7 @@ const ChooseCollection: React.FC<{
 
   return (
     <div className="w-full h-full">
-      <div className="text-bold text-xl text-black">
-        {t('collection.collect.desc')}
-      </div>
+      <div className="text-bold text-xl text-black">{t('collection.collect.desc')}</div>
 
       <div className="py-4 w-full">
         {loading && (
@@ -91,9 +78,7 @@ const ChooseCollection: React.FC<{
         )}
         <div className="flex flex-col space-y-4 max-h-60 overflow-y-scroll">
           {!loading &&
-            collections?.map((item, index: number) => (
-              <CollectionChoice collection={item} index={index} key={index} />
-            ))}
+            collections?.map((item, index: number) => <CollectionChoice collection={item} index={index} key={index} />)}
         </div>
       </div>
 
@@ -116,9 +101,7 @@ const ChooseCollection: React.FC<{
           <div className="h-5 w-5">
             <Plus />
           </div>
-          <span className="h-full flex flex-col justify-center">
-            {t('collection.create')}
-          </span>
+          <span className="h-full flex flex-col justify-center">{t('collection.create')}</span>
         </button>
       </div>
     </div>

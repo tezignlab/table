@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
 import clsx from 'clsx'
+import React, { useEffect } from 'react'
 import { Close } from '../Icons'
 
 const Modal: React.FC<{
@@ -35,11 +35,7 @@ const Modal: React.FC<{
       </div>
 
       <div
-        className={clsx(
-          'w-4/5 rounded-lg bg-white z-50 mx-auto',
-          'mt-36 p-4',
-          'lg:max-w-xl lg:p-8',
-        )}
+        className={clsx('w-4/5 rounded-lg bg-white z-50 mx-auto', 'mt-36 p-4', 'lg:max-w-xl lg:p-8')}
         onClick={(e) => {
           // prevent parent onClick event
           e.stopPropagation()

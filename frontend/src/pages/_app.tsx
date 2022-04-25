@@ -1,16 +1,15 @@
-import Layout from '../components/layouts/index'
+import BasicLayout from '@/components/layouts/basic'
+import { ACCESS_TOKEN_NAME, STATIC_URL } from '@/constants/index'
+import axios from 'axios'
 import type { NextPage } from 'next'
 import { appWithTranslation } from 'next-i18next'
 import type { AppProps } from 'next/app'
 import type { ReactElement, ReactNode } from 'react'
 import React from 'react'
-import '../global.css'
-import { RecoilRoot } from 'recoil'
-import BasicLayout from '@/components/layouts/basic'
-import { ReactQueryDevtools } from 'react-query/devtools'
 import { QueryClient, QueryClientProvider } from 'react-query'
-import { ACCESS_TOKEN_NAME, STATIC_URL } from '@/constants/index'
-import axios from 'axios'
+import { ReactQueryDevtools } from 'react-query/devtools'
+import { RecoilRoot } from 'recoil'
+import '../global.css'
 // add axios interceptor to set the authorization header
 axios.interceptors.request.use((config) => {
   if (typeof window === 'undefined') {

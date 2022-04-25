@@ -1,13 +1,13 @@
-import React, { useEffect } from 'react'
-import { CurrentUserModelState } from '../../models/currentUser'
-import Layout from './basic'
 import clsx from 'clsx'
-import { Loading } from '../Icons'
-import NotFound from '../NotFound'
-import HorizontalNavigation from '../HorizontalNavigation'
-import { GlobalLoadingState } from '../../../utils'
 import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
+import React, { useEffect } from 'react'
+import { CurrentUserModelState } from '../../models/currentUser'
+import { GlobalLoadingState } from '../../utils'
+import HorizontalNavigation from '../HorizontalNavigation'
+import { Loading } from '../Icons'
+import NotFound from '../NotFound'
+import Layout from './basic'
 
 export const PRIVATE_TYPE = ['history', 'inspiration']
 export const USER_PAGE_MENU = [
@@ -18,12 +18,8 @@ export const USER_PAGE_MENU = [
 ]
 
 const UserLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { user, error } = useSelector(
-    ({ currentUser }: { currentUser: CurrentUserModelState }) => currentUser,
-  )
-  const loading = useSelector(
-    ({ loading }: { loading: GlobalLoadingState }) => loading,
-  )
+  const { user, error } = useSelector(({ currentUser }: { currentUser: CurrentUserModelState }) => currentUser)
+  const loading = useSelector(({ loading }: { loading: GlobalLoadingState }) => loading)
   const { t } = useTranslation('common')
   const router = useRouter()
   const { username } = router.query as { username: string }
@@ -49,31 +45,20 @@ const UserLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     <Layout>
       {!(loading.models.auth && loading.models.currentUser) && !error && user && (
         <div className="flex-grow h-full w-full flex flex-col bg-white">
-          <div
-            className={clsx(
-              'w-full my-8 flex flex-col justify-center items-center',
-            )}
-          >
+          <div className={clsx('w-full my-8 flex flex-col justify-center items-center')}>
             <img src={user?.avatar} className="h-24 w-24 rounded-full" />
-            <div className="flex-grow font-bold text-xl py-2 flex flex-col justify-center">
-              {user && user.nickname}
-            </div>
+            <div className="flex-grow font-bold text-xl py-2 flex flex-col justify-center">{user && user.nickname}</div>
           </div>
 
           <div className="mx-auto">
-            <HorizontalNavigation
-              routes={userPageMenu}
-              urlPrefix={`/user/${username}`}
-            />
+            <HorizontalNavigation routes={userPageMenu} urlPrefix={`/user/${username}`} />
           </div>
 
           <div className="flex-grow flex flex-col p-8">{children}</div>
         </div>
       )}
 
-      {!(loading.models.auth && loading.models.currentUser) && error && (
-        <NotFound />
-      )}
+      {!(loading.models.auth && loading.models.currentUser) && error && <NotFound />}
 
       {loading.models.auth && loading.models.currentUser && !error && (
         <div className="flex-grow h-full mx-auto w-6 flex flex-col justify-center">

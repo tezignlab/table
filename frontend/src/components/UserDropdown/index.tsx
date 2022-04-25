@@ -1,22 +1,15 @@
-import React, { useState, useEffect } from 'react'
 import { signOut } from '@/services/auth'
+import { authUserState } from '@/stores/auth'
 import clsx from 'clsx'
 import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
+import React, { useEffect, useState } from 'react'
 import { useRecoilValue } from 'recoil'
-import { authUserState } from '@/stores/auth'
-import Image from 'next/image'
 
-const DropdownItem = ({
-                        message,
-                        handleClick,
-                      }: {
-  message: string
-  handleClick: () => void
-}) => {
+const DropdownItem = ({ message, handleClick }: { message: string; handleClick: () => void }) => {
   return (
     <div
-      className='w-full hover:bg-gray-100 p-4 text-md cursor-pointer transition-all duration-200 ease-in-out'
+      className="w-full hover:bg-gray-100 p-4 text-md cursor-pointer transition-all duration-200 ease-in-out"
       onClick={handleClick}
     >
       {message}
@@ -68,8 +61,8 @@ const UserDropdown: React.FC = () => {
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
       >
-        <div className='shadow flex flex-col py-4 rounded-lg bg-white divide-y divide-gray-200'>
-          <div className=''>
+        <div className="shadow flex flex-col py-4 rounded-lg bg-white divide-y divide-gray-200">
+          <div className="">
             <DropdownItem
               message={t('site.routes.user_profile')}
               handleClick={() => {

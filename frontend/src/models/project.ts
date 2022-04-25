@@ -1,15 +1,15 @@
 // import { Effect, Reducer } from 'umi'
 import {
-  getProjects as getProjectsService,
+  getCollectionDetailList as getCollectionDetailListService,
+  getLikedProjects as getLikedProjectsService,
   getProjectDetail as getProjectDetailService,
+  getProjects as getProjectsService,
+  getRecommendProjects as getRecommendProjectsService,
+  getSearchProjects as getSearchProjectsService,
+  getViewedProjectsList as getViewedProjectsListService,
   likeProject as likeProjectService,
   unlikeProject as unlikeProjectService,
-  getLikedProjects as getLikedProjectsService,
-  getCollectionDetailList as getCollectionDetailListService,
-  getSearchProjects as getSearchProjectsService,
   viewProject as viewProjectService,
-  getViewedProjectsList as getViewedProjectsListService,
-  getRecommendProjects as getRecommendProjectsService,
 } from '../services/project'
 
 export interface Author {
@@ -96,11 +96,7 @@ const ProjectModel: ProjectModelType = {
         } else if (type === 'likes') {
           result = yield getLikedProjectsService(payload.userId, skip, limit)
         } else if (type === 'collections') {
-          result = yield getCollectionDetailListService(
-            payload.collectionId,
-            skip,
-            limit,
-          )
+          result = yield getCollectionDetailListService(payload.collectionId, skip, limit)
         } else if (type === 'search') {
           result = yield getSearchProjectsService(payload.query, skip, limit)
         } else if (type === 'history') {

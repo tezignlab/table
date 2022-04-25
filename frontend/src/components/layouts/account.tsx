@@ -1,23 +1,19 @@
+import { useTranslation } from 'next-i18next'
+import Head from 'next/head'
+import { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
 import { AuthModelState } from '../../models/auth'
-import { GlobalLoadingState } from '../../../utils'
+import { GlobalLoadingState } from '../../utils'
 import { notification } from '../Notification'
 import Layout from './basic'
-import { useTranslation } from 'next-i18next'
-import { useRouter } from 'next/router'
-import Head from 'next/head'
 
-const AccountLayout: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+const AccountLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { t } = useTranslation('common')
   const router = useRouter()
   const dispatch = useDispatch()
 
   const auth = useSelector(({ auth }: { auth: AuthModelState }) => auth)
-  const globalLoading = useSelector(
-    ({ loading }: { loading: GlobalLoadingState }) => loading,
-  )
+  const globalLoading = useSelector(({ loading }: { loading: GlobalLoadingState }) => loading)
 
   const authLoading = globalLoading.models.auth
 

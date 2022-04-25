@@ -1,13 +1,9 @@
-import {
-  getUser,
-  signIn,
-  signUp,
-} from '@/services/auth'
-import { authStatusState, authUserState } from '../stores/auth'
-import { ACCESS_TOKEN_NAME } from '../constants/index'
-import { sagaErrorStatusHandler,sagaErrorCodeHandler } from '../../utils/error'
+import { getUser, signIn, signUp } from '@/services/auth'
 import { useQuery } from 'react-query'
 import { useRecoilState, useSetRecoilState } from 'recoil'
+import { ACCESS_TOKEN_NAME } from '../constants/index'
+import { authStatusState, authUserState } from '../stores/auth'
+import { sagaErrorCodeHandler, sagaErrorStatusHandler } from '../utils/error'
 
 export const useSignIn = (params: Parameters<typeof signIn>[number]) => {
   const [authStatus, setAuthStatus] = useRecoilState(authStatusState)
@@ -49,7 +45,6 @@ export const useSignIn = (params: Parameters<typeof signIn>[number]) => {
   )
 }
 
-
 export const useSignUp = (params: Parameters<typeof signUp>[number]) => {
   const [authStatus, setAuthStatus] = useRecoilState(authStatusState)
   const setAuthUser = useSetRecoilState(authUserState)
@@ -58,7 +53,7 @@ export const useSignUp = (params: Parameters<typeof signUp>[number]) => {
     async () => {
       try {
         const result = await signUp(params)
-        console.log('signUp',result)
+        console.log('signUp', result)
         if ('access_token' in result.data) {
           localStorage.setItem(ACCESS_TOKEN_NAME, result.data.access_token)
         } else {

@@ -10,18 +10,10 @@ const Footer: React.FC = () => {
     <div className="w-full bg-gray-100 flex flex-col">
       <div className="py-16 mx-16 flex flex-col items-center lg:flex-row lg:justify-between border-t border-solid border-opacity-50 text-gray-700 gap-4">
         <div className="flex flex-row justify-center gap-4">
-          <a
-            className="link underline"
-            href="https://github.com/tezignlab"
-            target="_blank"
-          >
+          <a className="link underline" href="https://github.com/tezignlab" target="_blank" rel="noreferrer">
             Team
           </a>
-          <a
-            className="link underline"
-            href="https://github.com/tezignlab/table"
-            target="_blank"
-          >
+          <a className="link underline" href="https://github.com/tezignlab/table" target="_blank" rel="noreferrer">
             Github
           </a>
         </div>

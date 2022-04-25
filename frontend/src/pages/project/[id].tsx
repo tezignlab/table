@@ -1,13 +1,12 @@
-import React, { useEffect, useRef, useState } from 'react'
-import ProjectDetailComponent from '../../components/ProjectDetail'
-import { ProjectModelState } from '../../models/project'
-import { ProjectCollectionModelState } from '../../models/projectCollection'
-import CollectionModal from '../../components/CollectionModal'
-import { CollectionModalModeType } from '../../components/CollectionModal'
-import { useOnScreen } from '../../hooks/useOnScreen'
-import { useRouter } from 'next/router'
 import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { useRouter } from 'next/router'
+import React, { useEffect, useRef, useState } from 'react'
+import CollectionModal, { CollectionModalModeType } from '../../components/CollectionModal'
+import ProjectDetailComponent from '../../components/ProjectDetail'
+import { useOnScreen } from '../../hooks/useOnScreen'
+import { ProjectModelState } from '../../models/project'
+import { ProjectCollectionModelState } from '../../models/projectCollection'
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
@@ -21,15 +20,9 @@ const ProjectPage: React.FC = () => {
 
   const dispatch = useDispatch()
   const [modalMode, setModalMode] = useState<CollectionModalModeType>('choose')
-  const { current } = useSelector(
-    ({ project }: { project: ProjectModelState }) => project,
-  )
+  const { current } = useSelector(({ project }: { project: ProjectModelState }) => project)
   const { projectId } = useSelector(
-    ({
-      projectCollection,
-    }: {
-      projectCollection: ProjectCollectionModelState
-    }) => projectCollection,
+    ({ projectCollection }: { projectCollection: ProjectCollectionModelState }) => projectCollection,
   )
 
   const bottomRef = useRef<HTMLDivElement>(null)

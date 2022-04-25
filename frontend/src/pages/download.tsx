@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react'
-import { Project, ProjectModelState } from '../models/project'
 import clsx from 'clsx'
-import { LogoWhite } from '../components/Images'
-import { useTranslation } from 'next-i18next'
 import { GetServerSideProps } from 'next'
+import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import React, { useEffect, useState } from 'react'
+import { LogoWhite } from '../components/Images'
+import { Project, ProjectModelState } from '../models/project'
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
@@ -13,9 +13,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 }
 const DownloadAppPage: React.FC = () => {
-  const { projects } = useSelector(
-    ({ project }: { project: ProjectModelState }) => project,
-  )
+  const { projects } = useSelector(({ project }: { project: ProjectModelState }) => project)
   const dispatch = useDispatch()
   const [isIOSHover, setIsIOSHover] = useState(false)
   const [isAndroidHover, setIsAndroidHover] = useState(false)
@@ -35,26 +33,16 @@ const DownloadAppPage: React.FC = () => {
       <div className="top-0 bottom-0 hidden  lg:flex flex-wrap z-0 h-screen w-screen overflow-x-hidden overflow-y-hidden">
         {projects &&
           projects.map((project: Project, index: number) => (
-            <img
-              key={index}
-              className="h-1/3 w-1/4 object-cover object-center"
-              src={project.cover}
-            />
+            <img key={index} className="h-1/3 w-1/4 object-cover object-center" src={project.cover} />
           ))}
         <div className="absolute h-screen w-screen grid grid-cols-2 gap-20 bg-black bg-opacity-70 z-10">
           <div className="flex flex-col my-auto justify-self-end">
             <div className="absolute w-72 mx-auto">
-              <img
-                className="object-fill"
-                src="https://ai.tezign.com/static/naodong/iphone.png"
-              />
+              <img className="object-fill" src="https://ai.tezign.com/static/naodong/iphone.png" />
             </div>
             <div className="w-72 p-5">
               <video autoPlay muted loop className="object-contain">
-                <source
-                  src="https://ai.tezign.com/static/naodong/app_video.mp4"
-                  type="video/mp4"
-                />
+                <source src="https://ai.tezign.com/static/naodong/app_video.mp4" type="video/mp4" />
               </video>
             </div>
           </div>
@@ -77,12 +65,7 @@ const DownloadAppPage: React.FC = () => {
                   })}
                 >
                   {t('app.qr.ios')}
-                  {isIOSHover && (
-                    <img
-                      src="https://ai.tezign.com/static/naodong/nd-ios-qr-code.jpg"
-                      alt=""
-                    />
-                  )}
+                  {isIOSHover && <img src="https://ai.tezign.com/static/naodong/nd-ios-qr-code.jpg" alt="" />}
                 </div>
               </div>
               <div className="h-36 mr-4">
@@ -99,12 +82,7 @@ const DownloadAppPage: React.FC = () => {
                   })}
                 >
                   {t('app.qr.android')}
-                  {isAndroidHover && (
-                    <img
-                      src="https://ai.tezign.com/static/naodong/nd-android-qr-code.jpg"
-                      alt=""
-                    />
-                  )}
+                  {isAndroidHover && <img src="https://ai.tezign.com/static/naodong/nd-android-qr-code.jpg" alt="" />}
                 </div>
               </div>
             </div>

@@ -1,17 +1,14 @@
+import { authStatusState, currentUserStatusState } from '@/stores/auth'
+import { GetServerSideProps } from 'next'
 import { useTranslation } from 'next-i18next'
-import React, { ReactElement, useEffect, useMemo } from 'react'
-import { ProjectModelState } from '../models/project'
-import ProjectList from '../components/ProjectList'
-import { SHOT_LIST_PAGE_SIZE, ROUTES } from '../constants'
-import Banner from '../components/Banner'
-import { AuthModelState } from '../models/auth'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import { GetServerSideProps } from 'next'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import Layout from '../components/layouts'
+import React, { ReactElement, useMemo } from 'react'
 import { useRecoilValue } from 'recoil'
-import { authStatusState, currentUserStatusState } from '@/stores/auth'
+import Banner from '../components/Banner'
+import Layout from '../components/layouts'
+import { ROUTES } from '../constants'
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
@@ -30,10 +27,7 @@ export default function IndexPage() {
   const pageHeader = useMemo(() => {
     let value = undefined
     ROUTES.forEach((route) => {
-      if (
-        route.path === router.pathname ||
-        `${route.path}/` === router.pathname
-      ) {
+      if (route.path === router.pathname || `${route.path}/` === router.pathname) {
         value = t('route.name')
       }
     })
@@ -53,9 +47,7 @@ export default function IndexPage() {
       </Head>
 
       <div className="w-full h-full bg-white">
-        <div className="lg:hidden w-full py-6 text-center text-lg font-bold">
-          {pageHeader}
-        </div>
+        <div className="lg:hidden w-full py-6 text-center text-lg font-bold">{pageHeader}</div>
 
         {/* <ProjectList
           loadMore={() => {

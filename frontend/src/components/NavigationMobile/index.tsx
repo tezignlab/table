@@ -1,14 +1,14 @@
-import React, { useState, useEffect, useMemo, Fragment } from 'react'
-import { AuthModelState } from '../../models/auth'
-import { Search, Menu, Close } from '../Icons'
 import clsx from 'clsx'
-import { ROUTES, APP_ICON_URL } from '../../constants'
-import { GlobalLoadingState } from '../../../utils'
-import { isiOS as isiOSService } from '../../../utils/device'
-import { Logo } from '../Images'
 import { useTranslation } from 'next-i18next'
-import { useRouter } from 'next/router'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
+import React, { Fragment, useEffect, useMemo, useState } from 'react'
+import { APP_ICON_URL, ROUTES } from '../../constants'
+import { AuthModelState } from '../../models/auth'
+import { GlobalLoadingState } from '../../utils'
+import { isiOS as isiOSService } from '../../utils/device'
+import { Close, Menu, Search } from '../Icons'
+import { Logo } from '../Images'
 
 const MenuItem: React.FC<{
   message: string
@@ -16,10 +16,7 @@ const MenuItem: React.FC<{
 }> = ({ message, handleClick }) => {
   return (
     <div
-      className={clsx(
-        'w-full hover-bg-gray-100 p-4 text-md cursor-pointer',
-        'transition-all duration-200 ease-in-out',
-      )}
+      className={clsx('w-full hover-bg-gray-100 p-4 text-md cursor-pointer', 'transition-all duration-200 ease-in-out')}
       onClick={handleClick}
     >
       {message}
@@ -32,9 +29,7 @@ const NavigationMobile: React.FC = () => {
   const dispatch = useDispatch()
   const router = useRouter()
   const { user } = useSelector(({ auth }: { auth: AuthModelState }) => auth)
-  const globalLoading = useSelector(
-    ({ loading }: { loading: GlobalLoadingState }) => loading,
-  )
+  const globalLoading = useSelector(({ loading }: { loading: GlobalLoadingState }) => loading)
   const [menuVisible, setMenuVisible] = useState(false)
 
   const isiOS = useMemo(() => {
@@ -118,23 +113,14 @@ const NavigationMobile: React.FC = () => {
           </div>
 
           <div className="h-full flex flex-col justify-center">
-            <a
-              className="btn btn-primary btn-small text-sm"
-              href={'https://ai.tezign.com/api/download'}
-            >
+            <a className="btn btn-primary btn-small text-sm" href={'https://ai.tezign.com/api/download'}>
               {t('app.download')}
             </a>
           </div>
         </div>
       )}
 
-      <div
-        className={clsx(
-          { hidden: !menuVisible },
-          'fixed top-0 left-0 right-0 bottom-0 pt-16',
-          'h-screen w-screen',
-        )}
-      >
+      <div className={clsx({ hidden: !menuVisible }, 'fixed top-0 left-0 right-0 bottom-0 pt-16', 'h-screen w-screen')}>
         <div
           className="h-full bg-white overflow-y-scroll divide-y divide-y-200 flex flex-col"
           onClick={(e) => {
@@ -148,9 +134,7 @@ const NavigationMobile: React.FC = () => {
                   <Link href={path}>
                     <a
                       className={clsx('link w-full p-4', {
-                        'link-active':
-                          location.pathname === path ||
-                          location.pathname === `${path}/`,
+                        'link-active': location.pathname === path || location.pathname === `${path}/`,
                       })}
                     >
                       {t(name)}

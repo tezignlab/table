@@ -1,14 +1,14 @@
-import React, { useEffect, useState, useRef } from 'react'
-import ProjectList from '../components/ProjectList'
 import clsx from 'clsx'
-import { Search, Close } from '../components/Icons'
+import { GetServerSideProps } from 'next'
+import { useTranslation } from 'next-i18next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import Head from 'next/head'
+import { useRouter } from 'next/router'
+import React, { useEffect, useRef, useState } from 'react'
+import { Close, Search } from '../components/Icons'
+import ProjectList from '../components/ProjectList'
 import { SHOT_LIST_PAGE_SIZE } from '../constants'
 import { ProjectModelState } from '../models/project'
-import { useRouter } from 'next/router'
-import { useTranslation } from 'next-i18next'
-import Head from 'next/head'
-import { GetServerSideProps } from 'next'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
@@ -25,9 +25,7 @@ const SearchPage: React.FC = () => {
 
   const { t } = useTranslation('common')
   const dispatch = useDispatch()
-  const { count } = useSelector(
-    ({ project }: { project: ProjectModelState }) => project,
-  )
+  const { count } = useSelector(({ project }: { project: ProjectModelState }) => project)
 
   const inputRef = useRef<HTMLInputElement>(null)
   const [searchValue, setSearchValue] = useState(query)
@@ -41,20 +39,14 @@ const SearchPage: React.FC = () => {
   }, [])
 
   const handleSearch = () => {
-    router.push(
-      `/search/${encodeURIComponent(searchType)}/${encodeURIComponent(
-        searchValue ?? '',
-      )}`,
-    )
+    router.push(`/search/${encodeURIComponent(searchType)}/${encodeURIComponent(searchValue ?? '')}`)
   }
 
   return (
     <div className="flex-grow w-full flex flex-col">
       <Head>
         {query && <title>{`${query} - ${t('site.name')}`}</title>}
-        {!query && (
-          <title>{`${t('general.search')} - ${t('site.name')}`}</title>
-        )}
+        {!query && <title>{`${t('general.search')} - ${t('site.name')}`}</title>}
       </Head>
 
       <div className="w-full py-8">
@@ -89,10 +81,7 @@ const SearchPage: React.FC = () => {
               )}
             >
               <div
-                className={clsx(
-                  'w-8 mx-4 h-full',
-                  'text-gray-300 hover:text-gray-500 cursor-pointer',
-                )}
+                className={clsx('w-8 mx-4 h-full', 'text-gray-300 hover:text-gray-500 cursor-pointer')}
                 onClick={() => {
                   setSearchValue('')
                   inputRef.current?.focus()

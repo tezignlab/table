@@ -1,16 +1,16 @@
 // import { Effect, Reducer } from 'umi'
-import {
-  signIn as signInService,
-  signUp as signUpService,
-  getUser as getUserService,
-  activateUser as activateUserService,
-  getVerificationCode as getVerificationCodeService,
-  signInWithCode as signInWithCodeService,
-  updateUser as updateUserService,
-  updatePassword as updatePasswordService,
-} from '../services/auth'
 import { ACCESS_TOKEN_NAME, VERIFICATION_CODE_TIME_NAME } from '../constants'
-import { sagaErrorStatusHandler, sagaErrorCodeHandler } from '../utils/error'
+import {
+  activateUser as activateUserService,
+  getUser as getUserService,
+  getVerificationCode as getVerificationCodeService,
+  signIn as signInService,
+  signInWithCode as signInWithCodeService,
+  signUp as signUpService,
+  updatePassword as updatePasswordService,
+  updateUser as updateUserService,
+} from '../services/auth'
+import { sagaErrorCodeHandler, sagaErrorStatusHandler } from '../utils/error'
 
 export interface User {
   id: string
@@ -145,10 +145,7 @@ const AuthModel: AuthModelType = {
         if (result && result.code === 0) {
           const currentTime = new Date()
           currentTime.setSeconds(currentTime.getSeconds() + 60)
-          localStorage.setItem(
-            VERIFICATION_CODE_TIME_NAME,
-            currentTime.getTime().toString(),
-          )
+          localStorage.setItem(VERIFICATION_CODE_TIME_NAME, currentTime.getTime().toString())
           yield put({
             type: 'save',
             payload: {

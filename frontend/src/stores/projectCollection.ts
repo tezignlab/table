@@ -1,5 +1,5 @@
-import { Collection } from './collection'
 import { atom } from 'recoil'
+import { Collection } from './collection'
 
 export interface ProjectCollection extends Collection {
   is_collect: boolean
@@ -22,4 +22,3 @@ export const projectCollectionStateState = atom<ProjectCollectionState>({
     collections: undefined,
   },
 })
-
