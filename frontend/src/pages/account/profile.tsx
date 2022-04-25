@@ -2,14 +2,16 @@ import { Form, FormikProvider, useFormik } from 'formik'
 import { GetServerSideProps } from 'next'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import React, { ReactElement, useEffect } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import * as Yup from 'yup'
 import { Loading } from '../../components/Icons'
 import { FormikInput as Input } from '../../components/Input'
 import AccountLayout from '../../components/layouts/account'
 import { USERNAME_MAX_LENGTH } from '../../constants'
-import { AuthModelState } from '../../models/auth'
-import { GlobalLoadingState } from '../../utils'
+import { authUserState, authStatusState } from '../../stores/auth'
+import { useUpdateUser } from '../../queries/auth'
+import { useRecoilValue } from 'recoil'
+
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
@@ -18,12 +20,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 }
 export default function Profile() {
-  const auth = useSelector(({ auth }: { auth: AuthModelState }) => auth)
   const { t } = useTranslation('common')
-  const dispatch = useDispatch()
-  const globalLoading = useSelector(({ loading }: { loading: GlobalLoadingState }) => loading)
 
-  const authLoading = globalLoading.models.auth
+  const authUser = useRecoilValue(authUserState)
+  const authStatus = useRecoilValue(authStatusState)
 
   const formik = useFormik({
     initialValues: {
@@ -32,38 +32,42 @@ export default function Profile() {
       nickname: '',
       bio: '',
     },
-    onSubmit: (values) => {
-      dispatch({
-        type: 'auth/updateUser',
-        payload: {
-          nickname: values.nickname,
-          bio: values.bio,
-        },
-      })
+    onSubmit: async (values) => {
+      setValues(values)
+      setSubmit(true)
     },
     validationSchema: Yup.object({
-      nickname: Yup.string().max(
-        USERNAME_MAX_LENGTH,
-        `${t('auth.validation.max.prefix')}${USERNAME_MAX_LENGTH}${t('auth.validation.max.suffix')}`,
-      ),
+      nickname: Yup.string().max(USERNAME_MAX_LENGTH, t('auth.validation.max')),
     }),
   })
 
+  const [values, setValues] = useState(formik.values)
+  const [submit, setSubmit] = useState(false)
+
+  const { isLoading, refetch: updateUser } = useUpdateUser(values)
+
   useEffect(() => {
-    if (!authLoading) {
-      formik.setFieldValue('username', auth.user?.username)
-      formik.setFieldValue('email', auth.user?.email)
-      formik.setFieldValue('nickname', auth.user?.nickname)
-      formik.setFieldValue('bio', auth.user?.bio ?? '')
+    if (submit) {
+      updateUser()
+      setSubmit(false)
     }
-  }, [authLoading])
+  }, [values, submit])
+
+  useEffect(() => {
+    if (!isLoading) {
+      formik.setFieldValue('username', authUser?.username)
+      formik.setFieldValue('email', authUser?.email)
+      formik.setFieldValue('nickname', authUser?.nickname)
+      formik.setFieldValue('bio', authUser?.bio ?? '')
+    }
+  }, [isLoading])
 
   return (
     <div className="w-full h-full">
-      {auth.requested && (
+      {authStatus.requested && (
         <div className="flex fle-row gap-8">
           <div className="flex-0 h-16 lg:h-24">
-            <img className="h-full rounded-full" src={auth.user?.avatar} />
+            <img className="h-full rounded-full" src={authUser?.avatar} />
           </div>
 
           <div className="flex flex-1">
@@ -98,7 +102,7 @@ export default function Profile() {
                 <Input id="bio" name="bio" type="text" label={t('account.bio')} />
 
                 <button className="btn btn-primary space-x-2 flex" type="submit">
-                  {authLoading && (
+                  {isLoading && (
                     <div className="h-5 w-5">
                       <Loading color="white" />
                     </div>

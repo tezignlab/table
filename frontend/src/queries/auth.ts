@@ -1,4 +1,4 @@
-import { getUser, signIn, signUp } from '@/services/auth'
+import { getUser, signIn, signUp, updateUser, updatePassword } from '@/services/auth'
 import { useQuery } from 'react-query'
 import { useRecoilState, useSetRecoilState } from 'recoil'
 import { ACCESS_TOKEN_NAME } from '../constants/index'
@@ -111,6 +111,87 @@ export const useGetUser = () => {
     },
     {
       cacheTime: 0, // not cache getUser api
+    },
+  )
+}
+
+export const useUpdateUser = (params: Parameters<typeof updateUser>[number]) => {
+  const setAuthUser = useSetRecoilState(authUserState)
+  const [authStatus, setAuthStatus] = useRecoilState(authStatusState)
+
+  return useQuery<null, Error>(
+    ['updateUser', { params }],
+    async () => {
+      try {
+        const result = await updateUser(params)
+
+        if (result && result.code === 0) {
+          setAuthStatus({
+            ...authStatus,
+            success: true,
+            message: 'account.success',
+          })
+        }
+      } catch (error) {
+        setAuthStatus({
+          ...authStatus,
+          error: true,
+          message: sagaErrorStatusHandler(error),
+        })
+
+        return null
+      }
+
+      try {
+        const result = await getUser()
+
+        if (result.code === 0) {
+          setAuthUser(result.data)
+        }
+      } catch (error) {
+        //
+      }
+
+      return null
+    },
+    { enabled: false },
+  )
+}
+
+export const useUpdatePassword = (params: Parameters<typeof updatePassword>[number]) => {
+  const [authStatus, setAuthStatus] = useRecoilState(authStatusState)
+
+  return useQuery<null, Error>(
+    ['updatePassword', params],
+    async () => {
+      try {
+        const result = await updatePassword(params)
+
+        if (result.code === 0) {
+          setAuthStatus({
+            ...authStatus,
+            success: true,
+            message: 'account.password.success',
+          })
+        } else {
+          setAuthStatus({
+            ...authStatus,
+            error: true,
+            message: sagaErrorCodeHandler(result.code.toString()),
+          })
+        }
+      } catch (error) {
+        setAuthStatus({
+          ...authStatus,
+          error: true,
+          message: sagaErrorStatusHandler(error),
+        })
+      }
+
+      return null
+    },
+    {
+      enabled: false, // query must be triggered manually by `refetch`
     },
   )
 }

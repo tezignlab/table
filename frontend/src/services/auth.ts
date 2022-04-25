@@ -35,21 +35,21 @@ export const getUser = async () => (await axios.request<IDefaultReturnType<User>
 export const getCurrentUser = async (username: string): Promise<IDefaultReturnType<User>> =>
   (await axios.get(`/api/v1/user/${username}`)).data
 
-export const updateUser = async (
-  nickname: string,
-  avatar: string,
-  location: string,
-  bio: string,
-): Promise<IDefaultReturnType> =>
-  (
-    await axios.patch('/api/v1/user', {
-      data: { nickname, avatar, location, bio },
-    })
-  ).data
+interface IUpdateUser {
+  nickname?: string
+  avatar?: string
+  location?: string
+  bio?: string
+}
 
-export const updatePassword = async (password: string, newPassword: string): Promise<IDefaultReturnType> =>
+export const updateUser = async (data: IUpdateUser) =>
+  (await axios.request<IDefaultReturnType>({ url: '/api/v1/user', method: 'patch', data: data })).data
+
+export const updatePassword = async ({ password, newPassword }: { password: string; newPassword: string }) =>
   (
-    await axios.patch('/api/v1/user/password', {
+    await axios.request<IDefaultReturnType>({
+      url: '/api/v1/user/password',
+      method: 'patch',
       data: { new_password: newPassword, old_password: password },
     })
   ).data

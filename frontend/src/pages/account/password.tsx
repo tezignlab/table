@@ -1,15 +1,17 @@
 import { Form, FormikProvider, useFormik } from 'formik'
 import { GetServerSideProps } from 'next'
 import { useTranslation } from 'next-i18next'
+import { useUpdatePassword } from '../../queries/auth'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useState, useEffect } from 'react'
 import * as Yup from 'yup'
 import Input from '../../components/AuthInput'
 import { Loading } from '../../components/Icons'
 import AccountLayout from '../../components/layouts/account'
 import { PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH } from '../../constants'
-import { AuthModelState } from '../../models/auth'
-import { GlobalLoadingState } from '../../utils'
+import { authStatusState } from '../../stores/auth'
+import { useRecoilValue } from 'recoil'
+
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
@@ -18,12 +20,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 }
 export default function Password() {
-  const auth = useSelector(({ auth }: { auth: AuthModelState }) => auth)
   const { t } = useTranslation('common')
-  const dispatch = useDispatch()
-  const globalLoading = useSelector(({ loading }: { loading: GlobalLoadingState }) => loading)
 
-  const authLoading = globalLoading.models.auth
+  const authStatus = useRecoilValue(authStatusState)
 
   const formik = useFormik({
     initialValues: {
@@ -31,14 +30,12 @@ export default function Password() {
       newPassword: '',
       newPasswordConfirm: '',
     },
-    onSubmit: (values: { oldPassword: string; newPassword: string }) => {
-      dispatch({
-        type: 'auth/updatePassword',
-        payload: {
-          oldPassword: values.oldPassword,
-          newPassword: values.newPassword,
-        },
+    onSubmit: async (values: { oldPassword: string; newPassword: string }) => {
+      setValues({
+        password: values.oldPassword,
+        newPassword: values.newPassword,
       })
+      setSubmit(true)
     },
     validationSchema: Yup.object({
       oldPassword: Yup.string()
@@ -52,7 +49,7 @@ export default function Password() {
           `${t('auth.validation.max.prefix')}${PASSWORD_MAX_LENGTH}${t('auth.validation.max.suffix')}`,
         ),
       newPassword: Yup.string()
-        .required(t('auth.validation.require'))
+        .required(t('auth.validation.require', { ns: 'auth', type: t('user.password') }))
         .min(
           PASSWORD_MIN_LENGTH,
           `${t('auth.validation.min.prefix')}${PASSWORD_MIN_LENGTH}${t('auth.validation.min.suffix')}`,
@@ -62,17 +59,35 @@ export default function Password() {
           `${t('auth.validation.max.prefix')}${PASSWORD_MAX_LENGTH}${t('auth.validation.max.suffix')}`,
         ),
       newPasswordConfirm: Yup.string()
-        .required(t('auth.validation.require'))
+        .required(t('auth.validation.require', { ns: 'auth', type: t('user.confirmPassword') }))
         .when('newPassword', {
           is: (val: string): boolean => (val && val.length > 0 ? true : false),
-          then: Yup.string().oneOf([Yup.ref('newPassword')], t('auth.validation.correct')),
+          then: Yup.string().oneOf(
+            [Yup.ref('newPassword')],
+            `${t('auth.validation.correct')}${t('user.confirmPassword')}`,
+          ),
         }),
     }),
   })
 
+  const [values, setValues] = useState<{
+    password: string
+    newPassword: string
+  }>({ password: '', newPassword: '' })
+  const [submit, setSubmit] = useState<boolean>(false)
+
+  const { isLoading, refetch: updatePassword } = useUpdatePassword(values)
+
+  useEffect(() => {
+    if (submit) {
+      updatePassword()
+      setSubmit(false)
+    }
+  }, [values, submit])
+
   return (
     <div className="w-full h-full">
-      {auth.requested && (
+      {authStatus.requested && (
         <div className="w-full h-full">
           <FormikProvider value={formik}>
             <Form className="py-4 space-y-4">
@@ -86,7 +101,7 @@ export default function Password() {
               />
 
               <button className="btn btn-primary space-x-2 flex" type="submit">
-                {authLoading && (
+                {isLoading && (
                   <div className="h-5 w-5">
                     <Loading color="white" />
                   </div>
