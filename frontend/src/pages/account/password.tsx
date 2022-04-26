@@ -39,7 +39,7 @@ export default function Password() {
     },
     validationSchema: Yup.object({
       oldPassword: Yup.string()
-        .required(t('auth.validation.require'))
+        .required(`${t('auth.validation.require')}${t('account.password.old')}`)
         .min(
           PASSWORD_MIN_LENGTH,
           `${t('auth.validation.min.prefix')}${PASSWORD_MIN_LENGTH}${t('auth.validation.min.suffix')}`,
@@ -49,7 +49,7 @@ export default function Password() {
           `${t('auth.validation.max.prefix')}${PASSWORD_MAX_LENGTH}${t('auth.validation.max.suffix')}`,
         ),
       newPassword: Yup.string()
-        .required(t('auth.validation.require', { ns: 'auth', type: t('user.password') }))
+        .required(`${t('auth.validation.require')}${t('account.password.new')}`)
         .min(
           PASSWORD_MIN_LENGTH,
           `${t('auth.validation.min.prefix')}${PASSWORD_MIN_LENGTH}${t('auth.validation.min.suffix')}`,
@@ -59,7 +59,7 @@ export default function Password() {
           `${t('auth.validation.max.prefix')}${PASSWORD_MAX_LENGTH}${t('auth.validation.max.suffix')}`,
         ),
       newPasswordConfirm: Yup.string()
-        .required(t('auth.validation.require', { ns: 'auth', type: t('user.confirmPassword') }))
+        .required(t('account.password.confirm'))
         .when('newPassword', {
           is: (val: string): boolean => (val && val.length > 0 ? true : false),
           then: Yup.string().oneOf(

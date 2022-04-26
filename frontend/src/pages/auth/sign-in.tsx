@@ -35,9 +35,9 @@ export default function SignIn() {
     },
     validationSchema: Yup.object({
       username: Yup.string()
-        .required(t('auth.validation.require'))
-        .matches(USERNAME_REGEX, t('auth.validation.correct')),
-      password: Yup.string().required(t('auth.validation.require')),
+        .required(`${t('auth.validation.require')}${t('user.username')}`)
+        .matches(USERNAME_REGEX, `${t('auth.validation.correct')}${t('user.username')}`),
+      password: Yup.string().required(`${t('auth.validation.require')}${t('user.password')}`),
     }),
   })
   const [values, setValues] = useState<{ username: string; password: string }>(formik.values)
