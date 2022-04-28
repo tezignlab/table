@@ -36,11 +36,11 @@ const UserLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             </div>
           </div>
 
-          <div className="mx-auto">
+          <div className="mx-4 lg:mx-auto">
             <HorizontalNavigation routes={userPageMenu} urlPrefix={`/user`} />
           </div>
 
-          <div className="flex-grow flex flex-col p-8">{children}</div>
+          <div className="flex-grow flex flex-col p-4 lg:p-8">{children}</div>
         </div>
       )}
     </>

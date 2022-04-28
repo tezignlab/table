@@ -1,4 +1,5 @@
 import { useProject } from '@/hooks/useProject'
+import { viewProject } from '@/services/project'
 import { ProjectDetail } from '@/types/project'
 import { withAuth } from '@/utils/withAuth'
 import clsx from 'clsx'
@@ -81,6 +82,11 @@ const ProjectDetailContent: React.FC<{
         }
       })
     }
+  }, [])
+
+  // record view history
+  useEffect(() => {
+    viewProject(project.id)
   }, [])
 
   const timestamp = moment(new Date(project.publish_time)).format('YYYY-MM-DD')

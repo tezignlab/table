@@ -1,12 +1,12 @@
+import { signOut } from '@/services/auth'
 import { authUserState } from '@/stores/auth'
 import clsx from 'clsx'
 import { useTranslation } from 'next-i18next'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import React, { Fragment, useEffect, useMemo, useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import { useRecoilValue } from 'recoil'
 import { APP_ICON_URL, ROUTES } from '../../constants'
-import { isiOS as isiOSService } from '../../utils/device'
 import { Close, Menu, Search } from '../Icons'
 import { Logo } from '../Images'
 
@@ -65,7 +65,7 @@ const NavigationMobile: React.FC = () => {
             <div
               className="h-16 flex flex-col p-2 justify-center"
               onClick={() => {
-                router.push('/auth/phone')
+                router.push('/auth/sign-in')
               }}
             >
               {t('auth.sign_in')}
@@ -86,7 +86,7 @@ const NavigationMobile: React.FC = () => {
           <div
             className="w-10 h-16 py-5 px-2 text-gray-500"
             onClick={() => {
-              router.push('/search/projects')
+              router.push('/search')
             }}
           >
             <Search />
@@ -164,8 +164,8 @@ const NavigationMobile: React.FC = () => {
               <MenuItem
                 message={t('auth.sign_out')}
                 handleClick={() => {
-                  // dispatch({ type: 'auth/signOut' })
-                  // window.location.reload()
+                  signOut()
+                  window.location.reload()
                 }}
               />
             </div>

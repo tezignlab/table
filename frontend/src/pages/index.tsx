@@ -28,7 +28,7 @@ export default function IndexPage() {
     let value = undefined
     ROUTES.forEach((route) => {
       if (route.path === router.pathname || `${route.path}/` === router.pathname) {
-        value = t('route.name')
+        value = t(route.name)
       }
     })
 

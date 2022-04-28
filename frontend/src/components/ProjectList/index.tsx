@@ -53,6 +53,7 @@ const ProjectList: React.FC<{
           skip: lastPage.data.skip + lastPage.data.limit,
         }
       },
+      cacheTime: 0,
     },
   )
 
