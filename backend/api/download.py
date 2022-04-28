@@ -5,7 +5,7 @@ from fastapi.responses import RedirectResponse
 from typing import Optional
 
 
-nd_download = mongo["naodong"]["download"]
+nd_download = mongo["table"]["download"]
 
 
 @router_public.get("/api/download", tags=["Download"], summary="Auto download")

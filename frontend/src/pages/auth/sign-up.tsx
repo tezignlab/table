@@ -139,6 +139,3 @@ export default function SignUp() {
         </div>
     )
 }
-// SignUp.getLayout = function getLayout(page: ReactElement) {
-//   return <AuthLayout>{page}</AuthLayout>
-// }

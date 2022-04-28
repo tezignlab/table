@@ -7,7 +7,7 @@ from db import mongo
 from fastlab.models import Response
 from models.help import KeywordCategoryEnum
 
-nd_keywords = mongo["naodong"]["keywords"]
+nd_keywords = mongo["table"]["keywords"]
 
 
 @router_public.get("/api/v1/help/keywords", tags=["Search"], summary="Hot search keywords", response_model=Response[List[str]])

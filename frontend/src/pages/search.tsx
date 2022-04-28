@@ -1,14 +1,14 @@
+import { getSearchProjects } from '@/services/project'
 import clsx from 'clsx'
 import { GetServerSideProps } from 'next'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Close, Search } from '../components/Icons'
 import ProjectList from '../components/ProjectList'
-import { SHOT_LIST_PAGE_SIZE } from '../constants'
-import { ProjectModelState } from '../models/project'
+
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
@@ -16,17 +16,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     },
   }
 }
+
 const SearchPage: React.FC = () => {
   const router = useRouter()
-  const { query, type: searchType } = router.query as {
-    query: string
-    type: 'projects'
-  }
+  const { query } = router.query as { query: string }
 
   const { t } = useTranslation('common')
-  const dispatch = useDispatch()
-  const { count } = useSelector(({ project }: { project: ProjectModelState }) => project)
-
   const inputRef = useRef<HTMLInputElement>(null)
   const [searchValue, setSearchValue] = useState(query)
 
@@ -34,13 +29,17 @@ const SearchPage: React.FC = () => {
     setSearchValue(query)
   }, [router.pathname])
 
-  useEffect(() => {
-    dispatch({ type: 'project/clear' })
-  }, [])
-
   const handleSearch = () => {
-    router.push(`/search/${encodeURIComponent(searchType)}/${encodeURIComponent(searchValue ?? '')}`)
+    router.push(`/search?query=${encodeURIComponent(searchValue ?? '')}`)
   }
+
+  const searchFunction = useCallback(
+    async ({ skip, limit }: { skip: number; limit: number }) => {
+      const result = await getSearchProjects(searchValue, skip, limit)
+      return result
+    },
+    [searchValue],
+  )
 
   return (
     <div className="flex-grow w-full flex flex-col">
@@ -71,7 +70,7 @@ const SearchPage: React.FC = () => {
                   handleSearch()
                 }
               }}
-              placeholder={t(`search.${searchType}`)}
+              placeholder={t(`search.projects`)}
             />
 
             <div
@@ -107,21 +106,7 @@ const SearchPage: React.FC = () => {
         </div>
       </div>
 
-      {searchType === 'projects' && (
-        <ProjectList
-          loadMore={() => {
-            dispatch({
-              type: 'project/getProjects',
-              payload: {
-                skip: count,
-                limit: SHOT_LIST_PAGE_SIZE,
-                type: query === undefined ? 'all' : 'search',
-                query: searchValue,
-              },
-            })
-          }}
-        />
-      )}
+      <ProjectList name="searchProjects" loadMore={searchFunction} />
     </div>
   )
 }

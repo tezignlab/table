@@ -1,5 +1,5 @@
-import BasicLayout from '@/components/layouts/basic'
 import { ACCESS_TOKEN_NAME, STATIC_URL } from '@/constants/index'
+import Layout from '@/layouts'
 import axios from 'axios'
 import type { NextPage } from 'next'
 import { appWithTranslation } from 'next-i18next'
@@ -10,6 +10,7 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
 import { RecoilRoot } from 'recoil'
 import '../global.css'
+
 // add axios interceptor to set the authorization header
 axios.interceptors.request.use((config) => {
   if (typeof window === 'undefined') {
@@ -24,6 +25,7 @@ axios.interceptors.request.use((config) => {
   }
   return config
 })
+
 // Create a client
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -33,6 +35,7 @@ export const queryClient = new QueryClient({
     },
   },
 })
+
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode
 }
@@ -47,8 +50,7 @@ const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
     <RecoilRoot>
       <QueryClientProvider client={queryClient}>
         <ReactQueryDevtools />
-        <BasicLayout>{getLayout(<Component {...pageProps} />)}</BasicLayout>
-        <Component {...pageProps} />
+        <Layout>{getLayout(<Component {...pageProps} />)}</Layout>
       </QueryClientProvider>
     </RecoilRoot>
   )

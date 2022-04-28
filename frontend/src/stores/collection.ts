@@ -1,12 +1,5 @@
+import { Collection } from '@/types/collection'
 import { atom } from 'recoil'
-
-export interface Collection {
-  id: string
-  name: string
-  desc?: string
-  covers?: string[]
-  createTime: number
-}
 
 export interface CollectionModelState {
   collections?: Collection[]

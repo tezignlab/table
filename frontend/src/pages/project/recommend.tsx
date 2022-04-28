@@ -1,5 +1,5 @@
 import ProjectList from '@/components/ProjectList'
-import { getProjects } from '@/services/project'
+import { getProjects, getRecommendProjects } from '@/services/project'
 import { authStatusState, currentUserStatusState } from '@/stores/auth'
 import { GetServerSideProps } from 'next'
 import { useTranslation } from 'next-i18next'
@@ -18,8 +18,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     },
   }
 }
-
-export default function IndexPage() {
+export default function RecommendPage() {
   const { t } = useTranslation('common')
 
   const router = useRouter()
@@ -49,7 +48,7 @@ export default function IndexPage() {
       <div className="w-full h-full bg-white">
         <div className="lg:hidden w-full py-6 text-center text-lg font-bold">{pageHeader}</div>
 
-        <ProjectList name="indexProjects" loadMore={getProjects} />
+        <ProjectList name="recommendProjects" loadMore={getRecommendProjects} />
       </div>
     </div>
   )

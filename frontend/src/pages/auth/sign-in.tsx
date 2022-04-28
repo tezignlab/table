@@ -8,9 +8,6 @@ import Input from '../../components/AuthInput'
 import { Loading } from '../../components/Icons'
 import { USERNAME_REGEX } from '../../constants'
 import { useSignIn } from '../../queries/auth'
-// import { AuthLayout } from '../../components/layouts/auth'
-// import { useRecoilValue } from 'recoil'
-// import { authStatusState } from '@/stores/auth'
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
@@ -21,8 +18,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 }
 
 export default function SignIn() {
-  // const authStatus = useRecoilValue(authStatusState)
-
   const { t } = useTranslation('common')
   const formik = useFormik({
     initialValues: {

@@ -1,16 +1,17 @@
+import AccountLayout from '@/layouts/account'
 import { Form, FormikProvider, useFormik } from 'formik'
 import { GetServerSideProps } from 'next'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { ReactElement } from 'react-markdown/lib/react-markdown'
+import { useRecoilValue } from 'recoil'
 import * as Yup from 'yup'
 import { Loading } from '../../components/Icons'
 import { FormikInput as Input } from '../../components/Input'
-import AccountLayout from '../../components/layouts/account'
 import { USERNAME_MAX_LENGTH } from '../../constants'
-import { authUserState, authStatusState } from '../../stores/auth'
 import { useUpdateUser } from '../../queries/auth'
-import { useRecoilValue } from 'recoil'
+import { authStatusState, authUserState } from '../../stores/auth'
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
@@ -19,7 +20,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     },
   }
 }
-export default function Profile() {
+
+const Profile = () => {
   const { t } = useTranslation('common')
 
   const authUser = useRecoilValue(authUserState)
@@ -117,6 +119,9 @@ export default function Profile() {
     </div>
   )
 }
+
 Profile.getLayout = function getLayout(page: ReactElement) {
   return <AccountLayout>{page}</AccountLayout>
 }
+
+export default Profile

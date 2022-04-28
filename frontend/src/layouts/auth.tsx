@@ -1,6 +1,6 @@
 import { getRecommendProjects } from '@/services/project'
 import { authStatusState, isAuthState } from '@/stores/auth'
-import { Project } from '@/stores/project'
+import { Project } from '@/types/project'
 import { useTranslation } from 'next-i18next'
 import Head from 'next/head'
 import Link from 'next/link'
@@ -8,10 +8,9 @@ import { useRouter } from 'next/router'
 import React, { ReactNode, useEffect } from 'react'
 import { useQuery } from 'react-query'
 import { useRecoilValue } from 'recoil'
-import { Loading } from '../Icons'
-import { Logo, LogoWhite } from '../Images'
-import { notification } from '../Notification'
-import Layout from './index'
+import { Loading } from '../components/Icons'
+import { Logo, LogoWhite } from '../components/Images'
+import { notification } from '../components/Notification'
 
 export const AuthLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
   const { t } = useTranslation('common')
@@ -19,15 +18,15 @@ export const AuthLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
   const isAuth = useRecoilValue(isAuthState)
   const authStatus = useRecoilValue(authStatusState)
   const { data: recommendProjects } = useQuery(['recommendProjects'], async () => {
-    const result = await getRecommendProjects(0, 12)
-    return result.data
+    const result = await getRecommendProjects({ skip: 0, limit: 12 })
+    return result.data.data
   })
   useEffect(() => {
     if (isAuth) router.push('/')
   }, [isAuth])
 
   useEffect(() => {
-    if (authStatus.error) {
+    if (authStatus.error && authStatus.message) {
       notification('error', t(authStatus.message), 1000)
       // TODO dispatch({ type: 'auth/clearNotification' })
     }
@@ -39,17 +38,16 @@ export const AuthLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
   }, [authStatus.error, authStatus.success])
 
   return (
-    <Layout>
+    <>
       <Head>
         <meta charSet="utf-8" />
         <title>{`${t('auth.welcome')} | ${t('site.name')}`}</title>
       </Head>
 
       <div className="top-0 bottom-0 hidden lg:flex flex-wrap z-0 h-screen w-screen overflow-x-hidden overflow-y-hidden">
-        {recommendProjects &&
-          recommendProjects.data.map((project: Project, index: number) => (
-            <img key={index} className="h-1/3 w-1/4 object-cover object-center" src={project.cover} />
-          ))}
+        {recommendProjects?.map((project: Project) => (
+          <img key={project.id} className="h-1/3 w-1/4 object-cover object-center" src={project.cover} />
+        ))}
       </div>
 
       <div className="absolute top-0 min-h-screen lg:h-screen w-screen lg:grid lg:grid-cols-2 lg:bg-black lg:bg-opacity-70 z-10">
@@ -94,6 +92,6 @@ export const AuthLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
           </div>
         </div>
       </div>
-    </Layout>
+    </>
   )
 }

@@ -1,3 +1,4 @@
+import { User } from '@/types/user'
 import { atom, selector } from 'recoil'
 
 interface Status {
@@ -6,16 +7,6 @@ interface Status {
   message?: string
   success?: boolean
   requested?: boolean
-}
-
-export interface User {
-  id: string
-  username: string
-  nickname: string
-  email?: string
-  avatar: string
-  location?: string
-  bio?: string
 }
 
 export const authStatusState = atom<Status>({

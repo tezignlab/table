@@ -27,7 +27,7 @@ app.add_middleware(
 app.include_router(router_public)
 
 # Config static files router
-app.mount("/api/static", StaticFiles(directory=f'{os.path.dirname(__file__)}/static'), name="static")
+app.mount("/api/static", StaticFiles(directory=f'{os.path.dirname(os.path.abspath(__file__))}/static'), name="static")
 
 # Config exception handler
 @app.exception_handler(HTTPBaseException)

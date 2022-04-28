@@ -1,14 +1,17 @@
+import { getInspiration } from '@/services/inspiration'
+import { authUserState } from '@/stores/auth'
+import { Inspiration } from '@/types/inspiration'
 import moment from 'moment'
 import { GetServerSideProps } from 'next'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import Head from 'next/head'
-import React, { ReactElement, useEffect, useState } from 'react'
-import { Loading } from '../../../components/Icons'
-import UserLayout from '../../../components/layouts/user'
-import { CurrentUserModelState } from '../../../models/currentUser'
-import { Inspiration, InspirationModelState } from '../../../models/inspiration'
-import { GlobalLoadingState } from '../../../utils'
+import React, { ReactElement, useState } from 'react'
+import { useQuery } from 'react-query'
+import { useRecoilValue } from 'recoil'
+import { Loading } from '@/components/Icons'
+import UserLayout from '@/layouts/user'
+
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
@@ -16,6 +19,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     },
   }
 }
+
 const InspirationCard: React.FC<{ inspiration: Inspiration }> = ({ inspiration }) => {
   return (
     <div className="w-full h-full mx-8 px-8 py-2 mb-8 border border-gray-200 rounded-lg">
@@ -38,49 +42,44 @@ const InspirationCard: React.FC<{ inspiration: Inspiration }> = ({ inspiration }
 }
 
 export default function InspirationPage() {
-  const dispatch = useDispatch()
   const { t } = useTranslation('common')
-  const [skip, setSkip] = useState(0)
-  const { user } = useSelector(({ currentUser }: { currentUser: CurrentUserModelState }) => currentUser)
-  const { inspiration, hasMoreInspiration } = useSelector(
-    ({ inspiration }: { inspiration: InspirationModelState }) => inspiration,
-  )
-  const loading = useSelector(({ loading }: { loading: GlobalLoadingState }) => loading)
-  useEffect(() => {
-    dispatch({
-      type: 'inspiration/getInspiration',
-      payload: { skip, limit: 20 },
-    })
-  }, [skip])
-  useEffect(() => {
-    dispatch({ type: 'inspiration/clear' })
-  }, [])
+  const [limit, setLimit] = useState(0)
+  const [hasMore, setHasMore] = useState(true)
+  const authUser = useRecoilValue(authUserState)
+
+  const { data, isFetching } = useQuery(['inspiration', authUser?.id, limit], async () => {
+    const result = await getInspiration(0, limit)
+    if (!result.data.has_more) setHasMore(false)
+    return result.data.data
+  })
 
   return (
     <div>
-      {loading.models.inspiration && (
+      {isFetching && (
         <div className="flex-grow h-full flex flex-col justify-center w-6 mx-auto">
           <Loading />
         </div>
       )}
-      {!loading.models.inspiration && (
+
+      {!isFetching && (
         <div>
           <Head>
-            <title>{`${user?.username}${t('likes.page.title')}`}</title>
+            <title>{`${authUser?.username}${t('likes.page.title')}`}</title>
           </Head>
           <div className="flex flex-col w-2/3 mx-auto">
-            {inspiration?.map((inspiration) => (
+            {data?.map((inspiration) => (
               <InspirationCard key={inspiration.id} inspiration={inspiration} />
             ))}
           </div>
         </div>
       )}
+
       <div className="w-full flex justify-center ">
-        {!loading && hasMoreInspiration && (
+        {!isFetching && hasMore && (
           <button
             className="btn btn-primary"
             onClick={() => {
-              setSkip(skip + 20)
+              setLimit(limit + 20)
             }}
           >
             {t('general.load_more')}
@@ -90,6 +89,7 @@ export default function InspirationPage() {
     </div>
   )
 }
+
 InspirationPage.getLayout = function getLayout(page: ReactElement) {
   return <UserLayout>{page}</UserLayout>
 }

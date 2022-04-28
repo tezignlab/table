@@ -1,37 +1,45 @@
+import { COLLECTION_DESC_MAX_LENGTH, COLLECTION_NAME_MAX_LENGTH } from '@/constants'
+import { updateCollection } from '@/services/project'
+import { Collection } from '@/types/collection'
 import { Form, FormikProvider, useFormik } from 'formik'
 import { useTranslation } from 'next-i18next'
 import React, { useEffect, useState } from 'react'
 import * as Yup from 'yup'
-import { COLLECTION_DESC_MAX_LENGTH, COLLECTION_NAME_MAX_LENGTH } from '../../constants'
-import { CollectionModelState } from '../../models/collection'
 import { Loading } from '../Icons'
 import { FormikInput as Input } from '../Input'
+import Modal from '../Modal'
 
-const EditCollection: React.FC<{ closeModal: () => void }> = ({ closeModal }) => {
+const CollectionEditModal: React.FC<{
+  collection: Collection
+  visible: boolean
+  closeModal: () => void
+  refresh: () => void
+}> = ({ collection, visible, closeModal, refresh }) => {
   const { t } = useTranslation('common')
-  const dispatch = useDispatch()
-
-  const { current, loading } = useSelector(({ collection }: { collection: CollectionModelState }) => collection)
-
-  const [submitted, setSubmitted] = useState<boolean>(false)
+  const [submitted, setSubmitted] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    if (!loading && submitted) {
-      closeModal()
-    }
-  }, [loading])
+    if (!loading && submitted) closeModal()
+  }, [submitted])
 
   const formik = useFormik({
     initialValues: {
-      name: current ? current.name : '',
-      desc: current ? current.desc : '',
+      name: collection ? collection.name : '',
+      desc: collection ? collection.desc : '',
     },
     onSubmit: async (values) => {
-      dispatch({
-        type: 'collection/updateCollection',
-        payload: { id: current?.id, data: values },
-      })
-      setSubmitted(true)
+      setLoading(true)
+      console.log(values)
+
+      try {
+        await updateCollection(collection.id, { name: values.name, desc: values.desc ?? '' })
+        setSubmitted(true)
+        refresh()
+      } catch {
+      } finally {
+        setLoading(false)
+      }
     },
     validationSchema: Yup.object({
       name: Yup.string()
@@ -48,10 +56,10 @@ const EditCollection: React.FC<{ closeModal: () => void }> = ({ closeModal }) =>
   })
 
   return (
-    <div className="w-full h-full">
-      <div className="text-bold text-xl text-black">{t('collection.edit')}</div>
+    <Modal visible={visible} toggle={closeModal}>
+      <div className="w-full h-full">
+        <div className="text-bold text-xl text-black">{t('collection.edit')}</div>
 
-      <div className="">
         <FormikProvider value={formik}>
           <Form className="pt-6 flex flex-col space-y-4">
             <Input placeholder={t('collection.name')} id="name" name="name" type="text" />
@@ -74,8 +82,8 @@ const EditCollection: React.FC<{ closeModal: () => void }> = ({ closeModal }) =>
           </Form>
         </FormikProvider>
       </div>
-    </div>
+    </Modal>
   )
 }
 
-export default EditCollection
+export default CollectionEditModal

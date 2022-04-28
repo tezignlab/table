@@ -66,7 +66,7 @@ const UserDropdown: React.FC = () => {
             <DropdownItem
               message={t('site.routes.user_profile')}
               handleClick={() => {
-                router.push(`/user/${authStatus?.username}/inspiration`)
+                router.push(`/user/inspiration`)
               }}
             />
             <DropdownItem

@@ -1,19 +1,74 @@
+import { useProject } from '@/hooks/useProject'
+import { ProjectDetail } from '@/types/project'
+import { withAuth } from '@/utils/withAuth'
 import clsx from 'clsx'
 import moment from 'moment'
 import { useTranslation } from 'next-i18next'
-import React, { useEffect, useRef } from 'react'
+import React, { FC, MouseEventHandler, useEffect, useRef, useState } from 'react'
 import Clamp from 'react-multiline-clamp'
-import { ProjectDetail } from '../../models/project'
+import CollectionsModal, { CollectionModalModeType } from '../CollectionModal'
 import { Detail, FolderPlus, Like, Loading } from '../Icons'
-import NeedAuthClickable from '../NeedAuthClickable'
+
+const LikeButtonBasic: FC<{ project: ProjectDetail; onClick: MouseEventHandler; isLoading: boolean }> = ({
+  project,
+  onClick,
+  isLoading,
+}) => {
+  const { t } = useTranslation('common')
+
+  return (
+    <button
+      className={clsx('btn flex flex-row h-full', {
+        'btn-active': project.is_like && !isLoading,
+        'btn-gray': !project.is_like || isLoading,
+      })}
+      onClick={onClick}
+      disabled={isLoading}
+    >
+      <div className="h-full flex flex-col justify-center">
+        <div className="h-4 w-4 mr-2">{isLoading ? <Loading color="black" /> : <Like />}</div>
+      </div>
+
+      {project.is_like ? project.count_like : t('general.like')}
+    </button>
+  )
+}
+
+const CollectButtonBasic: FC<{ project: ProjectDetail; onClick: MouseEventHandler; isLoading: boolean }> = ({
+  project,
+  onClick,
+  isLoading,
+}) => {
+  const { t } = useTranslation('common')
+
+  return (
+    <button
+      className={clsx('btn flex flex-row h-full', {
+        'btn-gray': project.collections.length === 0 || isLoading,
+        'btn-active': project.collections.length > 0 && !isLoading,
+      })}
+      onClick={onClick}
+      disabled={isLoading}
+    >
+      <div className="h-full flex flex-col justify-center">
+        <div className="h-4 w-4 mr-2">
+          <FolderPlus bgClassName="text-gray-300" />
+        </div>
+      </div>
+
+      {t('general.collect')}
+    </button>
+  )
+}
+
+const LikeButton = withAuth(LikeButtonBasic)
+const CollectButton = withAuth(CollectButtonBasic)
 
 const ProjectDetailContent: React.FC<{
   project: ProjectDetail
-  index?: number
   openModal: () => void
-}> = ({ project, index, openModal }) => {
+}> = ({ project, openModal }) => {
   const { t } = useTranslation('common')
-  const dispatch = useDispatch()
   const contentRef = useRef<HTMLDivElement>(null)
 
   // for image with data-original attribute
@@ -30,59 +85,10 @@ const ProjectDetailContent: React.FC<{
 
   const timestamp = moment(new Date(project.publish_time)).format('YYYY-MM-DD')
 
-  const likeButton = (
-    <NeedAuthClickable>
-      <button
-        className={clsx('btn flex flex-row h-full', {
-          'btn-active': project.is_like && !project.like_loading,
-          'btn-gray': !project.is_like || project.like_loading,
-        })}
-        onClick={() => {
-          dispatch({
-            type: project.is_like ? 'project/unlikeProject' : 'project/likeProject',
-            payload: { index: index, id: project.id },
-          })
-        }}
-        disabled={project.like_loading}
-      >
-        <div className="h-full flex flex-col justify-center">
-          <div className="h-4 w-4 mr-2">{project.like_loading ? <Loading color="black" /> : <Like />}</div>
-        </div>
+  const { likeLoading, toggleProjectLike } = useProject(project)
 
-        {project.is_like ? project.count_like : t('general.like')}
-      </button>
-    </NeedAuthClickable>
-  )
-
-  const collectButton = (
-    <NeedAuthClickable>
-      <button
-        className={clsx('btn flex flex-row h-full', {
-          'btn-gray': !project.is_collect || project.collect_loading,
-          'btn-active': project.is_collect && !project.collect_loading,
-        })}
-        onClick={() => {
-          // open collections modal
-          dispatch({
-            type: 'projectCollection/getCollections',
-            payload: {
-              id: project.id,
-              projectIndex: index,
-            },
-          })
-        }}
-        disabled={project.collect_loading}
-      >
-        <div className="h-full flex flex-col justify-center">
-          <div className="h-4 w-4 mr-2">
-            <FolderPlus bgClassName="text-gray-300" />
-          </div>
-        </div>
-
-        {t('general.collect')}
-      </button>
-    </NeedAuthClickable>
-  )
+  const [collectionVisible, setCollectionVisible] = useState(false)
+  const [collectionMode, setCollectionMode] = useState<CollectionModalModeType>('choose')
 
   return (
     <div className="w-full flex overflow-y-scroll">
@@ -107,8 +113,20 @@ const ProjectDetailContent: React.FC<{
           <div className={clsx('w-full flex flex-col justify-start', 'lg:flex-none lg:w-56 lg:justify-center')}>
             <div className={clsx('flex flex-row justify-between pt-4 space-x-4', 'lg:pt-0 lg:justify-end')}>
               <div className="flex flex-row justify-start space-x-4">
-                {likeButton}
-                {collectButton}
+                <LikeButton
+                  onClick={() => {
+                    toggleProjectLike()
+                  }}
+                  isLoading={likeLoading}
+                  project={project}
+                />
+                <CollectButton
+                  onClick={() => {
+                    setCollectionVisible(true)
+                  }}
+                  project={project}
+                  isLoading={false}
+                />
               </div>
               <div
                 className={clsx('btn btn-gray lg:hidden ')}
@@ -136,6 +154,16 @@ const ProjectDetailContent: React.FC<{
           <div className="w-full detail-content" dangerouslySetInnerHTML={{ __html: project.content }}></div>
         </div>
       </div>
+
+      <CollectionsModal
+        project={project}
+        mode={collectionMode}
+        visible={collectionVisible}
+        closeModal={() => setCollectionVisible(false)}
+        changeModalMode={(mode) => {
+          setCollectionMode(mode)
+        }}
+      />
     </div>
   )
 }

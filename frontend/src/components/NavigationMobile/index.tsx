@@ -1,11 +1,11 @@
+import { authUserState } from '@/stores/auth'
 import clsx from 'clsx'
 import { useTranslation } from 'next-i18next'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { Fragment, useEffect, useMemo, useState } from 'react'
+import { useRecoilValue } from 'recoil'
 import { APP_ICON_URL, ROUTES } from '../../constants'
-import { AuthModelState } from '../../models/auth'
-import { GlobalLoadingState } from '../../utils'
 import { isiOS as isiOSService } from '../../utils/device'
 import { Close, Menu, Search } from '../Icons'
 import { Logo } from '../Images'
@@ -26,21 +26,17 @@ const MenuItem: React.FC<{
 
 const NavigationMobile: React.FC = () => {
   const { t } = useTranslation('common')
-  const dispatch = useDispatch()
   const router = useRouter()
-  const { user } = useSelector(({ auth }: { auth: AuthModelState }) => auth)
-  const globalLoading = useSelector(({ loading }: { loading: GlobalLoadingState }) => loading)
   const [menuVisible, setMenuVisible] = useState(false)
+  const authUser = useRecoilValue(authUserState)
 
-  const isiOS = useMemo(() => {
-    return isiOSService()
-  }, [])
-
-  const loading = globalLoading.models.auth
+  // const isiOS = useMemo(() => {
+  //   return isiOSService()
+  // }, [])
 
   useEffect(() => {
     setMenuVisible(false)
-  }, [location.pathname])
+  }, [router.pathname])
 
   useEffect(() => {
     if (menuVisible) {
@@ -54,7 +50,7 @@ const NavigationMobile: React.FC = () => {
     <div className="w-full z-10 lg:hidden">
       <div className="w-full h-16 px-4 grid grid-cols-3 shadow relative z-20">
         <div className="h-16 flex flex-row justify-start">
-          {!loading && user && (
+          {authUser && (
             <div
               className="w-10 h-full py-5 px-2 text-gray-500"
               onClick={() => {
@@ -65,7 +61,7 @@ const NavigationMobile: React.FC = () => {
             </div>
           )}
 
-          {!loading && !user && (
+          {!authUser && (
             <div
               className="h-16 flex flex-col p-2 justify-center"
               onClick={() => {
@@ -99,7 +95,7 @@ const NavigationMobile: React.FC = () => {
       </div>
 
       {/* navigate to app store */}
-      {location.pathname === '/' && (
+      {router.pathname === '/' && (
         <div className="w-full h-16 py-4 px-4 flex justify-between bg-gray-200">
           <div className="h-full flex flex-col justify-center">
             <div className="flex h-full">
@@ -128,13 +124,13 @@ const NavigationMobile: React.FC = () => {
           }}
         >
           <div className="w-full flex flex-col">
-            {ROUTES.map(({ name, path, visibleOnMobile }, index) => (
-              <Fragment key={index}>
+            {ROUTES.map(({ name, path, visibleOnMobile }) => (
+              <Fragment key={name}>
                 {visibleOnMobile && (
                   <Link href={path}>
                     <a
                       className={clsx('link w-full p-4', {
-                        'link-active': location.pathname === path || location.pathname === `${path}/`,
+                        'link-active': router.pathname === path || router.pathname === `${path}/`,
                       })}
                     >
                       {t(name)}
@@ -145,12 +141,12 @@ const NavigationMobile: React.FC = () => {
             ))}
           </div>
 
-          {!!user && (
+          {!!authUser && (
             <div className="w-full">
               <MenuItem
                 message={t('site.routes.user_profile')}
                 handleClick={() => {
-                  router.push(`/user/${user?.username}/inspiration`)
+                  router.push(`/user/inspiration`)
                 }}
               />
               <MenuItem
@@ -168,14 +164,14 @@ const NavigationMobile: React.FC = () => {
               <MenuItem
                 message={t('auth.sign_out')}
                 handleClick={() => {
-                  dispatch({ type: 'auth/signOut' })
-                  window.location.reload()
+                  // dispatch({ type: 'auth/signOut' })
+                  // window.location.reload()
                 }}
               />
             </div>
           )}
 
-          {!user && (
+          {!authUser && (
             <div className="w-full">
               <MenuItem
                 message={t('auth.sign_in')}

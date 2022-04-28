@@ -10,11 +10,11 @@ const HorizontalNavigation: React.FC<{
 
   return (
     <div className="w-full flex flex-row space-x-2">
-      {routes.map(({ name, url }, index) => (
+      {routes.map(({ name, url }) => (
         <div
-          key={index}
+          key={name}
           className={clsx('text-md btn font-bold', {
-            'btn-primary': router.pathname === `${urlPrefix}/${url}` || router.pathname === `${urlPrefix}/${url}/`,
+            'btn-primary': router.pathname.startsWith(`${urlPrefix}/${url}`),
           })}
           onClick={() => {
             router.push(`${urlPrefix}/${url}`)

@@ -1,15 +1,19 @@
+import { Loading } from '@/components/Icons'
+import { useHover } from '@/hooks/useHover'
+import UserLayout from '@/layouts/user'
+import { getCollectionsList } from '@/services/project'
+import { authUserState } from '@/stores/auth'
+import { Collection } from '@/types/collection'
 import clsx from 'clsx'
 import { GetServerSideProps } from 'next'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import React, { ReactElement, useEffect } from 'react'
-import { Loading } from '../../../../components/Icons'
-import UserLayout from '../../../../components/layouts/user'
-import { useHover } from '../../../../hooks/useHover'
-import { Collection, CollectionModelState } from '../../../../models/collection'
-import { CurrentUserModelState } from '../../../../models/currentUser'
+import React, { ReactElement } from 'react'
+import { useQuery } from 'react-query'
+import { useRecoilValue } from 'recoil'
+
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
@@ -20,8 +24,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 const CollectionCard: React.FC<{ collection: Collection }> = ({ collection }) => {
   const [isHovering, hoverRef] = useHover<HTMLDivElement>()
   const router = useRouter()
-  const { username } = router.query as { username: string }
-  const dispatch = useDispatch()
 
   return (
     <div
@@ -29,12 +31,7 @@ const CollectionCard: React.FC<{ collection: Collection }> = ({ collection }) =>
       className={clsx('cursor-pointer', 'transition-all duration-200 ease-in-out')}
       key={collection.id}
       onClick={() => {
-        dispatch({ type: 'project/clear' })
-        dispatch({
-          type: 'collection/save',
-          payload: { current: undefined },
-        })
-        router.push(`/user/${username}/collections/${collection.id}`)
+        router.push(`/user/collections/${collection.id}`)
       }}
     >
       <div className="w-full flex flex-col relative">
@@ -97,27 +94,25 @@ const CollectionCard: React.FC<{ collection: Collection }> = ({ collection }) =>
 }
 
 export default function CollectionsPage() {
-  const dispatch = useDispatch()
   const { t } = useTranslation('common')
-  const { user } = useSelector(({ currentUser }: { currentUser: CurrentUserModelState }) => currentUser)
-  const { collections, loading } = useSelector(({ collection }: { collection: CollectionModelState }) => collection)
+  const authUser = useRecoilValue(authUserState)
 
-  useEffect(() => {
-    dispatch({
-      type: 'collection/getCollections',
-      payload: { userId: user?.id },
-    })
-  }, [])
+  const { data, isLoading } = useQuery(['collections', authUser?.id], async () => {
+    const result = await getCollectionsList(authUser?.id ?? '')
+    return result.data
+  }, {
+    cacheTime: 0
+  })
 
   return (
     <div className="flex-grow w-full min-h-0 flex flex-col space-y-2 bg-white">
-      {loading && (
+      {isLoading && (
         <div className="flex-grow h-full flex flex-col justify-center w-6 mx-auto">
           <Loading />
         </div>
       )}
 
-      {!loading && (
+      {!isLoading && (
         <div
           className={clsx(
             'px-4 lg:px-16 grid grid-cols-1 gap-16',
@@ -127,9 +122,9 @@ export default function CollectionsPage() {
           )}
         >
           <Head>
-            <title>{`${user?.username}${t('collection.page.title')}`}</title>
+            <title>{`${authUser?.username}${t('collection.page.title')}`}</title>
           </Head>
-          {collections?.map((collection) => (
+          {data?.map((collection) => (
             <CollectionCard key={collection.id} collection={collection} />
           ))}
         </div>
@@ -137,6 +132,7 @@ export default function CollectionsPage() {
     </div>
   )
 }
+
 CollectionsPage.getLayout = function getLayout(page: ReactElement) {
   return <UserLayout>{page}</UserLayout>
 }

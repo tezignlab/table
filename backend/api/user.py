@@ -13,8 +13,8 @@ from utils import TimeUtils
 from random import randint
 
 # Mongo Collections
-nd_user = mongo['naodong']['user']
-nd_user_black = mongo['naodong']['user-black']
+nd_user = mongo['table']['user']
+nd_user_black = mongo['table']['user-black']
 
 
 def get_user(query: dict):

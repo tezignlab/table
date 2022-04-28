@@ -1,16 +1,16 @@
 import { Form, FormikProvider, useFormik } from 'formik'
 import { GetServerSideProps } from 'next'
 import { useTranslation } from 'next-i18next'
-import { useUpdatePassword } from '../../queries/auth'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import React, { ReactElement, useState, useEffect } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
+import { useRecoilValue } from 'recoil'
 import * as Yup from 'yup'
 import Input from '../../components/AuthInput'
 import { Loading } from '../../components/Icons'
-import AccountLayout from '../../components/layouts/account'
 import { PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH } from '../../constants'
+import AccountLayout from '../../layouts/account'
+import { useUpdatePassword } from '../../queries/auth'
 import { authStatusState } from '../../stores/auth'
-import { useRecoilValue } from 'recoil'
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
@@ -19,6 +19,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     },
   }
 }
+
 export default function Password() {
   const { t } = useTranslation('common')
 
@@ -115,6 +116,7 @@ export default function Password() {
     </div>
   )
 }
+
 Password.getLayout = function getLayout(page: ReactElement) {
   return <AccountLayout>{page}</AccountLayout>
 }

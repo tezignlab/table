@@ -1,10 +1,11 @@
+import { getRecommendProjects } from '@/services/project'
 import clsx from 'clsx'
 import { GetServerSideProps } from 'next'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import React, { useEffect, useState } from 'react'
+import { useQuery } from 'react-query'
 import { LogoWhite } from '../components/Images'
-import { Project, ProjectModelState } from '../models/project'
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
@@ -13,27 +14,20 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 }
 const DownloadAppPage: React.FC = () => {
-  const { projects } = useSelector(({ project }: { project: ProjectModelState }) => project)
-  const dispatch = useDispatch()
   const [isIOSHover, setIsIOSHover] = useState(false)
   const [isAndroidHover, setIsAndroidHover] = useState(false)
   const { t } = useTranslation('common')
-  useEffect(() => {
-    dispatch({
-      type: 'project/getProjects',
-      payload: {
-        skip: 0,
-        limit: 12,
-        type: 'recommend',
-      },
-    })
-  }, [])
+  const { data: projects } = useQuery(['recommendProjects'], async () => {
+    const result = await getRecommendProjects({ skip: 0, limit: 12 })
+    return result.data.data
+  })
+
   return (
     <div className="w-full h-full">
       <div className="top-0 bottom-0 hidden  lg:flex flex-wrap z-0 h-screen w-screen overflow-x-hidden overflow-y-hidden">
         {projects &&
-          projects.map((project: Project, index: number) => (
-            <img key={index} className="h-1/3 w-1/4 object-cover object-center" src={project.cover} />
+          projects.map((project) => (
+            <img key={project.id} className="h-1/3 w-1/4 object-cover object-center" src={project.cover} />
           ))}
         <div className="absolute h-screen w-screen grid grid-cols-2 gap-20 bg-black bg-opacity-70 z-10">
           <div className="flex flex-col my-auto justify-self-end">

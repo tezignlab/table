@@ -1,26 +1,27 @@
+import { createCollection } from '@/services/project'
+import { Collection } from '@/types/collection'
 import { Form, FormikProvider, useFormik } from 'formik'
 import { useTranslation } from 'next-i18next'
 import React, { useEffect, useState } from 'react'
 import * as Yup from 'yup'
 import { COLLECTION_DESC_MAX_LENGTH, COLLECTION_NAME_MAX_LENGTH } from '../../constants'
-import { ProjectCollectionModelState } from '../../models/projectCollection'
 import { Loading } from '../Icons'
 import { FormikInput as Input } from '../Input'
 
-const CreateCollection: React.FC<{ showChooseModal: () => void }> = ({ showChooseModal }) => {
-  // const intl = useIntl()
+const CreateCollection: React.FC<{ collections: Collection[]; showChooseModal: () => void; refresh: () => void }> = ({
+  collections,
+  showChooseModal,
+  refresh
+}) => {
   const { t } = useTranslation('common')
-  const dispatch = useDispatch()
-  const { collections, loading } = useSelector(
-    ({ projectCollection }: { projectCollection: ProjectCollectionModelState }) => projectCollection,
-  )
   const [created, setCreated] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    if (created) {
+    if (!loading && created) {
       showChooseModal()
     }
-  }, [collections])
+  }, [loading])
 
   const formik = useFormik({
     initialValues: {
@@ -28,11 +29,15 @@ const CreateCollection: React.FC<{ showChooseModal: () => void }> = ({ showChoos
       desc: '',
     },
     onSubmit: async (values: { name: string; desc: string }) => {
-      setCreated(true)
-      dispatch({
-        type: 'projectCollection/createCollection',
-        payload: { ...values },
-      })
+      setLoading(true)
+      try {
+        await createCollection(values.name, values.desc)
+        setCreated(true)
+      } catch {
+      } finally {
+        setLoading(false)
+        refresh()
+      }
     },
     validationSchema: Yup.object({
       name: Yup.string()

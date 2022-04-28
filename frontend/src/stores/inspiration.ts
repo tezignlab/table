@@ -1,20 +1,6 @@
+import { Inspiration } from '@/types/inspiration'
 import { atom } from 'recoil'
 
-export interface Inspiration {
-  id: string
-  content: string
-  files: File[]
-  tag: []
-  create_time: number
-  update_time: number
-}
-
-export interface File {
-  id: string
-  content_type: string
-  url: string
-  thumbnail: string
-}
 
 export interface InspirationState {
   inspiration?: Inspiration[]

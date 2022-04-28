@@ -9,7 +9,7 @@ from fastlab.models import Response
 from models.file import FileInfo
 from utils import TimeUtils, FileUtils
 
-nd_files = mongo["naodong"]["files"]
+nd_files = mongo["table"]["files"]
 
 
 @router_public.post("/api/v1/file/upload", tags=["File"], summary="Upload", response_model=Response[FileInfo])

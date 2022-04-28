@@ -1,3 +1,5 @@
+import { Search } from '@/components/Icons'
+import { ROUTES } from '@/constants'
 import { authUserState } from '@/stores/auth'
 import clsx from 'clsx'
 import { useTranslation } from 'next-i18next'
@@ -5,8 +7,6 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { useRecoilValue } from 'recoil'
-import { ROUTES } from '../../constants'
-import { Search } from '../Icons'
 import { Logo } from '../Images'
 import UserDropdown from '../UserDropdown'
 
@@ -28,11 +28,12 @@ const Navigation: React.FC = () => {
         />
 
         <div className="pl-8 h-full w-full mx-auto space-x-4 flex flex-row">
-          {ROUTES.map(({ name, path }, index) => (
-            <Link key={index} href={path}>
+          {ROUTES.map(({ name, path }) => (
+            <Link key={name} href={path}>
               <a
                 className={clsx('link text-md flex flex-col justify-center', {
-                  'link-active': router.pathname === path || router.pathname === `${path}/`,
+                  'link-active':
+                    (path !== '/' && router.pathname.startsWith(path)) || (path === '/' && router.pathname === '/'),
                 })}
               >
                 {t(name)}
@@ -61,7 +62,7 @@ const Navigation: React.FC = () => {
               }}
               onKeyDown={(event) => {
                 if (event.key === 'Enter') {
-                  router.push(`/search/projects/${encodeURIComponent(searchValue)}`)
+                  router.push(`/search?query=${encodeURIComponent(searchValue)}`)
                 }
               }}
             />
