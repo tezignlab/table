@@ -9,13 +9,13 @@ es_index = conf['elasticsearch']['index']
 
 # Clear old data
 es.indices.delete(index=es_index, ignore=[400, 404])
-mongo.naodong.project.delete_many({})
+mongo.table.project.delete_many({})
 
 
 # Write data to DB
 with open(f'{os.path.dirname(__file__)}/data/mongo_projects_{lang}.json', 'r') as f:
     projects = json.load(f)
-    mongo.naodong.project.insert_many(projects)
+    mongo.table.project.insert_many(projects)
     for project in projects:
         es.index(index=es_index,
                  id=str(project['_id']),
