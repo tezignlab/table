@@ -1,6 +1,6 @@
 import { ACCESS_TOKEN_NAME } from '@/constants/index'
+import { User } from '@/types/user';
 import axios from 'axios'
-import { User } from '../stores/auth'
 import { AuthToken, IDefaultReturnType } from './index'
 
 export const signIn = async ({ username, password }: { username: string; password: string }) => {
