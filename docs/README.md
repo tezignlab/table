@@ -1,4 +1,3 @@
-
 <br />
 <p align="center">
   <img width="240" src="https://user-images.githubusercontent.com/12091906/152910229-6a1187bb-e06a-43a0-acb3-bbbc8c83c8f5.png"/>  
@@ -72,7 +71,7 @@ Start [docker](https://www.docker.com/products/docker-desktop) and run all servi
 docker-compose up --build --force-recreate
 ```
 
-This creates two new data folders: `data_es` and `data_mongo`. 
+This creates two new data folders: `data_es` and `data_mongo`.
 
 Load the sample data (choose from English or Chinese data):
 
@@ -111,12 +110,12 @@ Run the tests with:
 ```
 pytest
 ```
-`pytest` will run all files of the form `test_*.py` or `*_test.py` in the current directory and its subdirectories.
 
+`pytest` will run all files of the form `test_*.py` or `*_test.py` in the current directory and its subdirectories.
 
 ### Run Frontend Web Application Server
 
-The frontend is a [UmiJS](https://umijs.org/) project bootstrapped with [`@umijs/umi-app`](https://github.com/umijs/umi).
+The frontend is a [Next.js](https://nextjs.org/) project bootstrapped with [`@vercel/next.js`](https://github.com/vercel/next.js).
 
 ```shell
 cd frontend/
@@ -130,14 +129,13 @@ yarn start
 
 Open [http://localhost:8000](http://localhost:8000) with your browser to see the web app.
 
-
 Run the tests with:
 
 ```
 yarn test
 ```
 
-See [UmiJS Plugin Test](https://umijs.org/plugins/best-practice#plugin-test) for more information.
+See [Next.js Testing](https://nextjs.org/docs/testing) for more information.
 
 ### Run Mobile App
 
@@ -155,14 +153,8 @@ yarn web
 
 Install [Expo Go](https://expo.dev/client) on your phone, then scan the QR code using your phone's camera to check the App.
 
-
 ## Team
 
-Table is based on an internal project of [Tezign](https://www.tezign.com/) led by [Ling Fan](https://www.linkedin.com/in/fatflatfloat/), [Zhe Wang](https://www.linkedin.com/in/zhe-wang-7665921b/), and [Harry Wang](https://harrywang.me/). 
+Table is based on an internal project of [Tezign](https://www.tezign.com/) led by [Ling Fan](https://www.linkedin.com/in/fatflatfloat/), [Zhe Wang](https://www.linkedin.com/in/zhe-wang-7665921b/), and [Harry Wang](https://harrywang.me/).
 
 Core development team includes [Yuandong Yang](https://github.com/AnoyiX), [Jinggang Zhuo](https://github.com/zhuojg), and [Feifei Ying](https://github.com/faye1225) with contributions from other members, such as Meixi Lu, Zilong Pei, Jing Zhu, Dan Li.
-
-
-
-
-
