@@ -2,8 +2,6 @@ version: "3.9"
 services:
   mongo:
     container_name: table_mongo
-    networks:
-      - table
     image: mongo:4.4
     restart: unless-stopped
     environment:
@@ -16,8 +14,6 @@ services:
 
   elasticsearch:
     container_name: table_es
-    networks:
-      - table
     image: elasticsearch:7.16.2
     environment:
       cluster.name: table
