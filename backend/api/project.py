@@ -13,12 +13,12 @@ from service import ESService
 from utils import TimeUtils
 from db import es
 
-nd_project = mongo['naodong']['project']
-nd_project_collection = mongo['naodong']['project-collection']
-nd_project_collect = mongo['naodong']['project-collect']
-nd_project_like = mongo['naodong']['project-like']
-nd_project_view = mongo['naodong']['project-view']
-nd_user_black = mongo['naodong']['user-black']
+nd_project = mongo['table']['project']
+nd_project_collection = mongo['table']['project-collection']
+nd_project_collect = mongo['table']['project-collect']
+nd_project_like = mongo['table']['project-like']
+nd_project_view = mongo['table']['project-view']
+nd_user_black = mongo['table']['user-black']
 
 project_ID_PROJECTION = {'_id': 0, 'project_id': 1}
 project_PROJECTION = {'content': 0, 'crawler_time': 0}
@@ -30,16 +30,21 @@ async def _extra_project_field(request: Request, project_list: List):
     """
     user_id = await optional_user_id(request)
     project_ids = [str(x['_id']) for x in project_list]
-    user_likes, user_collects = {}, {}
+    user_likes = {}
     if user_id:
         _filter = {'user_id': user_id, 'project_id': {'$in': project_ids}}
         user_likes = {x['project_id'] for x in list(nd_project_like.find(_filter, project_ID_PROJECTION))}
-        user_collects = {x['project_id'] for x in list(nd_project_collect.find(_filter, project_ID_PROJECTION))}
     for item in project_list:
         item['id'] = str(item['_id'])
         if user_id:
             item['is_like'] = item['id'] in user_likes
-            item['is_collect'] = item['id'] in user_collects
+
+            # find projects collections
+            collection_ids = [x['collection_id'] for x in list(nd_project_collect.find({'user_id': user_id, 'project_id': item['id']}, {'_id': 0, 'collection_id': 1}))]
+            collection_ids = [ObjectId(item) for item in collection_ids]
+            collections = nd_project_collection.find({'_id': {'$in': collection_ids}})
+            collections = [{**item, 'id': str(item['_id'])} for item in collections]
+            item['collections'] = list(collections)
         if not item['author']['avatar']:
             item['author']['avatar'] = random_avatar()
 
@@ -92,7 +97,14 @@ async def project_detail(request: Request, project_id: str):
     user_id = await optional_user_id(request)
     if user_id:
         doc['is_like'] = nd_project_like.find_one({'user_id': user_id, 'project_id': project_id}) is not None
-        doc['is_collect'] = nd_project_collect.find_one({'user_id': user_id, 'project_id': project_id}) is not None
+        
+        # find projects collections
+        collection_ids = [x['collection_id'] for x in list(nd_project_collect.find({'user_id': user_id, 'project_id': doc['id']}, {'_id': 0, 'collection_id': 1}))]
+        collection_ids = [ObjectId(item) for item in collection_ids]
+        collections = nd_project_collection.find({'_id': {'$in': collection_ids}})
+        collections = [{**item, 'id': str(item['_id'])} for item in collections]
+        doc['collections'] = list(collections)
+
     return Response(data=doc)
 
 

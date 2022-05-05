@@ -13,8 +13,8 @@ from utils import TimeUtils
 from random import randint
 
 # Mongo Collections
-nd_user = mongo['naodong']['user']
-nd_user_black = mongo['naodong']['user-black']
+nd_user = mongo['table']['user']
+nd_user_black = mongo['table']['user-black']
 
 
 def get_user(query: dict):
@@ -22,7 +22,7 @@ def get_user(query: dict):
 
 
 def random_avatar():
-    return f'/api/static/avatars/{randint(0, 9)}.png'
+    return f'/avatars/{randint(0, 9)}.png'
 
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = timedelta(days=7)):
@@ -68,8 +68,9 @@ async def register(body: RegisterBody):
         'hashed_password': crypt_context.hash(body.password),
         'status': UserStatusEnum.ACTIVE
     }
-    nd_user.insert_one(user)
-    return Response(data=True)
+    result = nd_user.insert_one(user)
+    access_token, expire = create_access_token(data={'id': str(result.inserted_id)})
+    return Response(data=UserAuthedToken(access_token=access_token, expire=expire).dict())
 
 
 @router_public.get("/api/v1/user", response_model=Response[User], summary='Mine info', tags=['User'])

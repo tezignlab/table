@@ -1,21 +1,17 @@
-import React, { useEffect } from 'react'
-import { useIntl, useSelector, useDispatch } from 'umi'
-import {
-  ProjectCollectionModelState,
-  ProjectCollection,
-} from '@/models/projectCollection'
-import { Loading, Check, Plus } from '@/components/Icons'
+import { useProject } from '@/hooks/useProject'
+import { Collection } from '@/types/collection'
+import { Project } from '@/types/project'
 import clsx from 'clsx'
+import { useTranslation } from 'next-i18next'
+import React, { useEffect } from 'react'
+import { Check, Loading, Plus } from '../Icons'
 
 const CollectionChoice: React.FC<{
-  collection: ProjectCollection
-  index: number
-}> = ({ collection, index }) => {
-  const dispatch = useDispatch()
-  const { projectId } = useSelector(
-    ({ projectCollection }: { projectCollection: ProjectCollectionModelState }) =>
-      projectCollection,
-  )
+  project: Project
+  collection: Collection
+}> = ({ project, collection }) => {
+  const { toggleProjectCollection, collectLoading } = useProject(project)
+  const collected = !!project.collections.find((item) => item.id === collection.id)
 
   return (
     <div
@@ -25,28 +21,20 @@ const CollectionChoice: React.FC<{
         'transition-all duration-200 ease-in-out',
         'hover:bg-gray-200',
         {
-          'bg-blue-500 text-white hover:bg-blue-700': collection.is_collect,
+          'bg-blue-500 text-white hover:bg-blue-700': collected,
         },
       )}
       onClick={() => {
-        dispatch({
-          type: 'projectCollection/collectProject',
-          payload: {
-            projectId: projectId,
-            collectionId: collection.id,
-            method: collection.is_collect ? 'delete' : 'post',
-            collectionIndex: index,
-          },
-        })
+        toggleProjectCollection(collection)
       }}
     >
       <span className="font-bold">{collection.name}</span>
-      {collection.is_collect && !collection.loading && (
+      {collected && !collectLoading && (
         <div className="h-5 w-5">
           <Check />
         </div>
       )}
-      {collection.loading && (
+      {collectLoading && (
         <div className="h-5 w-5">
           <Loading />
         </div>
@@ -56,38 +44,29 @@ const CollectionChoice: React.FC<{
 }
 
 const ChooseCollection: React.FC<{
+  project: Project
+  collections: Collection[]
   closeModal: () => void
   showCreateModal: () => void
-}> = ({ closeModal, showCreateModal }) => {
-  const intl = useIntl()
-  const { collections, loading } = useSelector(
-    ({ projectCollection }: { projectCollection: ProjectCollectionModelState }) =>
-      projectCollection,
-  )
+  refresh: () => void
+}> = ({ project, collections, closeModal, showCreateModal , refresh}) => {
+  const { t } = useTranslation('common')
 
   useEffect(() => {
-    if (!loading && collections && collections.length === 0) {
+    if ((collections && collections.length === 0) || !collections) {
       showCreateModal()
     }
-  }, [loading])
+  }, [])
 
   return (
     <div className="w-full h-full">
-      <div className="text-bold text-xl text-black">
-        {intl.formatMessage({ id: 'collection.collect.desc' })}
-      </div>
+      <div className="text-bold text-xl text-black">{t('collection.collect.desc')}</div>
 
       <div className="py-4 w-full">
-        {loading && (
-          <div className="w-full h-6 flex flex-col justify-center">
-            <Loading />
-          </div>
-        )}
         <div className="flex flex-col space-y-4 max-h-60 overflow-y-scroll">
-          {!loading &&
-            collections?.map((item, index: number) => (
-              <CollectionChoice collection={item} index={index} key={index} />
-            ))}
+          {collections?.map((item) => (
+            <CollectionChoice project={project} collection={item} key={item.id} />
+          ))}
         </div>
       </div>
 
@@ -98,7 +77,7 @@ const ChooseCollection: React.FC<{
             closeModal()
           }}
         >
-          {intl.formatMessage({ id: 'general.done' })}
+          {t('general.done')}
         </button>
 
         <button
@@ -110,9 +89,7 @@ const ChooseCollection: React.FC<{
           <div className="h-5 w-5">
             <Plus />
           </div>
-          <span className="h-full flex flex-col justify-center">
-            {intl.formatMessage({ id: 'collection.create' })}
-          </span>
+          <span className="h-full flex flex-col justify-center">{t('collection.create')}</span>
         </button>
       </div>
     </div>

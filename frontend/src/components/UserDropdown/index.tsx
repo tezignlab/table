@@ -1,15 +1,12 @@
-import React, { useState, useEffect } from 'react'
-import { history, useSelector, useDispatch, useIntl, useLocation } from 'umi'
-import { AuthModelState } from '@/models/auth'
+import { signOut } from '@/services/auth'
+import { authUserState } from '@/stores/auth'
 import clsx from 'clsx'
+import { useTranslation } from 'next-i18next'
+import { useRouter } from 'next/router'
+import React, { useEffect, useState } from 'react'
+import { useRecoilValue } from 'recoil'
 
-const DropdownItem = ({
-  message,
-  handleClick,
-}: {
-  message: string
-  handleClick: () => void
-}) => {
+const DropdownItem = ({ message, handleClick }: { message: string; handleClick: () => void }) => {
   return (
     <div
       className="w-full hover:bg-gray-100 p-4 text-md cursor-pointer transition-all duration-200 ease-in-out"
@@ -21,10 +18,9 @@ const DropdownItem = ({
 }
 
 const UserDropdown: React.FC = () => {
-  const intl = useIntl()
-  const location = useLocation()
-  const dispatch = useDispatch()
-  const { user } = useSelector(({ auth }: { auth: AuthModelState }) => auth)
+  const { t } = useTranslation('common')
+  const router = useRouter()
+  const authStatus = useRecoilValue(authUserState)
   const [dropdownVisible, setDropdownVisible] = useState<boolean>(false)
 
   let timer: NodeJS.Timeout | null = null
@@ -53,7 +49,7 @@ const UserDropdown: React.FC = () => {
         <img
           onMouseEnter={onMouseEnter}
           onMouseLeave={onMouseLeave}
-          src={user?.avatar}
+          src={authStatus?.avatar}
           className="w-16 p-4 rounded-full cursor-pointer"
         />
       </div>
@@ -66,34 +62,31 @@ const UserDropdown: React.FC = () => {
         onMouseLeave={onMouseLeave}
       >
         <div className="shadow flex flex-col py-4 rounded-lg bg-white divide-y divide-gray-200">
-
           <div className="">
             <DropdownItem
-              message={intl.formatMessage({
-                id: 'site.routes.user_profile',
-              })}
+              message={t('site.routes.user_profile')}
               handleClick={() => {
-                history.push(`/user/${user?.username}/inspiration`)
+                router.push(`/user/inspiration`)
               }}
             />
             <DropdownItem
-              message={intl.formatMessage({ id: 'site.routes.user_update' })}
+              message={t('site.routes.user_update')}
               handleClick={() => {
-                history.push('/account/profile')
+                router.push('/account/profile')
               }}
             />
             <DropdownItem
-              message={intl.formatMessage({ id: 'site.routes.user_password' })}
+              message={t('site.routes.user_password')}
               handleClick={() => {
-                history.push('/account/password')
+                router.push('/account/password')
               }}
             />
           </div>
 
           <DropdownItem
-            message={intl.formatMessage({ id: 'auth.sign_out' })}
+            message={t('auth.sign_out')}
             handleClick={() => {
-              dispatch({ type: 'auth/signOut' })
+              signOut()
               window.location.reload()
             }}
           />

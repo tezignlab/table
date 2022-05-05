@@ -1,31 +1,27 @@
+import { createCollection } from '@/services/project'
+import { Collection } from '@/types/collection'
+import { Form, FormikProvider, useFormik } from 'formik'
+import { useTranslation } from 'next-i18next'
 import React, { useEffect, useState } from 'react'
-import { useDispatch, useIntl, useSelector } from 'umi'
-import { FormikInput as Input } from '@/components/Input'
-import { Loading } from '@/components/Icons'
-import { ProjectCollectionModelState } from '@/models/projectCollection'
-import { useFormik, FormikProvider, Form } from 'formik'
 import * as Yup from 'yup'
-import {
-  COLLECTION_DESC_MAX_LENGTH,
-  COLLECTION_NAME_MAX_LENGTH,
-} from '@/constants'
+import { COLLECTION_DESC_MAX_LENGTH, COLLECTION_NAME_MAX_LENGTH } from '../../constants'
+import { Loading } from '../Icons'
+import { FormikInput as Input } from '../Input'
 
-const CreateCollection: React.FC<{ showChooseModal: () => void }> = ({
+const CreateCollection: React.FC<{ collections: Collection[]; showChooseModal: () => void; refresh: () => void }> = ({
+  collections,
   showChooseModal,
+  refresh
 }) => {
-  const intl = useIntl()
-  const dispatch = useDispatch()
-  const { collections, loading } = useSelector(
-    ({ projectCollection }: { projectCollection: ProjectCollectionModelState }) =>
-      projectCollection,
-  )
+  const { t } = useTranslation('common')
   const [created, setCreated] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    if (created) {
+    if (!loading && created) {
       showChooseModal()
     }
-  }, [collections])
+  }, [loading])
 
   const formik = useFormik({
     initialValues: {
@@ -33,71 +29,48 @@ const CreateCollection: React.FC<{ showChooseModal: () => void }> = ({
       desc: '',
     },
     onSubmit: async (values: { name: string; desc: string }) => {
-      setCreated(true)
-      dispatch({
-        type: 'projectCollection/createCollection',
-        payload: { ...values },
-      })
+      setLoading(true)
+      try {
+        await createCollection(values.name, values.desc)
+        setCreated(true)
+      } catch {
+      } finally {
+        setLoading(false)
+        refresh()
+      }
     },
     validationSchema: Yup.object({
       name: Yup.string()
-        .required(
-          intl.formatMessage(
-            { id: 'form.validation.require' },
-            { type: intl.formatMessage({ id: 'collection.name' }) },
-          ),
-        )
+        .required(t('form.validation.require'))
         .max(
           COLLECTION_NAME_MAX_LENGTH,
-          intl.formatMessage(
-            { id: 'form.validation.max' },
-            { count: COLLECTION_NAME_MAX_LENGTH },
-          ),
+          `${t('form.validation.max.prefix')}${COLLECTION_NAME_MAX_LENGTH}${t('form.validation.max.suffix')}`,
         ),
       desc: Yup.string().max(
         COLLECTION_DESC_MAX_LENGTH,
-        intl.formatMessage(
-          { id: 'form.validation.max' },
-          { count: COLLECTION_DESC_MAX_LENGTH },
-        ),
+        `${t('form.validation.max.prefix')}${COLLECTION_DESC_MAX_LENGTH}${t('form.validation.max.suffix')}`,
       ),
     }),
   })
 
   return (
     <div className="w-full h-full">
-      <div className="text-bold text-xl text-black">
-        {intl.formatMessage({ id: 'collection.create' })}
-      </div>
+      <div className="text-bold text-xl text-black">{t('collection.create')}</div>
 
       <div className="">
         <FormikProvider value={formik}>
           <Form className="pt-6 flex flex-col space-y-4">
-            <Input
-              placeholder={intl.formatMessage({ id: 'collection.name' })}
-              id="name"
-              name="name"
-              type="text"
-            />
+            <Input placeholder={t('collection.name')} id="name" name="name" type="text" />
 
-            <Input
-              placeholder={intl.formatMessage({ id: 'collection.desc' })}
-              id="desc"
-              name="desc"
-              type="text"
-            />
+            <Input placeholder={t('collection.desc')} id="desc" name="desc" type="text" />
             <div className="w-full flex flex-row space-x-4">
-              <button
-                type="submit"
-                className="btn btn-primary flex flex-row space-x-2"
-                disabled={loading}
-              >
+              <button type="submit" className="btn btn-primary flex flex-row space-x-2" disabled={loading}>
                 {loading && (
                   <div className="h-5 w-5">
                     <Loading />
                   </div>
                 )}
-                <span>{intl.formatMessage({ id: 'collection.create' })}</span>
+                <span>{t('collection.create')}</span>
               </button>
 
               {collections && collections.length > 0 && (
@@ -107,7 +80,7 @@ const CreateCollection: React.FC<{ showChooseModal: () => void }> = ({
                     showChooseModal()
                   }}
                 >
-                  {intl.formatMessage({ id: 'general.cancel' })}
+                  {t('general.cancel')}
                 </button>
               )}
             </div>

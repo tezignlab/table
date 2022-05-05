@@ -1,23 +1,22 @@
+import { useTranslation } from 'next-i18next'
+import { useRouter } from 'next/router'
 import React from 'react'
-import { useIntl, history } from 'umi'
 import { MainBanner } from '../Images'
 
 const Banner: React.FC = () => {
-  const intl = useIntl()
+  const { t } = useTranslation('common')
+  const router = useRouter()
+
   return (
     <div className="flex flex-col-reverse lg:grid lg:grid-cols-2 text-gray-600">
       <div className="justify-center mx-auto lg:justify-self-end my-12 lg:mr-36 2xl:my-20 2xl:mr-60">
-        <div className="text-3xl 2xl:text-4xl py-2">
-          {intl.formatMessage({ id: 'publicity.slogan' })}
-        </div>
-        <div className="text-xl 2xl:text-2xl py-1 mt-2">
-          {intl.formatMessage({ id: 'publicity.introduction' })}
-        </div>
+        <div className="text-3xl 2xl:text-4xl py-2">{t('publicity.slogan')}</div>
+        <div className="text-xl 2xl:text-2xl py-1 mt-2">{t('publicity.introduction')}</div>
         <div className="pt-8 2xl:pt-10">
           <button
             className="btn btn-primary"
             onClick={() => {
-              history.push('/auth/sign-in')
+              router.push('/auth/sign-in')
             }}
           >
             Github

@@ -1,56 +1,43 @@
+import { authStatusState, authUserState } from '@/stores/auth'
+import { useTranslation } from 'next-i18next'
+import Head from 'next/head'
+import { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
-import {
-  useSelector,
-  useIntl,
-  history,
-  useDispatch,
-  Helmet,
-} from 'umi'
-import { AuthModelState } from '@/models/auth'
-import { GlobalLoadingState } from '@/utils'
-import { notification } from '@/components/Notification'
-import Layout from '@/layouts/basic'
+import { useRecoilValue } from 'recoil'
+import { notification } from '../components/Notification'
 
-const AccountLayout: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
-  const intl = useIntl()
-  const dispatch = useDispatch()
+const AccountLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { t } = useTranslation('common')
+  const router = useRouter()
 
-  const auth = useSelector(({ auth }: { auth: AuthModelState }) => auth)
-  const globalLoading = useSelector(
-    ({ loading }: { loading: GlobalLoadingState }) => loading,
-  )
-
-  const authLoading = globalLoading.models.auth
+  const authStatus = useRecoilValue(authStatusState)
+  const authUser = useRecoilValue(authUserState)
 
   useEffect(() => {
-    if (auth.requested && !authLoading && !auth.user) {
-      history.push('/')
+    if (authStatus.requested && !authUser) {
+      router.push('/')
     }
-  }, [authLoading, auth.user])
+  }, [authUser])
 
   useEffect(() => {
-    if (auth.error) {
-      notification('error', intl.formatMessage({ id: auth.message }), 1000)
-      dispatch({ type: 'auth/clearNotification' })
+    if (authStatus.error) {
+      notification('error', t(authStatus.message ?? ''), 1000)
+      // TODO dispatch({ type: 'auth/clearNotification' })
     }
 
-    if (auth.success && !!auth.message) {
-      notification('success', intl.formatMessage({ id: auth.message }), 1000)
-      dispatch({ type: 'auth/clearNotification' })
+    if (authStatus.success && !!authStatus.message) {
+      notification('success', t(authStatus.message), 1000)
+      // TODO dispatch({ type: 'auth/clearNotification' })
     }
-  }, [auth.error, auth.success])
+  }, [authStatus.error, authStatus.success])
 
   return (
-    <Layout>
-      <Helmet>
-        <title>{intl.formatMessage({ id: 'site.routes.user_profile' })}</title>
-      </Helmet>
-      <div className="max-w-screen-lg w-full h-full p-4 mx-auto flex space-x-4 lg:space-x-32 my-16">
-        <div className="flex-grow">{children}</div>
-      </div>
-    </Layout>
+    <>
+      <Head>
+        <title>{t('site.routes.user_profile')}</title>
+      </Head>
+      <div className="max-w-screen-lg w-full h-full p-4 mx-auto flex space-x-4 my-16">{children}</div>
+    </>
   )
 }
 

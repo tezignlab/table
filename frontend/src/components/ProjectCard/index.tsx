@@ -1,60 +1,56 @@
-import React from 'react'
-import { useDispatch } from 'umi'
-import { useHover } from '@umijs/hooks'
+import { useProject } from '@/hooks/useProject'
+import { Project } from '@/types/project'
+import { withAuth } from '@/utils/withAuth'
 import clsx from 'clsx'
-import { Project } from '@/models/project'
-import { FolderPlus, Like, Loading } from '@/components/Icons'
-import NeedAuthClickable from '@/components/NeedAuthClickable'
+import { useRouter } from 'next/router'
+import React, { MouseEventHandler, useState } from 'react'
 import Clamp from 'react-multiline-clamp'
-import { MouseEventHandler } from '@umijs/renderer-react/node_modules/@types/react'
-import Decoder from '@/utils/decoder'
+import { useHover } from '../../hooks/useHover'
+import Decoder from '../../utils/decoder'
+import CollectionsModal, { CollectionModalModeType } from '../CollectionModal'
+import { FolderPlus, Like, Loading } from '../Icons'
+import { ProjectModal } from '../ProjectModal'
 
-const CardButton: React.FC<{
-  handleClick: MouseEventHandler
+const CardButtonBasic: React.FC<{
+  onClick: MouseEventHandler
   children: React.ReactNode
   active: boolean
   color: 'red' | 'blue'
-}> = ({ handleClick, children, active, color }) => {
+}> = ({ onClick, children, active, color }) => {
   return (
-    <NeedAuthClickable>
-      <div
-        className={clsx(
-          'rounded-lg h-7 w-7 p-1',
-          'transition-all duration-200',
-          {
-            'text-gray-600 hover:text-gray-400': !active,
-            'text-red-600 hover:text-red-400': color === 'red' && active,
-            'text-blue-600 hover:text-blue-400': color === 'blue' && active,
-          },
-        )}
-        onClick={handleClick}
-      >
-        {children}
-      </div>
-    </NeedAuthClickable>
+    <div
+      className={clsx('rounded-lg h-7 w-7 p-1', 'transition-all duration-200', 'cursor-pointer', {
+        'text-gray-600 hover:text-gray-400': !active,
+        'text-red-600 hover:text-red-400': color === 'red' && active,
+        'text-blue-600 hover:text-blue-400': color === 'blue' && active,
+      })}
+      onClick={onClick}
+    >
+      {children}
+    </div>
   )
 }
 
-const ProjectCard: React.FC<{ project: Project; index: number }> = ({ project, index }) => {
+const CardButton = withAuth(CardButtonBasic)
+
+const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
   const [isHovering, hoverRef] = useHover<HTMLDivElement>()
-  const dispatch = useDispatch()
+  const { toggleProjectLike, likeLoading } = useProject(project)
+  const [modalVisible, setModalVisible] = useState(false)
+  const [collectionVisible, setCollectionVisible] = useState(false)
+  const [collectionMode, setCollectionMode] = useState<CollectionModalModeType>('choose')
+  const router = useRouter()
 
   const handleClick: () => void = () => {
     window.history.pushState('', '', `/project/${project.id}`)
-    dispatch({
-      type: 'project/getProjectDetail',
-      payload: { id: project.id, index: index },
-    })
+    setModalVisible(true)
   }
 
   return (
     <div className="w-full h-auto rounded-lg relative">
       <div className="w-full h-full flex flex-col justify-between">
         <div className="w-full h-64 rounded-lg">
-          <img
-            src={project.cover}
-            className="h-64 w-full object-cover object-center rounded-lg"
-          />
+          <img src={project.cover} className="h-64 w-full object-cover object-center rounded-lg" alt="" />
         </div>
 
         <div className="w-full flex flex-row justify-between py-2">
@@ -68,37 +64,26 @@ const ProjectCard: React.FC<{ project: Project; index: number }> = ({ project, i
 
           <div className="flex flex-row space-x-1 pl-3">
             <CardButton
-              handleClick={(e) => {
+              onClick={(e) => {
                 e.stopPropagation()
-
-                dispatch({
-                  type: project.is_like ? 'project/unlikeProject' : 'project/likeProject',
-                  payload: { id: project.id, index: index },
-                })
+                toggleProjectLike()
               }}
               active={project.is_like}
               color="red"
             >
-              {project.like_loading ? <Loading /> : <Like />}
+              {likeLoading ? <Loading /> : <Like />}
             </CardButton>
 
             <CardButton
-              handleClick={(e) => {
+              onClick={(e) => {
                 e.stopPropagation()
-
-                dispatch({
-                  type: 'projectCollection/getCollections',
-                  payload: { id: project.id, projectIndex: index },
-                })
+                setCollectionVisible(true)
               }}
-              active={project.is_collect}
+              active={project.collections.length > 0}
               color="blue"
             >
-              {project.collect_loading ? (
-                <Loading />
-              ) : (
-                <FolderPlus bgClassName="text-gray-300" />
-              )}
+              {/* {project.collect_loading ? <Loading /> : <FolderPlus bgClassName="text-gray-300" />} */}
+              <FolderPlus bgClassName="text-gray-300" />
             </CardButton>
           </div>
         </div>
@@ -110,12 +95,7 @@ const ProjectCard: React.FC<{ project: Project; index: number }> = ({ project, i
             </div>
 
             <div className="h-full flex flex-col justify-center">
-              <a
-                className="cursor-pointer pl-2 link"
-                target="_blank"
-                href={project.author.home}
-                rel="noreferrer"
-              >
+              <a className="cursor-pointer pl-2 link" target="_blank" href={project.author.home} rel="noreferrer">
                 {project.author.name}
               </a>
             </div>
@@ -142,6 +122,23 @@ const ProjectCard: React.FC<{ project: Project; index: number }> = ({ project, i
       >
         <div className="flex flex-row p-4 justify-between rounded-lg"></div>
       </div>
+
+      <ProjectModal
+        project={project}
+        visible={modalVisible}
+        returnUrl={router.pathname}
+        toggle={() => setModalVisible(false)}
+      />
+
+      <CollectionsModal
+        project={project}
+        mode={collectionMode}
+        visible={collectionVisible}
+        closeModal={() => setCollectionVisible(false)}
+        changeModalMode={(mode) => {
+          setCollectionMode(mode)
+        }}
+      />
     </div>
   )
 }

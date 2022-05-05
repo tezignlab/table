@@ -1,22 +1,31 @@
-import React, { useEffect } from 'react'
-import { useDispatch, useSelector, useIntl } from 'umi'
-import { useFormik, FormikProvider, Form } from 'formik'
-import { AuthModelState } from '@/models/auth'
-import { GlobalLoadingState } from '@/utils'
+import AccountLayout from '@/layouts/account'
+import { Form, FormikProvider, useFormik } from 'formik'
+import { GetServerSideProps } from 'next'
+import { useTranslation } from 'next-i18next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import React, { useEffect, useState } from 'react'
+import { ReactElement } from 'react-markdown/lib/react-markdown'
+import { useRecoilValue } from 'recoil'
 import * as Yup from 'yup'
-import { USERNAME_MAX_LENGTH } from '@/constants'
-import { FormikInput as Input } from '@/components/Input'
-import { Loading } from '@/components/Icons'
+import { Loading } from '../../components/Icons'
+import { FormikInput as Input } from '../../components/Input'
+import { USERNAME_MAX_LENGTH } from '../../constants'
+import { useUpdateUser } from '../../queries/auth'
+import { authStatusState, authUserState } from '../../stores/auth'
 
-const Profile: React.FC = () => {
-  const auth = useSelector(({ auth }: { auth: AuthModelState }) => auth)
-  const intl = useIntl()
-  const dispatch = useDispatch()
-  const globalLoading = useSelector(
-    ({ loading }: { loading: GlobalLoadingState }) => loading,
-  )
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  return {
+    props: {
+      ...(await serverSideTranslations(context.locale ?? '')),
+    },
+  }
+}
 
-  const authLoading = globalLoading.models.auth
+const Profile = () => {
+  const { t } = useTranslation('common')
+
+  const authUser = useRecoilValue(authUserState)
+  const authStatus = useRecoilValue(authStatusState)
 
   const formik = useFormik({
     initialValues: {
@@ -25,96 +34,94 @@ const Profile: React.FC = () => {
       nickname: '',
       bio: '',
     },
-    onSubmit: (values) => {
-      dispatch({
-        type: 'auth/updateUser',
-        payload: {
-          nickname: values.nickname,
-          bio: values.bio,
-        },
-      })
+    onSubmit: async (values) => {
+      setValues(values)
+      setSubmit(true)
     },
     validationSchema: Yup.object({
-      nickname: Yup.string().max(
-        USERNAME_MAX_LENGTH,
-        intl.formatMessage(
-          { id: 'auth.validation.max' },
-          { count: USERNAME_MAX_LENGTH },
-        ),
-      ),
+      nickname: Yup.string().max(USERNAME_MAX_LENGTH, t('auth.validation.max')),
     }),
   })
 
+  const [values, setValues] = useState(formik.values)
+  const [submit, setSubmit] = useState(false)
+
+  const { isLoading, refetch: updateUser } = useUpdateUser(values)
+
   useEffect(() => {
-    if (!authLoading) {
-      formik.setFieldValue('username', auth.user?.username)
-      formik.setFieldValue('email', auth.user?.email)
-      formik.setFieldValue('nickname', auth.user?.nickname)
-      formik.setFieldValue('bio', auth.user?.bio ?? '')
+    if (submit) {
+      updateUser()
+      setSubmit(false)
     }
-  }, [authLoading])
+  }, [values, submit])
+
+  useEffect(() => {
+    if (!isLoading) {
+      formik.setFieldValue('username', authUser?.username)
+      formik.setFieldValue('email', authUser?.email)
+      formik.setFieldValue('nickname', authUser?.nickname)
+      formik.setFieldValue('bio', authUser?.bio ?? '')
+    }
+  }, [isLoading])
 
   return (
     <div className="w-full h-full">
-      {auth.requested && (
-        <div className='flex fle-row gap-8'>
+      {authStatus.requested && (
+        <div className="flex fle-row gap-8">
           <div className="flex-0 h-16 lg:h-24">
-            <img className="h-full rounded-full" src={auth.user?.avatar} />
+            <img className="h-full rounded-full" src={authUser?.avatar} />
           </div>
 
-          <div className='flex flex-1'>
+          <div className="flex flex-1">
             <FormikProvider value={formik}>
               <Form className="w-full space-y-6">
                 <Input
                   id="username"
                   name="username"
                   type="text"
-                  label={intl.formatMessage({ id: 'account.username' })}
+                  label={t('account.username')}
                   disabled={true}
-                  desc={intl.formatMessage({ id: 'account.username.desc' })}
+                  desc={t('account.username.desc')}
                 />
 
                 <Input
                   id="email"
                   name="email"
                   type="text"
-                  label={intl.formatMessage({ id: 'account.email' })}
+                  label={t('account.email')}
                   disabled={true}
-                  desc={intl.formatMessage({ id: 'account.email.desc' })}
+                  desc={t('account.email.desc')}
                 />
 
                 <Input
                   id="nickname"
                   name="nickname"
                   type="text"
-                  label={intl.formatMessage({ id: 'account.nickname' })}
-                  desc={intl.formatMessage({ id: 'account.nickname.desc' })}
+                  label={t('account.nickname')}
+                  desc={t('account.nickname.desc')}
                 />
 
-                <Input
-                  id="bio"
-                  name="bio"
-                  type="text"
-                  label={intl.formatMessage({ id: 'account.bio' })}
-                />
+                <Input id="bio" name="bio" type="text" label={t('account.bio')} />
 
                 <button className="btn btn-primary space-x-2 flex" type="submit">
-                  {authLoading && (
+                  {isLoading && (
                     <div className="h-5 w-5">
                       <Loading color="white" />
                     </div>
                   )}
-                  <span>{intl.formatMessage({ id: 'account.save' })}</span>
+                  <span>{t('account.save')}</span>
                 </button>
               </Form>
             </FormikProvider>
-
           </div>
-
         </div>
       )}
     </div>
   )
+}
+
+Profile.getLayout = function getLayout(page: ReactElement) {
+  return <AccountLayout>{page}</AccountLayout>
 }
 
 export default Profile

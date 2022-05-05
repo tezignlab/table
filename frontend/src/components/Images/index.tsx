@@ -1,5 +1,3 @@
-export const Logo = (props: any) => <img {...props} src={require('@/assets/images/logo.svg')}  />
-
-export const LogoWhite = (props: any) => <img {...props} src={require('@/assets/images/logo-white.png')}  />
-
-export const MainBanner = (props: any) => <img {...props} src={require('@/assets/images/banner.svg')}  />
+export const Logo = (props: any) => <img {...props} src="/logo.svg" />
+export const LogoWhite = (props: any) => <img {...props} src="/logo-white.png" />
+export const MainBanner = (props: any) => <img {...props} src="/banner.svg" />

@@ -1,52 +1,90 @@
-import React, { useState, useEffect } from 'react'
-import { useIntl, useSelector, useDispatch, useLocation } from 'umi'
-import ProjectCard from '@/components/ProjectCard'
-import { Loading } from '@/components/Icons'
-import ToTop from '@/components/ToTop'
-import ProjectModal from '@/components/ProjectModal'
-import CollectionModal from '@/components/CollectionModal'
-import { Project } from '@/models/project'
-import { useInViewport } from '@umijs/hooks'
-import { ProjectModelState } from '@/models/project'
-import { GlobalLoadingState } from '@/utils'
-import { ProjectCollectionModelState } from '@/models/projectCollection'
+import { IDefaultPageDataReturnType } from '@/services'
+import { authUserState } from '@/stores/auth'
+import { projectsState } from '@/stores/project'
+import { Project } from '@/types/project'
 import clsx from 'clsx'
-import { CollectionModalModeType } from '@/components/CollectionModal'
+import React, { useEffect, useRef } from 'react'
+import { useInfiniteQuery, useQueryClient } from 'react-query'
+import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil'
+import { useOnScreen } from '../../hooks/useOnScreen'
+import { Loading } from '../Icons'
+import ProjectCard from '../ProjectCard'
+import ToTop from '../ToTop'
 
-const ProjectList: React.FC<{ loadMore: () => void }> = ({ loadMore }) => {
-  const intl = useIntl()
-  const location = useLocation()
-  const dispatch = useDispatch()
+const LIST_DEFAULT_LIMIT = 9
 
-  const { projects, hasMoreProjects } = useSelector(
-    ({ project }: { project: ProjectModelState }) => project,
-  )
-  const { projectId } = useSelector(
-    ({ projectCollection }: { projectCollection: ProjectCollectionModelState }) =>
-      projectCollection,
-  )
-  const globalLoading = useSelector(
-    ({ loading }: { loading: GlobalLoadingState }) => loading,
-  )
-  const loading = globalLoading.models.project
-
-  const [bottomVisible, bottomRef] = useInViewport<HTMLDivElement>()
-  const [topInViewPort, topRef] = useInViewport<HTMLDivElement>()
-  const [modalMode, setModalMode] = useState<CollectionModalModeType>('choose')
+const ProjectList: React.FC<{
+  name: string
+  loadMore: ({ skip, limit }: { skip: number; limit: number }) => Promise<IDefaultPageDataReturnType<Project>>
+}> = ({ name, loadMore }) => {
+  const authUser = useRecoilValue(authUserState)
+  const [projects, setProjects] = useRecoilState(projectsState)
+  const resetProjects = useResetRecoilState(projectsState)
+  const queryClient = useQueryClient()
 
   useEffect(() => {
-    if (hasMoreProjects && bottomVisible) {
-      loadMore()
+    resetProjects()
+
+    return () => {
+      resetProjects()
+      queryClient.invalidateQueries(name)
     }
-  }, [bottomVisible])
-
-  useEffect(() => {
-    dispatch({ type: 'project/clear' })
-  }, [location.pathname])
-
-  useEffect(() => {
-    dispatch({ type: 'project/clearDetail' })
   }, [])
+
+  const fetchItems = async ({
+    pageParam = {
+      skip: 0,
+      limit: LIST_DEFAULT_LIMIT,
+    },
+  }) => {
+    const result = await loadMore({ skip: pageParam.skip, limit: pageParam.limit })
+    return result
+  }
+
+  const { data, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage } = useInfiniteQuery(
+    [name, 'items', authUser?.id], // add id to query key, so when user login or logout, the cache will be cleared
+    fetchItems,
+    {
+      getNextPageParam: (lastPage, _) => {
+        if (!lastPage.data.has_more) return undefined
+
+        return {
+          limit: lastPage.data.limit,
+          skip: lastPage.data.skip + lastPage.data.limit,
+        }
+      },
+      cacheTime: 0,
+    },
+  )
+
+  const bottomRef = useRef<HTMLDivElement>(null)
+  const bottomVisible = useOnScreen(bottomRef, 1)
+  const topRef = useRef<HTMLDivElement>(null)
+  const topInViewPort = useOnScreen(topRef, 1)
+
+  useEffect(() => {
+    if (!data || !data.pages || data.pages.length === 0) return
+
+    setProjects((prev) => {
+      const newData: Record<string, Project> = {}
+      data.pages.forEach((page) => {
+        page.data.data.forEach((item) => {
+          newData[item.id] = item
+        })
+      })
+      return {
+        ...prev,
+        data: newData,
+        hasMoreProjects: data.pages[data.pages.length - 1].data.has_more,
+      }
+    })
+  }, [data])
+
+  useEffect(() => {
+    if (bottomVisible && hasNextPage && !isFetching) {
+      fetchNextPage()
+    }
+  }, [bottomVisible, hasNextPage, isFetching])
 
   return (
     <div className="w-full flex flex-col relative">
@@ -54,14 +92,14 @@ const ProjectList: React.FC<{ loadMore: () => void }> = ({ loadMore }) => {
 
       <div className="flex-grow bg-white lg:mt-10">
         <div className="flex-grow mx-auto w-full px-4 lg:px-16 grid grid-cols-1 md:grid-cols-3 2xl:grid-cols-5 gap-x-8 gap-y-8">
-          {projects?.map((project: Project, index: number) => {
-            return <ProjectCard key={index} project={project} index={index} />
-          })}
+          {Object.values(projects.data).map((item) => (
+            <ProjectCard project={item} key={item.id} />
+          ))}
         </div>
 
         <div className="w-full flex flex-col justify-center h-48">
           <div className="w-full flex justify-center ">
-            {loading && (
+            {(isFetching || isFetchingNextPage) && (
               <div className="h-5 w-5">
                 <Loading color="#000000" />
               </div>
@@ -69,28 +107,10 @@ const ProjectList: React.FC<{ loadMore: () => void }> = ({ loadMore }) => {
           </div>
         </div>
 
-        {!topInViewPort && (
-          <ToTop visible={!topInViewPort} atBottom={!!bottomVisible} />
-        )}
+        {!topInViewPort && <ToTop visible={!topInViewPort} atBottom={!!bottomVisible} />}
       </div>
 
       <div className={clsx('w-full h-0 flex justify-center')} ref={bottomRef} />
-
-      <ProjectModal returnUrl={location.pathname} />
-
-      <CollectionModal
-        visible={!!projectId}
-        mode={modalMode}
-        closeModal={() => {
-          dispatch({
-            type: 'projectCollection/clear',
-          })
-          setModalMode('choose')
-        }}
-        changeModalMode={(mode: CollectionModalModeType) => {
-          setModalMode(mode)
-        }}
-      />
     </div>
   )
 }

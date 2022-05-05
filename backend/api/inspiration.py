@@ -10,7 +10,7 @@ from fastlab.models import Response, PageData
 from models.inspiration import *
 from utils import TimeUtils, FileUtils
 
-nd_inspirations = mongo["naodong"]["inspirations"]
+nd_inspirations = mongo["table"]["inspirations"]
 
 
 def _files(file_ids: List[ObjectId]):

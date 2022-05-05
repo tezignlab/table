@@ -1,4 +1,3 @@
-node_modules
-.umi
-.umi-production
-dist
+.next/
+.vscode/
+.node_modules/

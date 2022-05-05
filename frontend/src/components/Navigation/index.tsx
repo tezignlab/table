@@ -1,24 +1,21 @@
-import React, { useState } from 'react'
-import { Link, useIntl, history, useSelector, useLocation } from 'umi'
-import { ROUTES } from '@/constants'
-import { AuthModelState } from '@/models/auth'
-import { GlobalLoadingState } from '@/utils'
-import UserDropdown from '@/components/UserDropdown'
 import { Search } from '@/components/Icons'
+import { ROUTES } from '@/constants'
+import { authUserState } from '@/stores/auth'
 import clsx from 'clsx'
+import { useTranslation } from 'next-i18next'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+import React, { useState } from 'react'
+import { useRecoilValue } from 'recoil'
 import { Logo } from '../Images'
+import UserDropdown from '../UserDropdown'
 
 const Navigation: React.FC = () => {
-  const intl = useIntl()
-  const location = useLocation()
+  const { t } = useTranslation('common')
+  const router = useRouter()
 
-  const auth = useSelector(({ auth }: { auth: AuthModelState }) => auth)
+  const authUser = useRecoilValue(authUserState)
   const [searchValue, setSearchValue] = useState('')
-  const globalLoading = useSelector(
-    ({ loading }: { loading: GlobalLoadingState }) => loading,
-  )
-
-  const authLoading = globalLoading.models.auth
 
   return (
     <div className="w-full h-16 bg-white px-6 flex-row justify-between shadow hidden lg:flex">
@@ -26,29 +23,28 @@ const Navigation: React.FC = () => {
         <Logo
           className="h-full object-fill cursor-pointer"
           onClick={() => {
-            history.push('/')
+            router.push('/')
           }}
         />
 
         <div className="pl-8 h-full w-full mx-auto space-x-4 flex flex-row">
-          {ROUTES.map(({ name, path }, index) => (
-            <Link
-              className={clsx('link text-md flex flex-col justify-center', {
-                'link-active':
-                  location.pathname === path ||
-                  location.pathname === `${path}/`,
-              })}
-              key={index}
-              to={path}
-            >
-              {intl.formatMessage({ id: name })}
+          {ROUTES.map(({ name, path }) => (
+            <Link key={name} href={path}>
+              <a
+                className={clsx('link text-md flex flex-col justify-center', {
+                  'link-active':
+                    (path !== '/' && router.pathname.startsWith(path)) || (path === '/' && router.pathname === '/'),
+                })}
+              >
+                {t(name)}
+              </a>
             </Link>
           ))}
         </div>
       </div>
 
       <div className="w-1/3 flex flex-col justify-center px-4">
-        {!location.pathname.startsWith('/search') && (
+        {!router.pathname.startsWith('/search') && (
           <div className="mx-auto flex flex-col justify-center w-full max-w-md relative">
             <input
               className={clsx(
@@ -59,16 +55,14 @@ const Navigation: React.FC = () => {
                 'focus:border-gray-500 focus:placeholder-transparent focus:bg-white',
                 'hover:border-gray-400 hover:bg-white',
               )}
-              placeholder={intl.formatMessage({ id: 'search.projects' })}
+              placeholder={t('search.projects')}
               value={searchValue}
               onChange={(event) => {
                 setSearchValue(event.target.value)
               }}
               onKeyDown={(event) => {
                 if (event.key === 'Enter') {
-                  history.push(
-                    `/search/projects/${encodeURIComponent(searchValue)}`,
-                  )
+                  router.push(`/search?query=${encodeURIComponent(searchValue)}`)
                 }
               }}
             />
@@ -82,29 +76,29 @@ const Navigation: React.FC = () => {
 
       <div className="w-1/3 flex justify-end space-x-2">
         <div className="flex-none h-full flex flex-col justify-center">
-          {!authLoading && !auth.user && (
+          {!authUser && (
             <div className="w-full space-x-2 flex justify-end">
               <button
                 className="btn text-sm py-2"
                 onClick={() => {
-                  history.push('/auth/sign-in')
+                  router.push('/auth/sign-in')
                 }}
               >
-                {intl.formatMessage({ id: 'auth.sign_in' })}
+                {t('auth.sign_in')}
               </button>
 
               <button
                 className="btn btn-primary text-sm py-2"
                 onClick={() => {
-                  history.push('/auth/sign-up')
+                  router.push('/auth/sign-up')
                 }}
               >
-                {intl.formatMessage({ id: 'auth.sign_up' })}
+                {t('auth.sign_up')}
               </button>
             </div>
           )}
 
-          {!authLoading && !!auth.user && (
+          {!!authUser && (
             <div className="w-full flex flex-row justify-end">
               <UserDropdown />
             </div>

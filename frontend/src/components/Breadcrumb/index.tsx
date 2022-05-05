@@ -1,5 +1,5 @@
+import { useRouter } from 'next/router'
 import React from 'react'
-import { history } from 'umi'
 
 export interface BreadcrumbItem {
   name: string
@@ -7,18 +7,16 @@ export interface BreadcrumbItem {
 }
 
 const Breadcrumb: React.FC<{ message: BreadcrumbItem[] }> = ({ message }) => {
+  const router = useRouter()
   return (
     <div className="w-full flex flex-row space-x-2 py-4 ">
       {message.map((item, index) => (
-        <div
-          className="flex flex-row space-x-2 text-gray-500 text-md "
-          key={index}
-        >
+        <div className="flex flex-row space-x-2 text-gray-500 text-md " key={item.name}>
           <div
             className="cursor-pointer hover:text-gray-700 transition-all duration-200 ease-in-out"
             onClick={() => {
               if (item.url !== undefined) {
-                history.push(item.url)
+                router.push(item.url)
               }
             }}
           >

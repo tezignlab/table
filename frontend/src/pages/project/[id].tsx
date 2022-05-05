@@ -1,55 +1,58 @@
-import { useParams, useSelector, useDispatch } from 'umi'
-import React, { useEffect, useState } from 'react'
 import ProjectDetailComponent from '@/components/ProjectDetail'
-import { ProjectModelState } from '@/models/project'
-import { ProjectCollectionModelState } from '@/models/projectCollection'
-import CollectionModal from '@/components/CollectionModal'
-import { CollectionModalModeType } from '@/components/CollectionModal'
-import { useInViewport } from '@umijs/hooks'
+import { useOnScreen } from '@/hooks/useOnScreen'
+import { getProjectDetail } from '@/services/project'
+import { projectsState } from '@/stores/project'
+import { GetServerSideProps } from 'next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { useRouter } from 'next/router'
+import React, { useRef } from 'react'
+import { useQuery } from 'react-query'
+import { useRecoilState } from 'recoil'
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  return {
+    props: {
+      ...(await serverSideTranslations(context.locale ?? '')),
+    },
+  }
+}
 
 const ProjectPage: React.FC = () => {
-  const params = useParams<{ id: string }>()
-  const dispatch = useDispatch()
-  const [modalMode, setModalMode] = useState<CollectionModalModeType>('choose')
-  const { current } = useSelector(({ project }: { project: ProjectModelState }) => project)
-  const { projectId } = useSelector(
-    ({ projectCollection }: { projectCollection: ProjectCollectionModelState }) =>
-      projectCollection,
+  const router = useRouter()
+  const params = router.query as { id: string }
+  const [projects, setProjects] = useRecoilState(projectsState)
+
+  const { isLoading, refetch } = useQuery(
+    ['projectDetail', params.id],
+    async () => {
+      const result = await getProjectDetail(params.id)
+      setProjects((prev) => ({
+        ...prev,
+        currentProject: result.data,
+      }))
+      return result.data
+    },
+    {
+      cacheTime: 0,
+    },
   )
 
-  const [topVisible, topRef] = useInViewport<HTMLDivElement>()
-  const [bottomVisible, bottomRef] = useInViewport<HTMLDivElement>()
-
-  useEffect(() => {
-    dispatch({ type: 'project/getProjectDetail', payload: { id: params.id } })
-  }, [])
+  const bottomRef = useRef<HTMLDivElement>(null)
+  const bottomVisible = useOnScreen(bottomRef, 1)
+  const topRef = useRef<HTMLDivElement>(null)
+  const topVisible = useOnScreen(topRef, 1)
 
   return (
     <div className="w-full">
       <div ref={topRef} />
 
-      {!!current && (
+      {!!projects.currentProject && (
         <ProjectDetailComponent
-          project={current}
-          inModal={false}
+          project={projects.currentProject}
           bottomVisible={!!bottomVisible}
           topVisible={!!topVisible}
         />
       )}
-
-      <CollectionModal
-        visible={!!projectId}
-        mode={modalMode}
-        closeModal={() => {
-          dispatch({
-            type: 'projectCollection/clear',
-          })
-          setModalMode('choose')
-        }}
-        changeModalMode={(mode: CollectionModalModeType) => {
-          setModalMode(mode)
-        }}
-      />
 
       <div ref={bottomRef} />
     </div>

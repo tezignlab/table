@@ -1,119 +1,59 @@
-import request from 'umi-request'
-import { User } from '@/models/auth'
-import { IDefaultReturnType } from './index'
+import { ACCESS_TOKEN_NAME } from '@/constants/index'
+import { User } from '@/types/user';
+import axios from 'axios'
+import { AuthToken, IDefaultReturnType } from './index'
 
-export const signIn = async (
-  username: string,
-  password: string,
-): Promise<
-  IDefaultReturnType<{ token_type: string; access_token: string }>
-> => {
-  const result = await request('/api/v1/login', {
-    method: 'post',
-    requestType: 'form',
-    data: { username, password },
-    skipErrorHandler: true,
-  })
-  return result
+export const signIn = async ({ username, password }: { username: string; password: string }) => {
+  const bodyFormData = new FormData()
+  bodyFormData.append('username', username)
+  bodyFormData.append('password', password)
+  return (
+    await axios.request<AuthToken>({
+      url: '/api/v1/login',
+      method: 'post',
+      data: bodyFormData,
+      headers: { 'Content-Type': 'multipart/form-data' },
+    })
+  ).data
 }
 
-export const signUp = async (
-  username: string,
-  password: string,
-  email: string,
-): Promise<IDefaultReturnType> => {
-  const result = await request('/api/v1/register', {
-    method: 'post',
-    requestType: 'json',
-    data: { username, password, email },
-    skipErrorHandler: true,
-  })
-  return result
+export const signUp = async ({ username, password, email }: { username: string; password: string; email: string }) =>
+  (
+    await axios.request<IDefaultReturnType<AuthToken>>({
+      url: '/api/v1/register',
+      method: 'post',
+      data: {
+        username,
+        password,
+        email,
+      },
+    })
+  ).data
+
+export const getUser = async () => (await axios.request<IDefaultReturnType<User>>({ url: '/api/v1/user' })).data
+
+export const getCurrentUser = async (username: string): Promise<IDefaultReturnType<User>> =>
+  (await axios.get(`/api/v1/user/${username}`)).data
+
+interface IUpdateUser {
+  nickname?: string
+  avatar?: string
+  location?: string
+  bio?: string
 }
 
-export const getVerificationCode = async (
-  phone: string,
-): Promise<IDefaultReturnType> => {
-  const result = await request('/api/v1/login/sms/code', {
-    method: 'post',
-    requestType: 'json',
-    data: { phone },
-    skipErrorHandler: true,
-  })
+export const updateUser = async (data: IUpdateUser) =>
+  (await axios.request<IDefaultReturnType>({ url: '/api/v1/user', method: 'patch', data: data })).data
 
-  return result
-}
+export const updatePassword = async ({ password, newPassword }: { password: string; newPassword: string }) =>
+  (
+    await axios.request<IDefaultReturnType>({
+      url: '/api/v1/user/password',
+      method: 'patch',
+      data: { new_password: newPassword, old_password: password },
+    })
+  ).data
 
-export const signInWithCode = async (
-  phone: string,
-  code: string,
-): Promise<IDefaultReturnType> => {
-  const result = await request('/api/v1/login/sms', {
-    method: 'post',
-    requestType: 'json',
-    data: { phone, code },
-    skipErrorHandler: true,
-  })
-
-  return result
-}
-
-export const activateUser = async (
-  code: string,
-): Promise<
-  IDefaultReturnType<{ token_type: string; access_token: string }>
-> => {
-  const result = await request('/api/v1/activate', {
-    method: 'post',
-    requestType: 'json',
-    data: { code },
-    skipErrorHandler: true,
-  })
-  return result
-}
-
-export const getUser = async (): Promise<User> => {
-  const result = await request('/api/v1/user', {
-    method: 'get',
-  })
-  return result.data
-}
-
-export const getCurrentUser = async (
-  username: string,
-): Promise<IDefaultReturnType<User>> => {
-  const result = await request(`/api/v1/user/${username}`, {
-    method: 'get',
-    skipErrorHandler: true,
-  })
-
-  return result
-}
-
-export const updateUser = async (
-  nickname: string,
-  avatar: string,
-  location: string,
-  bio: string,
-): Promise<IDefaultReturnType> => {
-  const result = await request('/api/v1/user', {
-    method: 'patch',
-    data: { nickname, avatar, location, bio },
-    skipErrorHandler: true,
-  })
-
-  return result
-}
-
-export const updatePassword = async (
-  password: string,
-  newPassword: string,
-): Promise<IDefaultReturnType> => {
-  const result = await request('/api/v1/user/password', {
-    method: 'patch',
-    data: { new_password: newPassword, old_password: password },
-    skipErrorHandler: true,
-  })
-
-  return result
+export const signOut = () => {
+  localStorage.removeItem(ACCESS_TOKEN_NAME)
 }

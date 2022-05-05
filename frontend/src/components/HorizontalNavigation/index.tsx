@@ -1,28 +1,23 @@
-import React from 'react'
-import { useLocation, history } from 'umi'
 import clsx from 'clsx'
+import { useRouter } from 'next/router'
+import React from 'react'
 
 const HorizontalNavigation: React.FC<{
   routes: { name: string; url: string }[]
   urlPrefix: string
 }> = ({ routes, urlPrefix }) => {
-  const location = useLocation()
+  const router = useRouter()
 
   return (
     <div className="w-full flex flex-row space-x-2">
-      {routes.map(({ name, url }, index) => (
+      {routes.map(({ name, url }) => (
         <div
-          key={index}
+          key={name}
           className={clsx('text-md btn font-bold', {
-            'btn-primary':
-              location.pathname === `${urlPrefix}/${url}` ||
-              location.pathname === `${urlPrefix}/${url}/`,
-            // 'btn-gray':
-            //   location.pathname !== `${urlPrefix}/${url}` &&
-            //   location.pathname !== `${urlPrefix}/${url}/`,
+            'btn-primary': router.pathname.startsWith(`${urlPrefix}/${url}`),
           })}
           onClick={() => {
-            history.push(`${urlPrefix}/${url}`)
+            router.push(`${urlPrefix}/${url}`)
           }}
         >
           {name}

@@ -1,17 +1,6 @@
-import request from 'umi-request'
-import { IDefaultReturnType } from '@/services/index'
-import { Inspiration } from '@/models/inspiration'
+import { Inspiration } from '@/types/inspiration'
+import axios from 'axios'
+import { IDefaultPageDataReturnType } from '../services/index'
 
-export const getInspiration = async (
-  skip: number,
-  limit: number,
-): Promise<IDefaultReturnType<Inspiration>> => {
-  const result = await request(
-    `/api/v1/inspirations?skip=${skip}&limit=${limit}`,
-    {
-      method: 'get',
-      skipErrorHandler: true,
-    },
-  )
-  return result
-}
+export const getInspiration = async (skip: number, limit: number): Promise<IDefaultPageDataReturnType<Inspiration>> =>
+  (await axios.get(`/api/v1/inspirations?skip=${skip}&limit=${limit}`)).data

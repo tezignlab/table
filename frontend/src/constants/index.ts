@@ -4,7 +4,11 @@ export const STATIC_URL = 'https://ai.tezign.com/static/naodong'
 
 export const ROUTES = [
   { name: 'index.trend', path: '/', visibleOnMobile: true },
-  { name: 'index.recommend', path: '/project/recommend', visibleOnMobile: true },
+  {
+    name: 'index.recommend',
+    path: '/project/recommend',
+    visibleOnMobile: true,
+  },
   { name: 'site.routes.app', path: '/download-app', visibleOnMobile: false },
 ]
 

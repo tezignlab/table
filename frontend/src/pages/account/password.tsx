@@ -1,22 +1,29 @@
-import React from 'react'
-import { useDispatch, useSelector, useIntl } from 'umi'
-import { useFormik, FormikProvider, Form } from 'formik'
+import { Form, FormikProvider, useFormik } from 'formik'
+import { GetServerSideProps } from 'next'
+import { useTranslation } from 'next-i18next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import React, { ReactElement, useEffect, useState } from 'react'
+import { useRecoilValue } from 'recoil'
 import * as Yup from 'yup'
-import { AuthModelState } from '@/models/auth'
-import { GlobalLoadingState } from '@/utils'
-import Input from '@/components/AuthInput'
-import { Loading } from '@/components/Icons'
-import { PASSWORD_MIN_LENGTH, PASSWORD_MAX_LENGTH } from '@/constants'
+import Input from '../../components/AuthInput'
+import { Loading } from '../../components/Icons'
+import { PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH } from '../../constants'
+import AccountLayout from '../../layouts/account'
+import { useUpdatePassword } from '../../queries/auth'
+import { authStatusState } from '../../stores/auth'
 
-const Password: React.FC = () => {
-  const auth = useSelector(({ auth }: { auth: AuthModelState }) => auth)
-  const intl = useIntl()
-  const dispatch = useDispatch()
-  const globalLoading = useSelector(
-    ({ loading }: { loading: GlobalLoadingState }) => loading,
-  )
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  return {
+    props: {
+      ...(await serverSideTranslations(context.locale ?? '')),
+    },
+  }
+}
 
-  const authLoading = globalLoading.models.auth
+export default function Password() {
+  const { t } = useTranslation('common')
+
+  const authStatus = useRecoilValue(authStatusState)
 
   const formik = useFormik({
     initialValues: {
@@ -24,98 +31,83 @@ const Password: React.FC = () => {
       newPassword: '',
       newPasswordConfirm: '',
     },
-    onSubmit: (values: { oldPassword: string; newPassword: string }) => {
-      dispatch({
-        type: 'auth/updatePassword',
-        payload: {
-          oldPassword: values.oldPassword,
-          newPassword: values.newPassword,
-        },
+    onSubmit: async (values: { oldPassword: string; newPassword: string }) => {
+      setValues({
+        password: values.oldPassword,
+        newPassword: values.newPassword,
       })
+      setSubmit(true)
     },
     validationSchema: Yup.object({
       oldPassword: Yup.string()
-        .required(
-          intl.formatMessage(
-            { id: 'auth.validation.require' },
-            { type: intl.formatMessage({ id: 'user.password' }) },
-          ),
-        )
+        .required(`${t('auth.validation.require')}${t('account.password.old')}`)
         .min(
           PASSWORD_MIN_LENGTH,
-          intl.formatMessage({ id: 'auth.validation.min' }, { count: 6 }),
+          `${t('auth.validation.min.prefix')}${PASSWORD_MIN_LENGTH}${t('auth.validation.min.suffix')}`,
         )
         .max(
           PASSWORD_MAX_LENGTH,
-          intl.formatMessage({ id: 'auth.validation.max' }, { count: 16 }),
+          `${t('auth.validation.max.prefix')}${PASSWORD_MAX_LENGTH}${t('auth.validation.max.suffix')}`,
         ),
       newPassword: Yup.string()
-        .required(
-          intl.formatMessage(
-            { id: 'auth.validation.require' },
-            { type: intl.formatMessage({ id: 'user.password' }) },
-          ),
-        )
+        .required(`${t('auth.validation.require')}${t('account.password.new')}`)
         .min(
           PASSWORD_MIN_LENGTH,
-          intl.formatMessage({ id: 'auth.validation.min' }, { count: 6 }),
+          `${t('auth.validation.min.prefix')}${PASSWORD_MIN_LENGTH}${t('auth.validation.min.suffix')}`,
         )
         .max(
           PASSWORD_MAX_LENGTH,
-          intl.formatMessage({ id: 'auth.validation.max' }, { count: 16 }),
+          `${t('auth.validation.max.prefix')}${PASSWORD_MAX_LENGTH}${t('auth.validation.max.suffix')}`,
         ),
       newPasswordConfirm: Yup.string()
-        .required(
-          intl.formatMessage(
-            { id: 'auth.validation.require' },
-            { type: intl.formatMessage({ id: 'user.confirmPassword' }) },
-          ),
-        )
+        .required(t('account.password.confirm'))
         .when('newPassword', {
           is: (val: string): boolean => (val && val.length > 0 ? true : false),
           then: Yup.string().oneOf(
             [Yup.ref('newPassword')],
-            intl.formatMessage(
-              { id: 'auth.validation.correct' },
-              { type: intl.formatMessage({ id: 'user.confirmPassword' }) },
-            ),
+            `${t('auth.validation.correct')}${t('user.confirmPassword')}`,
           ),
         }),
     }),
   })
 
+  const [values, setValues] = useState<{
+    password: string
+    newPassword: string
+  }>({ password: '', newPassword: '' })
+  const [submit, setSubmit] = useState<boolean>(false)
+
+  const { isLoading, refetch: updatePassword } = useUpdatePassword(values)
+
+  useEffect(() => {
+    if (submit) {
+      updatePassword()
+      setSubmit(false)
+    }
+  }, [values, submit])
+
   return (
     <div className="w-full h-full">
-      {auth.requested && (
+      {authStatus.requested && (
         <div className="w-full h-full">
           <FormikProvider value={formik}>
             <Form className="py-4 space-y-4">
-              <Input
-                id="oldPassword"
-                name="oldPassword"
-                type="password"
-                label={intl.formatMessage({ id: 'account.password.old' })}
-              />
-              <Input
-                id="newPassword"
-                name="newPassword"
-                type="password"
-                label={intl.formatMessage({ id: 'account.password.new' })}
-              />
+              <Input id="oldPassword" name="oldPassword" type="password" label={t('account.password.old')} />
+              <Input id="newPassword" name="newPassword" type="password" label={t('account.password.new')} />
               <Input
                 id="newPasswordConfirm"
                 name="newPasswordConfirm"
                 type="password"
-                label={intl.formatMessage({ id: 'account.password.confirm' })}
+                label={t('account.password.confirm')}
               />
 
               <button className="btn btn-primary space-x-2 flex" type="submit">
-                {authLoading && (
+                {isLoading && (
                   <div className="h-5 w-5">
                     <Loading color="white" />
                   </div>
                 )}
-                <span>{intl.formatMessage({ id: 'account.save' })}</span>
+                <span>{t('account.save')}</span>
               </button>
             </Form>
           </FormikProvider>
@@ -125,4 +117,6 @@ const Password: React.FC = () => {
   )
 }
 
-export default Password
+Password.getLayout = function getLayout(page: ReactElement) {
+  return <AccountLayout>{page}</AccountLayout>
+}

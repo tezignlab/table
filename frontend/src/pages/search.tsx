@@ -1,62 +1,52 @@
-import React, { useEffect, useState, useRef } from 'react'
-import {
-  useParams,
-  history,
-  useIntl,
-  useLocation,
-  Helmet,
-  useSelector,
-  useDispatch,
-} from 'umi'
-import ProjectList from '@/components/ProjectList'
+import { getSearchProjects } from '@/services/project'
 import clsx from 'clsx'
-import { Search, Close } from '@/components/Icons'
-import { SHOT_LIST_PAGE_SIZE } from '@/constants'
-import { ProjectModelState } from '@/models/project'
+import { GetServerSideProps } from 'next'
+import { useTranslation } from 'next-i18next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import Head from 'next/head'
+import { useRouter } from 'next/router'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { Close, Search } from '../components/Icons'
+import ProjectList from '../components/ProjectList'
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  return {
+    props: {
+      ...(await serverSideTranslations(context.locale ?? '')),
+    },
+  }
+}
 
 const SearchPage: React.FC = () => {
-  const { query, type: searchType } = useParams<{
-    query: string
-    type: 'projects'
-  }>()
-  const intl = useIntl()
-  const dispatch = useDispatch()
-  const { count } = useSelector(({ project }: { project: ProjectModelState }) => project)
+  const router = useRouter()
+  const { query } = router.query as { query: string }
 
+  const { t } = useTranslation('common')
   const inputRef = useRef<HTMLInputElement>(null)
-  const location = useLocation()
   const [searchValue, setSearchValue] = useState(query)
 
   useEffect(() => {
     setSearchValue(query)
-  }, [location.pathname])
-
-  useEffect(() => {
-    dispatch({ type: 'project/clear' })
-  }, [])
+  }, [router.pathname])
 
   const handleSearch = () => {
-    history.push(
-      `/search/${encodeURIComponent(searchType)}/${encodeURIComponent(
-        searchValue ?? '',
-      )}`,
-    )
+    router.push(`/search?query=${encodeURIComponent(searchValue ?? '')}`)
   }
+
+  const searchFunction = useCallback(
+    async ({ skip, limit }: { skip: number; limit: number }) => {
+      const result = await getSearchProjects(searchValue, skip, limit)
+      return result
+    },
+    [searchValue],
+  )
 
   return (
     <div className="flex-grow w-full flex flex-col">
-      <Helmet>
-        {query && (
-          <title>{`${query} - ${intl.formatMessage({
-            id: 'site.name',
-          })}`}</title>
-        )}
-        {!query && (
-          <title>{`${intl.formatMessage({
-            id: 'general.search',
-          })} - ${intl.formatMessage({ id: 'site.name' })}`}</title>
-        )}
-      </Helmet>
+      <Head>
+        {query && <title>{`${query} - ${t('site.name')}`}</title>}
+        {!query && <title>{`${t('general.search')} - ${t('site.name')}`}</title>}
+      </Head>
 
       <div className="w-full py-8">
         <div className="w-full flex flex-row justify-center">
@@ -80,7 +70,7 @@ const SearchPage: React.FC = () => {
                   handleSearch()
                 }
               }}
-              placeholder={intl.formatMessage({ id: `search.${searchType}` })}
+              placeholder={t(`search.projects`)}
             />
 
             <div
@@ -90,10 +80,7 @@ const SearchPage: React.FC = () => {
               )}
             >
               <div
-                className={clsx(
-                  'w-8 mx-4 h-full',
-                  'text-gray-300 hover:text-gray-500 cursor-pointer',
-                )}
+                className={clsx('w-8 mx-4 h-full', 'text-gray-300 hover:text-gray-500 cursor-pointer')}
                 onClick={() => {
                   setSearchValue('')
                   inputRef.current?.focus()
@@ -117,25 +104,9 @@ const SearchPage: React.FC = () => {
             </div>
           </div>
         </div>
-       
       </div>
- 
-      {searchType === 'projects' && (
-        <ProjectList
-          loadMore={() => {
-            dispatch({
-              type: 'project/getProjects',
-              payload: {
-                skip: count,
-                limit: SHOT_LIST_PAGE_SIZE,
-                type: query === undefined ? 'all' : 'search',
-                query: searchValue,
-              },
-            })
-          }}
-        />
-      )}
- 
+
+      <ProjectList name="searchProjects" loadMore={searchFunction} />
     </div>
   )
 }
