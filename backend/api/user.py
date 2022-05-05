@@ -7,7 +7,7 @@ from jose import jwt
 from api import router_public, crypt_context, SECRET_KEY, ALGORITHM, current_user_id
 from db import mongo
 from exception import *
-from fastlab.models import Response
+from models import Response
 from models.user import *
 from utils import TimeUtils
 from random import randint

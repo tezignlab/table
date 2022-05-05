@@ -4,7 +4,7 @@ from fastapi import Query
 
 from api import router_public
 from db import mongo
-from fastlab.models import Response
+from models import Response
 from models.help import KeywordCategoryEnum
 
 nd_keywords = mongo["table"]["keywords"]
