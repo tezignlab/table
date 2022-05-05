@@ -7,7 +7,7 @@ services:
       - table
     image: mongo:4.4
     restart: unless-stopped
-    environment: 
+    environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: password
     ports:
@@ -52,7 +52,7 @@ services:
       ELASTICSEARCH_HOSTS: '["elasticsearch:9200"]'
     ports:
     - "8080:80"
-      
+
   webserver:
     container_name: table_webserver
     networks:
@@ -63,6 +63,19 @@ services:
       - apiserver
     ports:
     - "8000:80"
+
+  nginx:
+    container_name: table_nginx
+    networks:
+      - table
+    build: ./
+    restart: unless-stopped
+    depends_on:
+      - apiserver
+      - webserver
+    ports:
+      - "80:80"
+
 
 networks:
   table:
