@@ -21,14 +21,11 @@
   </a>
 </p>
 <p align="center">
-  <a href="https://reactjs.org/">
-    <img src="https://img.shields.io/badge/React-2D333B?style=for-the-badge&logo=React&logoColor=61dafb"/> 
+  <a href="https://nextjs.org/">
+    <img src="https://img.shields.io/badge/Next.js-2D333B?style=for-the-badge&logo=Next.js&logoColor=61dafb"/> 
   </a>
   <a href="https://www.typescriptlang.org/">
     <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=TypeScript&logoColor=fff"/> 
-  </a>
-  <a href="https://umijs.org/">
-    <img src="https://img.shields.io/badge/UmiJS-0170FE?style=for-the-badge&logo=Ant-Design&logoColor=fff"/> 
   </a>
   <a href="https://tailwindcss.com/">
     <img src="https://img.shields.io/badge/TailwindCSS-06B6D4?style=for-the-badge&logo=Tailwind-CSS&logoColor=fff"/> 
@@ -116,8 +113,6 @@ pytest
 
 ### Run Frontend Web Application Server
 
-The frontend is a [UmiJS](https://umijs.org/) project bootstrapped with [`@umijs/umi-app`](https://github.com/umijs/umi).
-
 ```shell
 cd frontend/
 
@@ -137,7 +132,6 @@ Run the tests with:
 yarn test
 ```
 
-See [UmiJS Plugin Test](https://umijs.org/plugins/best-practice#plugin-test) for more information.
 
 ### Run Mobile App
 
@@ -160,7 +154,7 @@ Install [Expo Go](https://expo.dev/client) on your phone, then scan the QR code 
 
 Table is based on an internal project of [Tezign](https://www.tezign.com/) led by [Ling Fan](https://www.linkedin.com/in/fatflatfloat/), [Zhe Wang](https://www.linkedin.com/in/zhe-wang-7665921b/), and [Harry Wang](https://harrywang.me/). 
 
-Core development team includes [Yuandong Yang](https://github.com/AnoyiX), [Jinggang Zhuo](https://github.com/zhuojg), and [Feifei Ying](https://github.com/faye1225) with contributions from other members, such as Meixi Lu, Zilong Pei, Jing Zhu, Dan Li.
+Initial core development team includes [Jinggang Zhuo](https://github.com/zhuojg), [Yuandong Yang](https://github.com/AnoyiX), and [Feifei Ying](https://github.com/faye1225) with contributions from other members, such as Meixi Lu, Zilong Pei, Jing Zhu, Dan Li.
 
 
 
