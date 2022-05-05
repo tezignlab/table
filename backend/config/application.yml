@@ -8,11 +8,11 @@ application:
 
 # Mongo
 mongo:
-  host: ai.tezign.com
-  port: 31310
+  host: 127.0.0.1
+  port: 27017
   authSource: admin
-  username: lab
-  password: 0202@bal
+  username: root
+  password: password
 
 # ES
 elasticsearch:
@@ -25,4 +25,3 @@ user:
   pwd:
     secret_key: 97y9bx1dfjt46050z3mgksqnom0m8a57icj2ha2lhjcyke12tfxuxejzdv0ckvsj
     algorithm: HS256
-
