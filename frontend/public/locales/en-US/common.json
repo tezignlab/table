@@ -57,7 +57,6 @@
   "auth.verificationCode.lengthError": "Please enter the 6-digit verification code",
   "auth.verificationCode.wait": "Try again in {number} seconds",
   "auth.return": "Return to sign-in page",
-  "auth.other_way": "Please use {type} to open the webpage",
   "account.title": "",
   "account.profile": "User profile",
   "account.password": "Change password",
