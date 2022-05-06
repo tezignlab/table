@@ -1,6 +1,5 @@
 {
-  "site.name": "naodong.io",
-  "site.introduction": "naodong.io",
+  "site.name": "Table (Tezign enAbles)",
   "site.lang": "简体中文",
   "site.return.home": "返回首页",
   "site.routes.case": "案例",
@@ -60,7 +59,6 @@
   "auth.verificationCode.lengthError": "请输入6位验证码",
   "auth.verificationCode.wait": "{number}秒后再试",
   "auth.return": "返回登录页面",
-  "auth.other_way": "使用{type}打开脑洞",
   "account.title": "",
   "account.profile": "用户信息",
   "account.password": "修改密码",
