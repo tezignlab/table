@@ -9,8 +9,6 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: password
-    ports:
-      - "27017:27017"
     volumes:
       - './data_mongo:/data/db'
 
@@ -31,11 +29,9 @@ services:
         soft: 65536
         hard: 65536
     restart: unless-stopped
-    ports:
-      - "9200:9200"
-      - "9300:9300"
     volumes:
       - './data_es:/usr/share/elasticsearch/data'
+
   apiserver:
     container_name: table_apiserver
     networks:
@@ -60,7 +56,7 @@ services:
     depends_on:
       - apiserver
     ports:
-      - "8000:80"
+      - "8000:3000"
 
   nginx:
     container_name: table_nginx
