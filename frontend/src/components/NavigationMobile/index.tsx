@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { Fragment, useEffect, useState } from 'react'
 import { useRecoilValue } from 'recoil'
-import { APP_ICON_URL, ROUTES } from '../../constants'
+import { ROUTES } from '../../constants'
 import { Close, Menu, Search } from '../Icons'
 import { Logo } from '../Images'
 
@@ -99,8 +99,6 @@ const NavigationMobile: React.FC = () => {
         <div className="w-full h-16 py-4 px-4 flex justify-between bg-gray-200">
           <div className="h-full flex flex-col justify-center">
             <div className="flex h-full">
-              <img className="rounded-lg w-auto h-full" src={APP_ICON_URL} />
-
               <div className="flex flex-col justify-center pl-2">
                 <div className="font-bold text-sm">{t('app.name')}</div>
                 <div className="text-xs">{t('app.desc')}</div>
@@ -109,7 +107,7 @@ const NavigationMobile: React.FC = () => {
           </div>
 
           <div className="h-full flex flex-col justify-center">
-            <a className="btn btn-primary btn-small text-sm" href={'https://ai.tezign.com/api/download'}>
+            <a className="btn btn-primary btn-small text-sm">
               {t('app.download')}
             </a>
           </div>
