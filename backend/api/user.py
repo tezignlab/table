@@ -13,16 +13,16 @@ from utils import TimeUtils
 from random import randint
 
 # Mongo Collections
-nd_user = mongo['table']['user']
-nd_user_black = mongo['table']['user-black']
+table_user = mongo['table']['user']
+table_user_black = mongo['table']['user-black']
 
 
 def get_user(query: dict):
-    return nd_user.find_one(query)
+    return table_user.find_one(query)
 
 
 def random_avatar():
-    return f'/avatars/{randint(0, 9)}.png'
+    return f'/api/static/avatars/{randint(0, 9)}.png'
 
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = timedelta(days=7)):
@@ -34,7 +34,7 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = timedel
 
 
 async def get_current_user(user_id: str = Depends(current_user_id)):
-    user = nd_user.find_one({'_id': ObjectId(user_id)})
+    user = table_user.find_one({'_id': ObjectId(user_id)})
     if user is None:
         raise HTTPBaseException(HTTPExceptionEnum.USER_NOT_FOUND)
     user['id'] = user_id
@@ -68,7 +68,7 @@ async def register(body: RegisterBody):
         'hashed_password': crypt_context.hash(body.password),
         'status': UserStatusEnum.ACTIVE
     }
-    result = nd_user.insert_one(user)
+    result = table_user.insert_one(user)
     access_token, expire = create_access_token(data={'id': str(result.inserted_id)})
     return Response(data=UserAuthedToken(access_token=access_token, expire=expire).dict())
 
@@ -89,16 +89,16 @@ async def user_info(username: str):
 
 @router_public.patch("/api/v1/user", response_model=Response, summary='Update info', tags=['User'])
 async def update_user_info(body: UserInfoBody, user_id: str = Depends(current_user_id)):
-    nd_user.update_one({'_id': ObjectId(user_id)}, {'$set': body.dict(exclude_none=True)})
+    table_user.update_one({'_id': ObjectId(user_id)}, {'$set': body.dict(exclude_none=True)})
     return Response()
 
 
 @router_public.patch("/api/v1/user/password", response_model=Response, summary='Update password', tags=['User'])
 async def update_user_info(body: PasswordUpdateBody, user_id: str = Depends(current_user_id)):
-    user = nd_user.find_one({'_id': ObjectId(user_id)})
+    user = table_user.find_one({'_id': ObjectId(user_id)})
     if not crypt_context.verify(body.old_password, user.get('hashed_password')):
         raise HTTPBaseException(HTTPExceptionEnum.WRONG_OLD_PASSWORD)
-    nd_user.update_one({'_id': user['_id']}, {'$set': {'hashed_password': crypt_context.hash(body.new_password)}})
+    table_user.update_one({'_id': user['_id']}, {'$set': {'hashed_password': crypt_context.hash(body.new_password)}})
     return Response()
 
 
@@ -109,5 +109,5 @@ async def black_user(body: BlackUserBody, user_id: str = Depends(current_user_id
         'user_id': user_id,
         'update_time': TimeUtils.now_timestamp()
     })
-    nd_user_black.update_one({'user_id': user_id, 'value': body.value, 'type': body.type}, {'$set': doc}, upsert=True)
+    table_user_black.update_one({'user_id': user_id, 'value': body.value, 'type': body.type}, {'$set': doc}, upsert=True)
     return Response()

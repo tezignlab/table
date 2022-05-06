@@ -41,7 +41,7 @@ class BaseProject(BaseModel):
     origin: str = Field(...)
     origin_url: Optional[str] = Field(None)
     title: str = Field(...)
-    cover: str = Field('https://ai.tezign.com/static/naodong/cover.jpeg')
+    cover: str = Field('')
     tags: List[str] = Field([])
     publish_time: int = Field(...)
     count_read: int = Field(0)

@@ -3,7 +3,7 @@ import clsx from 'clsx'
 import { GetServerSideProps } from 'next'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useQuery } from 'react-query'
 import { LogoWhite } from '../components/Images'
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -31,14 +31,8 @@ const DownloadAppPage: React.FC = () => {
           ))}
         <div className="absolute h-screen w-screen grid grid-cols-2 gap-20 bg-black bg-opacity-70 z-10">
           <div className="flex flex-col my-auto justify-self-end">
-            <div className="absolute w-72 mx-auto">
-              <img className="object-fill" src="https://ai.tezign.com/static/naodong/iphone.png" />
-            </div>
-            <div className="w-72 p-5">
-              <video autoPlay muted loop className="object-contain">
-                <source src="https://ai.tezign.com/static/naodong/app_video.mp4" type="video/mp4" />
-              </video>
-            </div>
+            <div className="absolute w-72 mx-auto"></div>
+            <div className="w-72 p-5"></div>
           </div>
 
           <div className="flex flex-col my-auto justify-self-start text-white">
@@ -59,7 +53,6 @@ const DownloadAppPage: React.FC = () => {
                   })}
                 >
                   {t('app.qr.ios')}
-                  {isIOSHover && <img src="https://ai.tezign.com/static/naodong/nd-ios-qr-code.jpg" alt="" />}
                 </div>
               </div>
               <div className="h-36 mr-4">
@@ -76,7 +69,6 @@ const DownloadAppPage: React.FC = () => {
                   })}
                 >
                   {t('app.qr.android')}
-                  {isAndroidHover && <img src="https://ai.tezign.com/static/naodong/nd-android-qr-code.jpg" alt="" />}
                 </div>
               </div>
             </div>

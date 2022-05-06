@@ -9,7 +9,7 @@ from fastlab.models import Response
 from models.file import FileInfo
 from utils import TimeUtils, FileUtils
 
-nd_files = mongo["table"]["files"]
+table_files = mongo["table"]["files"]
 
 
 @router_public.post("/api/v1/file/upload", tags=["File"], summary="Upload", response_model=Response[FileInfo])
@@ -20,7 +20,7 @@ async def file_upload(file: UploadFile = File(..., description='file'), user_id:
     file_path = f'{tmp_path}/{str(uuid.uuid4()).replace("-", "")}'
     with open(file_path, 'wb') as f:
         [f.write(chunk) for chunk in iter(lambda: file.file.read(10240), b'')]
-    result = nd_files.insert_one({
+    result = table_files.insert_one({
         'user_id': user_id,
         'name': file.filename,
         'path': file_path,
