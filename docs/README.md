@@ -1,4 +1,3 @@
-
 <br />
 <p align="center">
   <img width="240" src="https://user-images.githubusercontent.com/12091906/152910229-6a1187bb-e06a-43a0-acb3-bbbc8c83c8f5.png"/>  
@@ -69,7 +68,7 @@ Start [docker](https://www.docker.com/products/docker-desktop) and run all servi
 docker-compose up --build --force-recreate
 ```
 
-This creates two new data folders: `data_es` and `data_mongo`. 
+This creates two new data folders: `data_es` and `data_mongo`.
 
 Load the sample data (choose from English or Chinese data):
 
@@ -108,8 +107,8 @@ Run the tests with:
 ```
 pytest
 ```
-`pytest` will run all files of the form `test_*.py` or `*_test.py` in the current directory and its subdirectories.
 
+`pytest` will run all files of the form `test_*.py` or `*_test.py` in the current directory and its subdirectories.
 
 ### Run Frontend Web Application Server
 
@@ -120,18 +119,16 @@ cd frontend/
 yarn
 
 # run
-yarn start
+yarn dev
 ```
 
-Open [http://localhost:8000](http://localhost:8000) with your browser to see the web app.
-
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the web app.
 
 Run the tests with:
 
 ```
 yarn test
 ```
-
 
 ### Run Mobile App
 
@@ -149,14 +146,8 @@ yarn web
 
 Install [Expo Go](https://expo.dev/client) on your phone, then scan the QR code using your phone's camera to check the App.
 
-
 ## Team
 
-Table is based on an internal project of [Tezign](https://www.tezign.com/) led by [Ling Fan](https://www.linkedin.com/in/fatflatfloat/), [Zhe Wang](https://www.linkedin.com/in/zhe-wang-7665921b/), and [Harry Wang](https://harrywang.me/). 
+Table is based on an internal project of [Tezign](https://www.tezign.com/) led by [Ling Fan](https://www.linkedin.com/in/fatflatfloat/), [Zhe Wang](https://www.linkedin.com/in/zhe-wang-7665921b/), and [Harry Wang](https://harrywang.me/).
 
 Initial core development team includes [Jinggang Zhuo](https://github.com/zhuojg), [Yuandong Yang](https://github.com/AnoyiX), and [Feifei Ying](https://github.com/faye1225) with contributions from other members, such as Meixi Lu, Zilong Pei, Jing Zhu, Dan Li.
-
-
-
-
-
