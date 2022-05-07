@@ -57,27 +57,32 @@ You can setup Table on a local computer via a few simple steps:
 
 Clone the repo and switch to the folder:
 
-```
+```shell
 git clone https://github.com/tezignlab/table.git
 cd table
 ```
 
 Start [docker](https://www.docker.com/products/docker-desktop) and run all services using the following command:
 
-```
+```shell
 docker-compose up --build --force-recreate
 ```
 
-This creates two new data folders: `data_es` and `data_mongo`.
+This creates two new data folders: `data_es` and `data_mongo`. Also make sure ES container can read and write `data_es`:
+
+```shell
+# without permissions, elasticsearch will fail to start
+chmod a+rw data_es
+```
 
 Load the sample data (choose from English or Chinese data):
 
 ```shell
 # English data
-docker exec -it table_apiserver python3 init.py
+docker exec table_apiserver python3 init.py
 
 # Chinese data
-# docker exec -it table_apiserver bash -c "export DATA_LANG=zh && python3 init.py"
+# docker exec table_apiserver bash -c "export DATA_LANG=zh && python3 init.py"
 ```
 
 Open [http://localhost:8000](http://localhost:8000) with your browser to see Table web application.
@@ -115,7 +120,7 @@ python3 run.py
 
 Run the tests with:
 
-```
+```shell
 pytest
 ```
 
@@ -137,7 +142,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 Run the tests with:
 
-```
+```shell
 yarn test
 ```
 
