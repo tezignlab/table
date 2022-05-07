@@ -6,7 +6,7 @@ from starlette.responses import JSONResponse
 from api import *
 from config import conf
 from exception import *
-from fastlab.models import Response
+from models import Response
 from db import es
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware

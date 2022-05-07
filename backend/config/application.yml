@@ -1,6 +1,6 @@
 # Application
 application:
-  title: NaoDong Service
+  title: Table Service
   version: 0.1.0
   openapi_url: /openapi.json
   docs_url: /docs
@@ -25,4 +25,3 @@ user:
   pwd:
     secret_key: 97y9bx1dfjt46050z3mgksqnom0m8a57icj2ha2lhjcyke12tfxuxejzdv0ckvsj
     algorithm: HS256
-

@@ -84,6 +84,17 @@ Open [http://localhost:8000](http://localhost:8000) with your browser to see Tab
 
 ## Development
 
+### Start Local Database  
+
+Run MongDB and ElasticSearch on localhost with docker-compose:
+
+```shell
+docker-compose -f docker-compose.dev.yml up -d
+
+# without permissions, elasticsearch will fail to start
+chmod a+rw data_es/
+```
+
 ### Run Backend Server
 
 This is a [FastAPI](https://github.com/tiangolo/fastapi) project.

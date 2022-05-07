@@ -7,7 +7,7 @@ from api.user import table_user, get_user
 from api.user import random_avatar
 from config import conf
 from db import mongo
-from fastlab.models import Response, PageData
+from models import Response, PageData
 from models.project import *
 from service import ESService
 from utils import TimeUtils

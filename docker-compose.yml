@@ -1,19 +1,14 @@
 version: "3.9"
 services:
-
   mongo:
     container_name: table_mongo
     networks:
       - table
     image: mongo:4.4
     restart: unless-stopped
-    environment: 
+    environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: password
-    ports:
-      - "27017:27017"
-    volumes:
-      - './data_mongo:/data/db'
 
   elasticsearch:
     container_name: table_es
@@ -32,11 +27,6 @@ services:
         soft: 65536
         hard: 65536
     restart: unless-stopped
-    ports:
-      - "9200:9200"
-      - "9300:9300"
-    volumes:
-      - './data_es:/usr/share/elasticsearch/data'
 
   apiserver:
     container_name: table_apiserver
@@ -50,9 +40,7 @@ services:
     environment:
       MONGO_HOST: mongo
       ELASTICSEARCH_HOSTS: '["elasticsearch:9200"]'
-    ports:
-    - "8080:80"
-      
+
   webserver:
     container_name: table_webserver
     networks:
@@ -61,8 +49,19 @@ services:
     restart: unless-stopped
     depends_on:
       - apiserver
+
+  nginx:
+    container_name: table_nginx
+    networks:
+      - table
+    build: ./
+    restart: unless-stopped
+    depends_on:
+      - apiserver
+      - webserver
     ports:
-    - "8000:80"
+      - "80:80"
+
 
 networks:
   table:

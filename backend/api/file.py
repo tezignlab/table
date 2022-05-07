@@ -5,7 +5,7 @@ from fastapi import Depends, File, UploadFile
 
 from api import router_public, current_user_id
 from db import mongo
-from fastlab.models import Response
+from models import Response
 from models.file import FileInfo
 from utils import TimeUtils, FileUtils
 

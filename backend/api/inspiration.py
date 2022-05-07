@@ -6,7 +6,7 @@ from fastapi import Depends
 from api import router_public, current_user_id
 from api.file import table_files
 from db import mongo
-from fastlab.models import Response, PageData
+from models import Response, PageData
 from models.inspiration import *
 from utils import TimeUtils, FileUtils
 
