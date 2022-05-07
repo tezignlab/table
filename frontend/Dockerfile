@@ -10,10 +10,10 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN yarn build
 
-FROM nginx:alpine
-RUN apk add nodejs npm
+FROM node:16-alpine AS runner
+WORKDIR /app
 ENV NODE_ENV production
 ENV TZ="Asia/Shanghai"
-WORKDIR /app
 COPY --from=builder /app /app
+CMD ["yarn", "start"]
 
