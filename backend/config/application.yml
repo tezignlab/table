@@ -1,6 +1,6 @@
 # Application
 application:
-  title: NaoDong Service
+  title: Table Service
   version: 0.1.0
   openapi_url: /openapi.json
   docs_url: /docs

@@ -1,7 +1,6 @@
 FROM node:lts-bullseye AS deps
 WORKDIR /app
 COPY package.json yarn.lock ./
-RUN yarn config set registry https://registry.npm.taobao.org/
 RUN yarn install --frozen-lockfile
 
 FROM node:lts-bullseye AS builder
