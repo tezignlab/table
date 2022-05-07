@@ -61,27 +61,32 @@ You can setup Table on a local computer via a few simple steps:
 
 Clone the repo and switch to the folder:
 
-```
+```shell
 git clone https://github.com/tezignlab/table.git
 cd table
 ```
 
 Start [docker](https://www.docker.com/products/docker-desktop) and run all services using the following command:
 
-```
-docker-compose up --build --force-recreate
+```shell
+docker-compose up --build -d --force-recreate
 ```
 
-This creates two new data folders: `data_es` and `data_mongo`. 
+This creates two new data folders: `data_es` and `data_mongo`. Also make sure ES container can read and write `data_es`:
+
+```shell
+# without permissions, elasticsearch will fail to start
+chmod a+rw data_es
+```
 
 Load the sample data (choose from English or Chinese data):
 
 ```shell
 # English data
-docker exec -it table_apiserver python3 init.py
+docker exec table_apiserver python3 init.py
 
 # Chinese data
-# docker exec -it table_apiserver bash -c "export DATA_LANG=zh && python3 init.py"
+# docker exec table_apiserver bash -c "export DATA_LANG=zh && python3 init.py"
 ```
 
 Open [http://localhost:8000](http://localhost:8000) with your browser to see Table web application.
@@ -96,7 +101,7 @@ Run MongDB and ElasticSearch on localhost with docker-compose:
 docker-compose -f docker-compose.dev.yml up -d
 
 # without permissions, elasticsearch will fail to start
-chmod a+rw data_es/
+chmod a+rw data_es
 ```
 
 ### Run Backend Server
@@ -119,11 +124,11 @@ python3 run.py
 
 Run the tests with:
 
-```
+```shell
 pytest
 ```
-`pytest` will run all files of the form `test_*.py` or `*_test.py` in the current directory and its subdirectories.
 
+`pytest` will run all files of the form `test_*.py` or `*_test.py` in the current directory and its subdirectories.
 
 ### Run Frontend Web Application Server
 
@@ -141,10 +146,9 @@ yarn start
 
 Open [http://localhost:8000](http://localhost:8000) with your browser to see the web app.
 
-
 Run the tests with:
 
-```
+```shell
 yarn test
 ```
 
@@ -166,14 +170,8 @@ yarn web
 
 Install [Expo Go](https://expo.dev/client) on your phone, then scan the QR code using your phone's camera to check the App.
 
-
 ## Team
 
 Table is based on an internal project of [Tezign](https://www.tezign.com/) led by [Ling Fan](https://www.linkedin.com/in/fatflatfloat/), [Zhe Wang](https://www.linkedin.com/in/zhe-wang-7665921b/), and [Harry Wang](https://harrywang.me/). 
 
 Core development team includes [Yuandong Yang](https://github.com/AnoyiX), [Jinggang Zhuo](https://github.com/zhuojg), and [Feifei Ying](https://github.com/faye1225) with contributions from other members, such as Meixi Lu, Zilong Pei, Jing Zhu, Dan Li.
-
-
-
-
-
