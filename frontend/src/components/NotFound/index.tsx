@@ -1,7 +1,6 @@
 import { useTranslation } from 'next-i18next'
 import Head from 'next/head'
 import React from 'react'
-import { STATIC_URL } from '../../constants'
 
 const NotFound: React.FC = () => {
   const { t } = useTranslation('common')
@@ -13,7 +12,7 @@ const NotFound: React.FC = () => {
       </Head>
 
       <div className="mx-auto w-48 lg:w-72">
-        <img className="object-fit" src={`${STATIC_URL}/404.png`} alt="not-found" />
+        <img className="object-fit" src={`/404.png`} alt="not-found" />
       </div>
     </div>
   )

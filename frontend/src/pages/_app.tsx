@@ -1,4 +1,4 @@
-import { ACCESS_TOKEN_NAME, STATIC_URL } from '@/constants/index'
+import { ACCESS_TOKEN_NAME } from '@/constants/index'
 import Layout from '@/layouts'
 import axios from 'axios'
 import type { NextPage } from 'next'
@@ -20,7 +20,7 @@ axios.interceptors.request.use((config) => {
   }
 
   const token = localStorage.getItem(ACCESS_TOKEN_NAME)
-  if (token && config.headers && !config.url?.startsWith(STATIC_URL)) {
+  if (token && config.headers) {
     config.headers.Authorization = `Bearer ${token}`
   }
   return config
