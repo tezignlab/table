@@ -76,12 +76,12 @@ export function InspirationCreateScreen({ navigation, route }: RootStackScreenPr
             }
         })).then(results => Promise.all(results.map(result => result.id))).then(file_ids => {
             if (inspiration === null) {
-                return http.post('/api/nd/v1/inspiration', {
+                return http.post('/api/v1/inspiration', {
                     content: content,
                     file_ids: file_ids
                 });
             } else {
-                return http.put(`/api/nd/v1/inspiration/${inspiration.id}`, {
+                return http.put(`/api/v1/inspiration/${inspiration.id}`, {
                     content: content,
                     file_ids: file_ids,
                 });

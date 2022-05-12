@@ -33,12 +33,10 @@ class FileUtils:
 
     @staticmethod
     def thumbnail(path: str, content_type: str, width: int = 200):
-        if content_type.startswith('image'):
-            return f'{conf["file"]["image_thumbnail_api"]}?path={path}&width={width}'
-        if content_type.startswith('video'):
-            return f'{conf["file"]["video_thumbnail_api"]}?path={path}&width={width}'
+        if content_type.startswith('image') or content_type.startswith('video'):
+            return f'{conf["file"]["url_prefix"]}{path.split("backend")[-1]}'
         return ''
 
     @staticmethod
     def url(path: str):
-        return f'{conf["file"]["url_prefix"]}{path.replace(conf["file"]["upload_path"], "")}'
+        return f'{conf["file"]["url_prefix"]}{path.split("backend")[-1]}'

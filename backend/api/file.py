@@ -14,10 +14,10 @@ table_files = mongo["table"]["files"]
 
 @router_public.post("/api/v1/file/upload", tags=["File"], summary="Upload", response_model=Response[FileInfo])
 async def file_upload(file: UploadFile = File(..., description='file'), user_id: str = Depends(current_user_id)):
-    tmp_path = f'{Path(__file__).parent}/static/assets/{TimeUtils.ymd()}'
+    tmp_path = f'{Path(__file__).parent.parent}/static/assets/{TimeUtils.ymd()}'
     if not os.path.exists(tmp_path):
         os.makedirs(tmp_path)
-    file_path = f'{tmp_path}/{str(uuid.uuid4()).replace("-", "")}'
+    file_path = f'{tmp_path}/{str(uuid.uuid4()).replace("-", "")}.{file.filename.split(".")[-1]}'
     with open(file_path, 'wb') as f:
         [f.write(chunk) for chunk in iter(lambda: file.file.read(10240), b'')]
     result = table_files.insert_one({
@@ -30,4 +30,4 @@ async def file_upload(file: UploadFile = File(..., description='file'), user_id:
     return Response(data=FileInfo(id=str(result.inserted_id),
                                   content_type=file.content_type,
                                   url=FileUtils.url(file_path),
-                                  thumbnail=FileUtils.thumbnail(file_path, file.content_type)))
+                                  thumbnail=FileUtils.url(file_path)))

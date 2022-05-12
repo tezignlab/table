@@ -25,3 +25,7 @@ user:
   pwd:
     secret_key: 97y9bx1dfjt46050z3mgksqnom0m8a57icj2ha2lhjcyke12tfxuxejzdv0ckvsj
     algorithm: HS256
+
+# 文件模块
+file:
+  url_prefix: http://127.0.0.1:8080/api

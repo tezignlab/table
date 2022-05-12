@@ -51,11 +51,11 @@ export function ProjectDetail({ project }: { project: TProjectDetail }) {
     const onLike = () => {
         if (isLogin) {
             if (isLike) {
-                http.delete(`/api/nd/v1/project/like/${id}`)
+                http.delete(`/api/v1/project/like/${id}`)
                     .then(() => setIsLike(false))
                     .catch(e => Tips.error('Error', e))
             } else {
-                http.put(`/api/nd/v1/project/like/${id}`)
+                http.put(`/api/v1/project/like/${id}`)
                     .then(() => setIsLike(true))
                     .catch(() => { })
             }
