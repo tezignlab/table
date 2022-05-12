@@ -13,7 +13,7 @@ mongo.table.project.delete_many({})
 
 
 # Write data to DB
-with open(f'{os.path.dirname(__file__)}/data/mongo_projects_{lang}.json', 'r') as f:
+with open(f'{os.path.dirname(os.path.abspath(__file__))}/data/mongo_projects_{lang}.json', 'r') as f:
     projects = json.load(f)
     mongo.table.project.insert_many(projects)
     for project in projects:
