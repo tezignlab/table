@@ -42,15 +42,15 @@ const SearchPage: React.FC = () => {
   )
 
   return (
-    <div className="flex-grow w-full flex flex-col">
+    <div className='flex-grow w-full flex flex-col'>
       <Head>
         {query && <title>{`${query} - ${t('site.name')}`}</title>}
         {!query && <title>{`${t('general.search')} - ${t('site.name')}`}</title>}
       </Head>
 
-      <div className="w-full py-8">
-        <div className="w-full flex flex-row justify-center">
-          <div className="w-full mx-4 lg:w-1/2 lg:mx-auto relative">
+      <div className='w-full py-8'>
+        <div className='w-full flex flex-row justify-center'>
+          <div className='w-full mx-4 lg:w-1/2 lg:mx-auto relative'>
             <input
               ref={inputRef}
               className={clsx(
@@ -106,7 +106,7 @@ const SearchPage: React.FC = () => {
         </div>
       </div>
 
-      <ProjectList name="searchProjects" loadMore={searchFunction} />
+      <ProjectList name={`searchProjects-${query}`} loadMore={searchFunction} />
     </div>
   )
 }
