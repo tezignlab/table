@@ -22,18 +22,18 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 const InspirationCard: React.FC<{ inspiration: Inspiration }> = ({ inspiration }) => {
   return (
-    <div className="w-full h-full mx-8 px-8 py-2 mb-8 border border-gray-200 rounded-lg">
-      <p className="text-gray-400 my-2">{moment(inspiration.create_time).format('YYYY-MM-DD HH:mm:ss')}</p>
-      <div className="text-lg ">
+    <div className='w-full h-full mx-8 px-8 py-2 mb-8 border border-gray-200 rounded-lg'>
+      <p className='text-gray-400 my-2'>{moment(inspiration.create_time).format('YYYY-MM-DD HH:mm:ss')}</p>
+      <div className='text-lg '>
         <p>{inspiration.content}</p>
       </div>
-      <div className="flex flex-row flex-wrap">
+      <div className='flex flex-row flex-wrap'>
         {inspiration.files?.map((file, index) => (
           <img
             src={file.thumbnail}
-            alt=""
+            alt=''
             key={index}
-            className="h-64 w-64 my-4 mx-2 object-cover object-center rounded-lg"
+            className='h-64 w-64 my-4 mx-2 object-cover object-center rounded-lg'
           />
         ))}
       </div>
@@ -56,7 +56,7 @@ export default function InspirationPage() {
   return (
     <div>
       {isFetching && (
-        <div className="flex-grow h-full flex flex-col justify-center w-6 mx-auto">
+        <div className='flex-grow h-full flex flex-col justify-center w-6 mx-auto'>
           <Loading />
         </div>
       )}
@@ -66,7 +66,7 @@ export default function InspirationPage() {
           <Head>
             <title>{`${authUser?.username}${t('likes.page.title')}`}</title>
           </Head>
-          <div className="flex flex-col w-2/3 mx-auto">
+          <div className='flex flex-col w-2/3 mx-auto'>
             {data?.map((inspiration) => (
               <InspirationCard key={inspiration.id} inspiration={inspiration} />
             ))}
@@ -74,10 +74,10 @@ export default function InspirationPage() {
         </div>
       )}
 
-      <div className="w-full flex justify-center ">
-        {!isFetching && hasMore && (
+      <div className='w-full flex justify-center '>
+        {!isFetching && hasMore && data && data.length > 0 && (
           <button
-            className="btn btn-primary"
+            className='btn btn-primary'
             onClick={() => {
               setLimit(limit + 20)
             }}
