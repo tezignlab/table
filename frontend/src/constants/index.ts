@@ -8,7 +8,6 @@ export const ROUTES = [
     path: '/project/recommend',
     visibleOnMobile: true,
   },
-  { name: 'site.routes.app', path: '/download-app', visibleOnMobile: false },
 ]
 
 export const USERNAME_MIN_LENGTH = 4
