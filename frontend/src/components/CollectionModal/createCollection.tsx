@@ -11,7 +11,7 @@ import { FormikInput as Input } from '../Input'
 const CreateCollection: React.FC<{ collections: Collection[]; showChooseModal: () => void; refresh: () => void }> = ({
   collections,
   showChooseModal,
-  refresh
+  refresh,
 }) => {
   const { t } = useTranslation('common')
   const [created, setCreated] = useState(false)
@@ -19,6 +19,7 @@ const CreateCollection: React.FC<{ collections: Collection[]; showChooseModal: (
 
   useEffect(() => {
     if (!loading && created) {
+      refresh()
       showChooseModal()
     }
   }, [loading])
@@ -36,7 +37,6 @@ const CreateCollection: React.FC<{ collections: Collection[]; showChooseModal: (
       } catch {
       } finally {
         setLoading(false)
-        refresh()
       }
     },
     validationSchema: Yup.object({

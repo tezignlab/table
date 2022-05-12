@@ -1,7 +1,7 @@
 import { getCollectionsList } from '@/services/project'
 import { authUserState } from '@/stores/auth'
 import { Project } from '@/types/project'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useQuery } from 'react-query'
 import { useRecoilValue } from 'recoil'
 import { Loading } from '../Icons'
@@ -20,24 +20,24 @@ const CollectionsModal: React.FC<{
 }> = ({ project, mode, visible, closeModal, changeModalMode }) => {
   const authUser = useRecoilValue(authUserState)
 
-  const { data, isLoading, refetch } = useQuery(
+  const { data, isLoading, refetch, isFetching } = useQuery(
     ['collections', authUser?.id],
     async () => {
       const result = await getCollectionsList(authUser?.id ?? '')
       return result.data
     },
-    { cacheTime: 0 },
+    { cacheTime: 0, keepPreviousData: false },
   )
 
   return (
     <Modal visible={visible} toggle={closeModal}>
-      {isLoading && (
+      {(isLoading || isFetching) && (
         <div className="w-full h-6 flex flex-col justify-center">
           <Loading />
         </div>
       )}
 
-      {!isLoading && (
+      {!isLoading && !isFetching && (
         <>
           {mode === 'create' && (
             <CreateCollection

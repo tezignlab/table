@@ -1,6 +1,7 @@
 import { deleteCollection } from '@/services/project'
 import { Collection } from '@/types/collection'
 import { useTranslation } from 'next-i18next'
+import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { Loading } from '../Icons'
 import Modal from '../Modal'
@@ -12,6 +13,7 @@ const CollectionDeleteModal: React.FC<{
   refresh: () => void
 }> = ({ collection, visible, closeModal, refresh }) => {
   const { t } = useTranslation('common')
+  const router = useRouter()
   const [confirmed, setConfirmed] = useState(false)
   const [loading, setLoading] = useState(false)
 
@@ -24,6 +26,7 @@ const CollectionDeleteModal: React.FC<{
     } catch {
     } finally {
       setLoading(false)
+      router.push('/user/collections')
     }
   }
 

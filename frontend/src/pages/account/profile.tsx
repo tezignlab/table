@@ -62,7 +62,7 @@ const Profile = () => {
       formik.setFieldValue('nickname', authUser?.nickname)
       formik.setFieldValue('bio', authUser?.bio ?? '')
     }
-  }, [isLoading])
+  }, [isLoading, authUser])
 
   return (
     <div className="w-full h-full">
