@@ -93,7 +93,7 @@ export function useProjects({ mode = 'latest', limit = 20, value = '' }: { mode:
         fetchProjects({
             skip, limit, value
         });
-    }, [skip]);
+    }, [skip, value]);
 
     return {
         pagedProject,
