@@ -44,7 +44,7 @@ export function CollectionCreateScreen({ navigation }: RootStackScreenProps<'Col
         });
         setErrorInfo(errorInfo);
         if (!pass) return;
-        http.post(`/api/nd/v1/project/collection`, { name, desc }).then(navigation.goBack).catch(e => Tips.error('Error', e))
+        http.post(`/api/v1/project/collection`, { name, desc }).then(navigation.goBack).catch(e => Tips.error('Error', e))
     }
 
     return (

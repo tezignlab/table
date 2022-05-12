@@ -29,7 +29,7 @@ export function InspirationsScreen({ navigation }: RootStackScreenProps<'Inspira
 
     // 删除
     function onDeleteItem() {
-        currentItem != null && http.delete(`/api/nd/v1/inspiration/${currentItem?.id}`).then(() => {
+        currentItem != null && http.delete(`/api/v1/inspiration/${currentItem?.id}`).then(() => {
             deleteItem(currentItem?.id)
         })
     }
@@ -52,6 +52,7 @@ export function InspirationsScreen({ navigation }: RootStackScreenProps<'Inspira
     return (
 
         <View style={tailwind(`w-full h-full bg-white`)}>
+
             <FlatList data={items.data}
                 renderItem={renderItem}
                 keyExtractor={(item, index) => index.toString()}

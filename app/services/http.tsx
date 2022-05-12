@@ -126,7 +126,7 @@ const http = {
             name: uri.split('/').pop(),
             ...fileType
         });
-        return AsyncStorage.getItem('access_token').then(token => fetch(HOST + '/api/nd/v1/file/upload', {
+        return AsyncStorage.getItem('access_token').then(token => fetch(HOST + '/api/v1/file/upload', {
             method: 'POST',
             headers: {
                 Authorization: token != null ? `Bearer ${token}` : ''

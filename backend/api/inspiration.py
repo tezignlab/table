@@ -37,7 +37,7 @@ async def inspiration_list(skip: int = 0, limit: int = 20, user_id: str = Depend
     result = list(table_inspirations.find(_filter).skip(skip).limit(limit).sort([('create_time', -1)]))
     total = table_inspirations.count_documents(_filter)
     _extra_files(result)
-    return Response(data=PageData(skip=skip, limit=limit, total=total, has_more=total > skip + limit, list=result))
+    return Response(data=PageData(skip=skip, limit=limit, total=total, has_more=total > skip + limit, data=result))
 
 
 @router_public.post("/api/v1/inspiration", tags=["Inspiration"], summary="Create inspiration", response_model=Response[Inspiration])

@@ -18,12 +18,12 @@ function CollectionOption({ shot_id, collection, setCollectionStatus }: { shot_i
     
     const doCollect = () => {
         if (isCollect) {
-            http.delete(`/api/nd/v1/project/${shot_id}/collect/${collection.id}`, {}).then(() => {
+            http.delete(`/api/v1/project/${shot_id}/collect/${collection.id}`, {}).then(() => {
                 setIsCollect(false)
                 setCollectionStatus(collection.id, false)
             }).catch(e => Tips.error('Error', e))
         } else {
-            http.post(`/api/nd/v1/project/${shot_id}/collect/${collection.id}`, {}).then(() => {
+            http.post(`/api/v1/project/${shot_id}/collect/${collection.id}`, {}).then(() => {
                 setIsCollect(true)
                 setCollectionStatus(collection.id, true)
             }).catch(e => Tips.error('Error', e))
@@ -51,7 +51,7 @@ export default function SelectCollections({ shot_id, setShotCollectStatus, setMo
 
     useEffect(() => {
         setLoading(true)
-        http.get(`/api/nd/v1/project/${shot_id}/collections`).then(data => {
+        http.get(`/api/v1/project/${shot_id}/collections`).then(data => {
             setCollections(data);
             setLoading(false)
             collectionsStatus = Object.fromEntries(new Map(data.map((item: TCollection & { is_collect: boolean }) => [item.id, item.is_collect])))

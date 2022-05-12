@@ -19,7 +19,7 @@ const ProjectDetailComponent: React.FC<{
           key={`${item}_${index}`}
           className="btn btn-tag mx-1 my-1"
           onClick={() => {
-            window.open(`/search/projects/${item}`, '_blank')
+            window.open(`/search?query=${encodeURIComponent(item)}`, '_blank')
           }}
         >
           {item}

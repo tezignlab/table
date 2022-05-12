@@ -31,7 +31,7 @@ export function CollectedProjectsScreen({ navigation, route }: RootStackScreenPr
             { text: translate('cancle'), style: 'cancel' },
             {
                 text: translate('ok'), onPress: () => {
-                    http.delete(`/api/nd/v1/project/collection/${route.params.collection.id}`).then(() => {
+                    http.delete(`/api/v1/project/collection/${route.params.collection.id}`).then(() => {
                         navigation.goBack()
                     }).catch(e => Tips.error('Error', e))
                 }

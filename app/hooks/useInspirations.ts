@@ -35,6 +35,7 @@ export default function useInspirations({limit = 20}: { limit: number; }) {
     const fetchItems = ({skip, limit}: { skip: number; limit: number; }) => {
         skip !== 0 && setLoading(true);
         http.get(`/api/v1/inspirations?skip=${skip}&limit=${limit}`).then(res => {
+            console.log(res)
             setRefreshing(false);
             setLoading(false);
             setItems({
