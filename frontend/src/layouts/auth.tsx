@@ -46,7 +46,12 @@ export const AuthLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
 
       <div className="top-0 bottom-0 hidden lg:flex flex-wrap z-0 h-screen w-screen overflow-x-hidden overflow-y-hidden">
         {recommendProjects?.map((project: Project) => (
-          <img key={project.id} className="h-1/3 w-1/4 object-cover object-center" src={project.cover} />
+          <img
+            referrerPolicy="no-referrer"
+            key={project.id}
+            className="h-1/3 w-1/4 object-cover object-center"
+            src={project.cover}
+          />
         ))}
       </div>
 
