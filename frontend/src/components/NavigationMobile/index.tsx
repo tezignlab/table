@@ -94,26 +94,6 @@ const NavigationMobile: React.FC = () => {
         </div>
       </div>
 
-      {/* navigate to app store */}
-      {router.pathname === '/' && (
-        <div className="w-full h-16 py-4 px-4 flex justify-between bg-gray-200">
-          <div className="h-full flex flex-col justify-center">
-            <div className="flex h-full">
-              <div className="flex flex-col justify-center pl-2">
-                <div className="font-bold text-sm">{t('app.name')}</div>
-                <div className="text-xs">{t('app.desc')}</div>
-              </div>
-            </div>
-          </div>
-
-          <div className="h-full flex flex-col justify-center">
-            <a className="btn btn-primary btn-small text-sm">
-              {t('app.download')}
-            </a>
-          </div>
-        </div>
-      )}
-
       <div className={clsx({ hidden: !menuVisible }, 'fixed top-0 left-0 right-0 bottom-0 pt-16', 'h-screen w-screen')}>
         <div
           className="h-full bg-white overflow-y-scroll divide-y divide-y-200 flex flex-col"
