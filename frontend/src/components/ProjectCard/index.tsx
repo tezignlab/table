@@ -50,7 +50,12 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
     <div className="w-full h-auto rounded-lg relative">
       <div className="w-full h-full flex flex-col justify-between">
         <div className="w-full h-64 rounded-lg">
-          <img src={project.cover} className="h-64 w-full object-cover object-center rounded-lg" alt="" />
+          <img
+            referrerPolicy="no-referrer"
+            src={project.cover}
+            className="h-64 w-full object-cover object-center rounded-lg"
+            alt=""
+          />
         </div>
 
         <div className="w-full flex flex-row justify-between py-2">
@@ -91,7 +96,7 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
         <div className="flex flex-row justify-between">
           <div className="flex flex-row justify-start">
             <div className="flex flex-col justify-center">
-              <img src={project.author.avatar} className="w-6 h-6 rounded-full" />
+              <img referrerPolicy="no-referrer" src={project.author.avatar} className="w-6 h-6 rounded-full" />
             </div>
 
             <div className="h-full flex flex-col justify-center">
