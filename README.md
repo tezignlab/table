@@ -50,17 +50,10 @@
 <img height="500" src="https://user-images.githubusercontent.com/595772/154818230-fcbc5a58-b5d1-4d22-b1a6-73fb622e9224.jpg">
 </p>
 
-
-
-# About
-
-Table is based on an internal project of [Tezign](https://www.tezign.com/) led by [Ling Fan](https://www.linkedin.com/in/fatflatfloat/), [Zhe Wang](https://www.linkedin.com/in/zhe-wang-7665921b/), and [Harry Wang](https://harrywang.me/). 
-
-Initial core development team includes [Jinggang Zhuo](https://github.com/zhuojg), [Yuandong Yang](https://github.com/AnoyiX), and [Feifei Ying](https://github.com/faye1225) with contributions from other members, such as Meixi Lu, Zilong Pei, Jing Zhu, Dan Li.
-
 # Documentation
 
 Please visit [https://tezignlab.github.io/table/](https://tezignlab.github.io/table/)
+
 
 
 

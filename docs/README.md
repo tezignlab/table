@@ -49,6 +49,19 @@
 <img height="500" src="https://user-images.githubusercontent.com/595772/154818230-fcbc5a58-b5d1-4d22-b1a6-73fb622e9224.jpg">
 </p>
 
+## About
+
+TABLE serves as a full-stack web and mobile application boilerplate to jump start your project. 
+
+TABLE powers the creative advertising showcase platform [NaoDong.IO](https://naodong.io/) and its universal native apps for [Android and iOS](https://naodong.io/download-app).
+
+TABLE has implemented the following basic functionalities:
+
+- user registration and authentication
+- search via ElasticSearch
+- like and save 
+- dynamic loading and scrolling
+
 ## Quick Start
 
 Get the source code from [https://github.com/tezignlab/table](https://github.com/tezignlab/table)
@@ -166,4 +179,4 @@ Install [Expo Go](https://expo.dev/client) on your phone, then scan the QR code 
 
 Table is based on an internal project of [Tezign](https://www.tezign.com/) led by [Ling Fan](https://www.linkedin.com/in/fatflatfloat/), [Zhe Wang](https://www.linkedin.com/in/zhe-wang-7665921b/), and [Harry Wang](https://harrywang.me/).
 
-Initial core development team includes [Jinggang Zhuo](https://github.com/zhuojg), [Yuandong Yang](https://github.com/AnoyiX), and [Feifei Ying](https://github.com/faye1225) with contributions from other members, such as Meixi Lu, Zilong Pei, Jing Zhu, Dan Li.
+Initial core development team includes [Jinggang Zhuo](https://github.com/zhuojg), [Yuandong Yang](https://github.com/AnoyiX), and [Feifei Ying](https://github.com/faye1225) with contributions from other [members](../CONTRIBUTORS.md).
