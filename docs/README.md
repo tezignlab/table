@@ -41,13 +41,14 @@
 </p>
 
 <p align="center">
-<img width="800" src="https://user-images.githubusercontent.com/595772/154817942-3e7f8c43-2591-4f13-a0ae-032751bcda25.png">
+<img width="800" src="https://user-images.githubusercontent.com/595772/169161995-152216ba-bdc7-43f9-a049-21268e28542d.png">
 </p>
 
 <p align="center">
-<img height="500" src="https://user-images.githubusercontent.com/595772/154818228-2297e605-dc73-40b0-8e21-5ccffb7fff6a.jpg">
-<img height="500" src="https://user-images.githubusercontent.com/595772/154818230-fcbc5a58-b5d1-4d22-b1a6-73fb622e9224.jpg">
+<img height="500" src="https://user-images.githubusercontent.com/595772/169162001-5158fd26-50a5-4b03-a74c-5486f005618a.jpeg">
+<img height="500" src="https://user-images.githubusercontent.com/595772/169162002-c38bfee2-6fec-4bf7-9d9c-f6b790b16122.jpeg">
 </p>
+
 
 ## About
 
@@ -179,4 +180,4 @@ Install [Expo Go](https://expo.dev/client) on your phone, then scan the QR code 
 
 Table is based on an internal project of [Tezign](https://www.tezign.com/) led by [Ling Fan](https://www.linkedin.com/in/fatflatfloat/), [Zhe Wang](https://www.linkedin.com/in/zhe-wang-7665921b/), and [Harry Wang](https://harrywang.me/).
 
-Initial core development team includes [Jinggang Zhuo](https://github.com/zhuojg), [Yuandong Yang](https://github.com/AnoyiX), and [Feifei Ying](https://github.com/faye1225) with contributions from other [members](../CONTRIBUTORS.md).
+Initial core development team includes [Jinggang Zhuo](https://github.com/zhuojg), [Yuandong Yang](https://github.com/AnoyiX), and [Feifei Ying](https://github.com/faye1225) with contributions from other [members](https://github.com/tezignlab/table/blob/main/CONTRIBUTORS.md).
